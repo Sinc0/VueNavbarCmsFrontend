@@ -14,13 +14,27 @@
     <!-- ### data ### -->
     <div v-if="SelectedSectionCategoryData" id="data">
       
+      <!-- arrow previous gallery image -->
+      <h1 id="arrowPreviousGalleryImage" class="arrowsImageGallery" v-on:click="showPreviousGalleryImage()">❮</h1>
+
       <!-- image gallery -->
-      <br />
-      <b>gallery images: {{SelectedSectionCategoryData[0].galleryImages}}</b><br />
-      <br />
+      <div id="image-gallery">
+
+        <!-- image -->
+        <div class="galleryImageDiv" v-for="(image, itemObjKey) in SelectedSectionCategoryData[0].galleryImages.sort((a, b) => {return a.pos - b.pos})" v-bind:key="image.id">
+          <img v-if="(itemObjKey + 1) == 1" v-bind:id="'galleryImage#' + (itemObjKey + 1)" class="galleryImage" v-bind:src="image.image" v-bind:title="'image' + ' ' + (itemObjKey + 1) + ' of ' + SelectedSectionCategoryData[0].galleryImages.length" /> <!--  + ' pos ' + image.pos -->
+          <img v-if="(itemObjKey + 1) != 1" v-bind:id="'galleryImage#' + (itemObjKey + 1)" class="galleryImage galleryImageHidden" v-bind:src="image.image" v-bind:title="'image' + ' ' + (itemObjKey + 1) + ' of ' + SelectedSectionCategoryData[0].galleryImages.length" /> <!--  + ' pos ' + image.pos -->
+        </div>
+
+        <!-- <b>image description</b> -->
+      </div>
+
+      <!-- arrow next gallery image -->
+      <h1 id="arrowNextGalleryImage" class="arrowsImageGallery" v-on:click="showNextGalleryImage()">❯</h1>
 
       <!-- text data -->
       <div class="data-div" v-for="data in SelectedSectionCategoryData[0].obj.sort((a, b) => {return a.pos - b.pos})" v-bind:key="data.id">
+          <!-- print data obj -->
           <!-- {{data}} -->
 
           <!-- filter hidden data -->          
@@ -48,9 +62,12 @@
       </div>
     </div>
 
-    <p v-if="SelectedSection"><b>Section = {{SelectedSection.title}}</b></p>
-    <p v-if="SelectedSection"><b>Section Data </b><br />{{SelectedSection}}</p>
-    <p v-if="SelectedSectionCategoryData"><b>Category = {{SelectedSectionCategoryData[0].category}}</b></p>
+    <!-- print section obj -->
+    <!-- <p v-if="SelectedSection"><b>Section = {{SelectedSection.title}}</b></p> -->
+    <!-- <p v-if="SelectedSection"><b>Section Data </b><br />{{SelectedSection}}</p> -->
+    
+    <!-- print category obj -->
+    <!-- <p v-if="SelectedSectionCategoryData"><b>Category = {{SelectedSectionCategoryData[0].category}}</b></p> -->
     
   </div>
 </template>
@@ -70,9 +87,9 @@ export default {
     const SelectedSectionCategoryData = computed(() => { return store.getters['storage/selectedSectionCategoryData']})
 
     //variables
-    
-    //functions
+    var imagePos = 1
 
+    //functions
     function loadCategory(category, data, pos)
     {
         //filter data for selected category
@@ -98,6 +115,71 @@ export default {
       //vuex
       store.dispatch('storage/actionSetSelectedSectionCategoryData', categoryData)
     }
+    
+    function showNextGalleryImage() {
+      var galleryImages = document.getElementsByClassName("galleryImage")
+
+      // set ImagePos
+      if (imagePos < galleryImages.length)
+      {
+        imagePos++
+      }
+      else 
+      {
+        imagePos = 1
+      }
+      // console.log(imagePos)
+
+      // display correct gallery image
+      for(var c = 1; c <= galleryImages.length; c++)
+      {
+        var setDisplayedImage = document.getElementById("galleryImage#" + c)
+
+        if (c == imagePos)
+        {
+          setDisplayedImage.style.display = "block"
+          // console.log(setDisplayedImage.id)
+        }
+        else 
+        {
+          setDisplayedImage.style.display = "none"
+        }
+
+      }
+    }
+
+    function showPreviousGalleryImage()
+    {
+      var galleryImages = document.getElementsByClassName("galleryImage")
+      
+      // set ImagePos
+      if (imagePos > 1)
+      {
+        imagePos--
+      }
+      else 
+      {
+        imagePos = galleryImages.length
+      }
+      // console.log(imagePos)
+
+      // display correct gallery image
+      for(var c = 1; c <= galleryImages.length; c++)
+      {
+        var setDisplayedImage = document.getElementById("galleryImage#" + c)
+
+        if (c == imagePos)
+        {
+          setDisplayedImage.style.display = "block"
+          // console.log(setDisplayedImage.id)
+        }
+        else 
+        {
+          setDisplayedImage.style.display = "none"
+        }
+
+      }
+    }
 
     return {
       //variables
@@ -110,6 +192,8 @@ export default {
 
       //functions
       loadCategory,
+      showNextGalleryImage,
+      showPreviousGalleryImage
     }   
   }
 }
@@ -192,10 +276,9 @@ export default {
   margin: 0px;
   margin: auto;
   padding: 10px;
-  padding-bottom: 10px;
-  width: 60%;
+  width: 60vw;
   text-align: left;
-  /* border: 1px solid black; */
+  border: 1px solid black;
 }
 
 .data-text-singleline
@@ -211,5 +294,69 @@ export default {
 .data-div {
   margin: 0px;
   padding: 0px;
+}
+
+#image-gallery {
+  display: inline-flex;
+  margin: 0px;
+  margin-top: 7px;
+  padding-bottom: 10px;
+  padding-left: 10px;
+  padding-top: 10px;
+  padding-right: 10px;
+  width: 60vw;
+  height: 30vw;
+  border: 1px solid black;
+}
+
+.arrowsImageGallery {  
+  display: inline-flex;
+  /* margin: 0px;
+  padding: 0px;
+  padding-bottom: 0px;
+  padding-left: 10px;
+  padding-top: 16vh;
+  padding-right: 10px;
+  user-select: none;
+  -webkit-user-select: none; */
+  /* border: 1px solid black; */
+  margin: 0;
+  margin-top: 18vh;
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-bottom: 3px;
+  padding-top: 0px;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  -webkit-user-select: none;
+  vertical-align: top;
+  /* border: 1px solid black; */
+}
+
+.arrowsImageGallery:active {
+  color: lightgreen;
+}
+
+#arrowPreviousGalleryImage {
+  margin-left: 0px;
+}
+
+.galleryImage {
+  display: block;
+  margin: 0px;
+  padding: 0px;
+  width: 100%;
+  height: 100%;
+  /* width: 400px;
+  height: 300px; */
+}
+
+.galleryImageHidden {
+  display: none;
+  margin: 0px;
+  padding: 0px;
+  width: 100%;
+  height: 100%;
 }
 </style>
