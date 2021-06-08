@@ -14,23 +14,27 @@
     <!-- ### data ### -->
     <div v-if="SelectedSectionCategoryData" id="data">
       
-      <!-- arrow previous gallery image -->
-      <h1 id="arrowPreviousGalleryImage" class="arrowsImageGallery" v-on:click="showPreviousGalleryImage()">❮</h1>
+      <!-- check if category has image gallery -->
+      <div id="image-gallery-wrapper" v-if="SelectedSectionCategoryData[0].galleryImages.length > 0">
+        
+        <!-- arrow previous gallery image -->
+        <h1 id="arrowPreviousGalleryImage" class="arrowsImageGallery" v-on:click="showPreviousGalleryImage()">❮</h1>
 
-      <!-- image gallery -->
-      <div id="image-gallery">
+        <!-- image gallery -->
+        <div id="image-gallery">
 
-        <!-- image -->
-        <div class="galleryImageDiv" v-for="(image, itemObjKey) in SelectedSectionCategoryData[0].galleryImages.sort((a, b) => {return a.pos - b.pos})" v-bind:key="image.id">
-          <img v-if="(itemObjKey + 1) == 1" v-bind:id="'galleryImage#' + (itemObjKey + 1)" class="galleryImage" v-bind:src="image.image" v-bind:title="'image' + ' ' + (itemObjKey + 1) + ' of ' + SelectedSectionCategoryData[0].galleryImages.length" /> <!--  + ' pos ' + image.pos -->
-          <img v-if="(itemObjKey + 1) != 1" v-bind:id="'galleryImage#' + (itemObjKey + 1)" class="galleryImage galleryImageHidden" v-bind:src="image.image" v-bind:title="'image' + ' ' + (itemObjKey + 1) + ' of ' + SelectedSectionCategoryData[0].galleryImages.length" /> <!--  + ' pos ' + image.pos -->
+          <!-- image -->
+          <div class="galleryImageDiv" v-for="(image, itemObjKey) in SelectedSectionCategoryData[0].galleryImages.sort((a, b) => {return a.pos - b.pos})" v-bind:key="image.id">
+            <img v-if="(itemObjKey + 1) == 1" v-bind:id="'galleryImage#' + (itemObjKey + 1)" class="galleryImage" v-bind:src="image.image" v-bind:title="'image' + ' ' + (itemObjKey + 1) + ' of ' + SelectedSectionCategoryData[0].galleryImages.length" /> <!--  + ' pos ' + image.pos -->
+            <img v-if="(itemObjKey + 1) != 1" v-bind:id="'galleryImage#' + (itemObjKey + 1)" class="galleryImage galleryImageHidden" v-bind:src="image.image" v-bind:title="'image' + ' ' + (itemObjKey + 1) + ' of ' + SelectedSectionCategoryData[0].galleryImages.length" /> <!--  + ' pos ' + image.pos -->
+          </div>
+
+          <!-- <b>image description</b> -->
         </div>
 
-        <!-- <b>image description</b> -->
+        <!-- arrow next gallery image -->
+        <h1 id="arrowNextGalleryImage" class="arrowsImageGallery" v-on:click="showNextGalleryImage()">❯</h1>
       </div>
-
-      <!-- arrow next gallery image -->
-      <h1 id="arrowNextGalleryImage" class="arrowsImageGallery" v-on:click="showNextGalleryImage()">❯</h1>
 
       <!-- text data -->
       <div class="data-div" v-for="data in SelectedSectionCategoryData[0].obj.sort((a, b) => {return a.pos - b.pos})" v-bind:key="data.id">
