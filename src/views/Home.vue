@@ -16,7 +16,6 @@ import {computed} from 'vue'
 import SectionData from '@/components/SectionData.vue'
 import Sections from '@/components/Sections.vue'
 
-
 export default {
   name: 'Home',
   components: {

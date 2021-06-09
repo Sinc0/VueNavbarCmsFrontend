@@ -5,7 +5,7 @@
 
     <!-- sections from api -->
     <div v-if="getSections">
-      <p v-for="section in getSections.sections.sort((a, b) => {return a.pos - b.pos})" v-bind:key="section.id" v-on:click="loadSection(section, getCategories, getData)" class="section">{{section.pos}}</p>      
+      <p v-for="section in getSections.sections.sort((a, b) => {return a.pos - b.pos})" v-bind:key="section.id" v-bind:id="'section#' + section.pos" v-on:click="loadSection(section, getCategories, getData)" class="section">{{section.pos}}</p>      
     </div>
 
   </div>
@@ -14,7 +14,7 @@
 <script>
 import {useStore} from 'vuex'
 import { useRouter, useRoute } from 'vue-router' //instead of this.$route
-import {computed} from 'vue'
+import {computed, onMounted, onUpdated} from 'vue'
 
 export default {
   setup() {
@@ -25,6 +25,34 @@ export default {
     const getData = computed(() => { return store.getters['storage/data']})
 
     //variables
+    var defaultSectionTitle = "defaultSectionTitle"
+    var defaultSectionNumber = 1
+            
+    //lifecycle hooks
+    onMounted(() => {
+        console.log("sections mounted")
+        // var t = document.getElementById("section#1")
+        // console.log(t)
+        // console.log("setSections")
+        // var t = computed(() => { return store.getters['storage/sections']})
+        // console.log(t.value.sections[0])
+        
+        //fetch all data
+        fetchSections()
+        .then(() => fetchCategories())
+        .then(() => fetchData())
+
+        // var x = fetchSections().then(() => {console.log(asdf.sections[0])})
+        // var y = fetchCategories()
+        // var z = fetchData()
+    })
+    
+    onUpdated(() => {
+        // console.log("sections updated")
+        // var t = document.getElementById("category-1")
+        // console.log(t)
+        // t.click()
+    })
 
     //functions
     async function fetchSections() {
@@ -32,10 +60,23 @@ export default {
       await fetch(url) //(url, {method: 'get'})
       .then((response) => response.json()) //convert response to json object
       .then(jsondata => {
+        // console.log(jsondata.sections)
 
         //vuex
         store.dispatch('storage/actionSetSections', jsondata)
         // console.log(getSections.value.sections)
+
+        //set default section
+        for (var c in jsondata.sections) 
+        {
+          if (jsondata.sections[c].pos == defaultSectionNumber)
+          {
+            defaultSectionTitle = jsondata.sections[c].title
+            // console.log(jsondata.sections[c].pos)
+            store.dispatch('storage/actionSetSelectedSection', jsondata.sections[c])
+          }
+        }
+
       })
     }
 
@@ -45,11 +86,24 @@ export default {
       await fetch(url) //(url, {method: 'get'})
       .then((response) => response.json()) //convert response to json object
       .then(jsondata => {
-        console.log(jsondata)
+        // console.log(jsondata.categories)
 
         //vuex
         store.dispatch('storage/actionSetCategories', jsondata)
         // console.log(getCategories.value.categories)
+
+        //set default categories
+        var sectionCategories = []
+        for (var c in jsondata.categories)
+        {
+          if (jsondata.categories[c].section == defaultSectionTitle)
+          {
+            // console.log(jsondata.categories[c])
+            sectionCategories.push(jsondata.categories[c])
+          }
+        }
+        store.dispatch('storage/actionSetSelectedSectionCategories', sectionCategories)
+
       })
     }
 
@@ -59,11 +113,24 @@ export default {
       await fetch(url) //(url, {method: 'get'})
       .then((response) => response.json()) //convert response to json object
       .then(jsondata => {
-        console.log(jsondata)
+        // console.log(jsondata.data)
 
         //vuex
         store.dispatch('storage/actionSetData', jsondata)
         // console.log(getCategories.value.categories)
+
+        //set default data
+        var sectionData = []
+        for (var c in jsondata.data)
+        {
+          if(jsondata.data[c].section == defaultSectionTitle)
+          {
+            // console.log(jsondata.data[c])
+            sectionData.push(jsondata.data[c])
+          }
+        }
+        store.dispatch('storage/actionSetSelectedSectionData', sectionData)
+        
       })
     }
 
@@ -103,10 +170,14 @@ export default {
         store.dispatch('storage/actionSetSelectedSectionData', sectionData)
     }
 
+    // function loadDefaultSection() {
+
+    // }
+
     //onload
-    fetchSections()
-    fetchCategories()
-    fetchData()
+    // fetchSections()
+    // fetchCategories()
+    // fetchData()
 
     return {
       //variables

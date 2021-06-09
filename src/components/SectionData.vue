@@ -5,7 +5,7 @@
       <!-- <h1 id="arrowScrollLeft" class="arrowScroll" v-on:click="scrollCategoriesToLeft()">❮</h1> -->
 
       <div v-if="SelectedSectionCategories" id="categories">
-        <h1 v-for="category in SelectedSectionCategories.sort((a, b) => {return a.pos - b.pos})" v-bind:key="category.key" v-bind:id="'category-' + category.pos" v-on:click="loadCategory(category, SelectedSectionData, category.pos)" class="category">{{category.title}}</h1>
+        <h1 class="category" v-for="category in SelectedSectionCategories.sort((a, b) => {return a.pos - b.pos})" v-bind:key="category.key" v-bind:id="'category-' + category.pos" v-on:click="loadCategory(category, SelectedSectionData, category.pos)">{{category.title}}</h1>
       </div>
 
       <!-- <h1 id="arrowScrollRight" class="arrowScroll" v-on:click="scrollCategoriesToRight()">❯</h1> -->
@@ -79,7 +79,7 @@
 <script>
 import {useStore} from 'vuex'
 import { useRouter, useRoute } from 'vue-router' //instead of this.$route
-import {computed} from 'vue'
+import {computed, onMounted, onUpdated} from 'vue'
 
 export default {
   setup() {
@@ -89,7 +89,23 @@ export default {
     const SelectedSectionCategories = computed(() => { return store.getters['storage/selectedSectionCategories']})
     const SelectedSectionData = computed(() => { return store.getters['storage/selectedSectionData']})
     const SelectedSectionCategoryData = computed(() => { return store.getters['storage/selectedSectionCategoryData']})
-
+        
+    //lifecycle hooks
+    onMounted(() => {
+        console.log("sectionData mounted")
+        // var t = computed(() => {return store.getters['storage/selectedSectionCategories']})
+        // console.log(t[0])
+        // var t = document.getElementById("section#1")
+        // console.log(t)
+    })
+    
+    onUpdated(() => {
+        // console.log("sections updated")
+        // var t = document.getElementById("category-1")
+        // console.log(t)
+        // t.click()
+    })
+    
     //variables
     var imagePos = 1
 
@@ -184,7 +200,7 @@ export default {
 
       }
     }
-
+    
     return {
       //variables
       SelectedSectionCategoryData,
