@@ -18,15 +18,18 @@ import {computed, onMounted, onUpdated} from 'vue'
 
 export default {
   setup() {
+    //variables
+    var defaultSectionTitle = "defaultSectionTitle"
+    var defaultSectionNumber = 1
+
     //vuex
     const store = useStore()
     const getSections = computed(() => { return store.getters['storage/sections']})
     const getCategories = computed(() => { return store.getters['storage/categories']})
     const getData = computed(() => { return store.getters['storage/data']})
 
-    //variables
-    var defaultSectionTitle = "defaultSectionTitle"
-    var defaultSectionNumber = 1
+    //router
+    let sectionSpecified = useRouter().currentRoute.value.params.sectionId
             
     //lifecycle hooks
     onMounted(() => {
@@ -66,14 +69,63 @@ export default {
         store.dispatch('storage/actionSetSections', jsondata)
         // console.log(getSections.value.sections)
 
-        //set default section
-        for (var c in jsondata.sections) 
+        //set specified section
+        if (sectionSpecified != null)
         {
-          if (jsondata.sections[c].pos == defaultSectionNumber)
+          //check if section id is specified by number
+          for (var o = 0; o < 10; o++)
           {
-            defaultSectionTitle = jsondata.sections[c].title
-            // console.log(jsondata.sections[c].pos)
-            store.dispatch('storage/actionSetSelectedSection', jsondata.sections[c])
+            if (sectionSpecified[0] == o)
+            {
+              sectionSpecified = parseInt(sectionSpecified)
+            }
+          }
+
+          //section specified by title
+          if (typeof(sectionSpecified) == "string")
+          {
+            // console.log("section specified by title")
+
+            for (var c in jsondata.sections) 
+            {
+              if (jsondata.sections[c].title == sectionSpecified)
+              {
+                defaultSectionTitle = jsondata.sections[c].title
+                // console.log(jsondata.sections[c].pos)
+                store.dispatch('storage/actionSetSelectedSection', jsondata.sections[c])
+              }
+            }
+          }
+
+          //section specified by id
+          if (typeof(sectionSpecified) == "number")
+          {
+            // console.log("section specified by id")
+            
+            for (var c in jsondata.sections) 
+            {
+              if (jsondata.sections[c].pos == sectionSpecified)
+              {
+                defaultSectionTitle = jsondata.sections[c].title
+                // console.log(jsondata.sections[c].pos)
+                store.dispatch('storage/actionSetSelectedSection', jsondata.sections[c])
+              }
+            }
+          }
+
+        }
+        
+        //set default section
+        else
+        {
+          for (var c in jsondata.sections)
+          {
+            if (jsondata.sections[c].pos == defaultSectionNumber)
+            {
+              defaultSectionTitle = jsondata.sections[c].title
+              // console.log(jsondata.sections[c].pos)
+              store.dispatch('storage/actionSetSelectedSection', jsondata.sections[c])
+            }
           }
         }
 
