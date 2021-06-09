@@ -5,10 +5,32 @@
       <!-- <h1 id="arrowScrollLeft" class="arrowScroll" v-on:click="scrollCategoriesToLeft()">❮</h1> -->
 
       <div v-if="SelectedSectionCategories" id="categories">
-        <h1 class="category" v-for="category in SelectedSectionCategories.sort((a, b) => {return a.pos - b.pos})" v-bind:key="category.key" v-bind:id="'category-' + category.pos" v-on:click="loadCategory(category, SelectedSectionData, category.pos)">{{category.title}}</h1>
+        <span v-for="category in SelectedSectionCategories.sort((a, b) => {return a.pos - b.pos})" v-bind:key="category.key" v-bind:id="'category-' + category.pos">
+          <h1 class="category" v-if="category.title == 'Index Tree'">{{category.title}}</h1>
+          <h1 class="category" v-if="category.title != 'Index Tree'" v-on:click="loadCategory(category, SelectedSectionData, category.pos)">{{category.title}}</h1>
+        </span>
       </div>
 
       <!-- <h1 id="arrowScrollRight" class="arrowScroll" v-on:click="scrollCategoriesToRight()">❯</h1> -->
+    </div>
+
+    
+    <!-- ### index tree ### -->
+    <div v-if="Sections && Categories">
+      <div v-if="SelectedSection.title == 'index'">
+        <div v-for="section in Sections.sections.sort((a, b) => {return a.pos - b.pos})" v-bind:key="section.id">
+          <div v-if="section.title != 'index'">
+            <br />
+            <router-link class="indexSection" v-bind:to="'/' + section.title" v-on:click="loadSection(section.title, Sections, Categories, Data)">{{section.title}}</router-link>
+            <!-- <p class="indexSection" v-bind:to="'/' + section.title" v-on:click="loadSection(section.title, Sections, Categories, Data)">{{section.title}}</p> -->
+            <!-- <router-link v-bind:to="section.title"><b>{{section.title}}</b></router-link> -->
+            <!-- window.history.pushState(nextState, nextTitle, nextURL); -->
+            <div v-for="category in Categories.categories.sort((a, b) => {return a.pos - b.pos})" v-bind:key="category.id">
+              <p class="indexCategory" v-if="category.section == section.title">{{category.title}}</p>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- ### data ### -->
@@ -85,10 +107,15 @@ export default {
   setup() {
     //vuex
     const store = useStore()
+
     const SelectedSection = computed(() => { return store.getters['storage/selectedSection']})
     const SelectedSectionCategories = computed(() => { return store.getters['storage/selectedSectionCategories']})
     const SelectedSectionData = computed(() => { return store.getters['storage/selectedSectionData']})
     const SelectedSectionCategoryData = computed(() => { return store.getters['storage/selectedSectionCategoryData']})
+
+    const Sections = computed(() => { return store.getters['storage/sections']})
+    const Categories = computed(() => { return store.getters['storage/categories']})
+    const Data = computed(() => { return store.getters['storage/data']})
         
     //lifecycle hooks
     onMounted(() => {
@@ -201,6 +228,56 @@ export default {
       }
     }
     
+    function loadSection(title, sections, categories, data)
+    {
+        var section = null 
+
+        //filter sections for selected section
+        for (var c in sections.sections)
+        {
+          if (title == sections.sections[c].title)
+          {
+            section = sections.sections[c]
+          }
+        }
+
+        //filter categories for selected section
+        var sectionCategories = []
+        for (var c in categories.categories)
+        {
+          if(categories.categories[c].section == section.title)
+          {
+            sectionCategories.push(categories.categories[c])
+          }
+
+          // console.log(section.title)
+          // console.log(categories.categories[c].section)
+          // console.log(data)
+        }
+
+        //filter data for selected section
+        var sectionData = []
+        for (var d in data.data)
+        {
+          if(data.data[d].section == section.title)
+          {
+            sectionData.push(data.data[d])
+          }
+
+          // console.log(section.title)
+          // console.log(categories.categories[c].section)
+          // console.log(data.data[d])
+        }
+
+        //vuex
+        store.dispatch('storage/actionSetSelectedSection', section)
+        store.dispatch('storage/actionSetSelectedSectionCategories', sectionCategories)
+        store.dispatch('storage/actionSetSelectedSectionData', sectionData)
+
+        //set history test 
+        // window.history.pushState(null, null, "/" + title)
+    }
+    
     return {
       //variables
       SelectedSectionCategoryData,
@@ -209,11 +286,15 @@ export default {
       SelectedSection,
       SelectedSectionCategories,
       SelectedSectionData,
+      Sections,
+      Categories,
+      Data,
 
       //functions
       loadCategory,
       showNextGalleryImage,
-      showPreviousGalleryImage
+      showPreviousGalleryImage,
+      loadSection
     }   
   }
 }
@@ -378,5 +459,21 @@ export default {
   padding: 0px;
   width: 100%;
   height: 100%;
+}
+
+.indexSection, .indexCategory {
+  margin: 0px;
+  padding: 0px;
+}
+
+.indexSection {
+  margin-top: 10px;
+  font-weight: bold;
+  color: black;
+  text-decoration: none;
+}
+
+.indexCategory {
+
 }
 </style>

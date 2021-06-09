@@ -20,7 +20,7 @@ export default {
   setup() {
     //variables
     var defaultSectionTitle = "defaultSectionTitle"
-    var defaultSectionNumber = 1
+    var defaultSectionNumber = 0 //0 = index
 
     //vuex
     const store = useStore()
