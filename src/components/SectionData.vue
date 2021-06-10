@@ -5,9 +5,9 @@
       <!-- <h1 id="arrowScrollLeft" class="arrowScroll" v-on:click="scrollCategoriesToLeft()">❮</h1> -->
 
       <div v-if="SelectedSectionCategories" id="categories">
-        <span v-for="category in SelectedSectionCategories.sort((a, b) => {return a.pos - b.pos})" v-bind:key="category.key" v-bind:id="'category-' + category.pos">
-          <h1 class="category" v-if="category.title == 'Index Tree'">{{category.title}}</h1>
-          <h1 class="category" v-if="category.title != 'Index Tree'" v-on:click="loadCategory(category, SelectedSectionData, category.pos)">{{category.title}}</h1>
+        <span v-for="category in SelectedSectionCategories.sort((a, b) => {return a.pos - b.pos})" v-bind:key="category.key">
+          <h1 v-bind:id="'category-' + category.pos" class="category" v-if="category.title == 'Index Tree'">{{category.title}}</h1>
+          <h1 v-bind:id="'category-' + category.pos" class="category" v-if="category.title != 'Index Tree'" v-on:click="loadCategory(category, SelectedSectionData, category.pos)">{{category.title}}</h1>
         </span>
       </div>
 
@@ -21,7 +21,7 @@
         <div v-for="section in Sections.sections.sort((a, b) => {return a.pos - b.pos})" v-bind:key="section.id">
           <div v-if="section.title != 'index'">
             <br />
-            <router-link class="indexSection" v-bind:to="'/' + section.title" v-on:click="loadSection(section.title, Sections, Categories, Data)">{{section.title}}</router-link>
+            <router-link class="indexSection" v-bind:to="'/' + section.title" v-on:click="loadSectionFromIndex(section.title, Sections, Categories, Data, section.pos)">{{section.title}}</router-link>
             <!-- <p class="indexSection" v-bind:to="'/' + section.title" v-on:click="loadSection(section.title, Sections, Categories, Data)">{{section.title}}</p> -->
             <!-- <router-link v-bind:to="section.title"><b>{{section.title}}</b></router-link> -->
             <!-- window.history.pushState(nextState, nextTitle, nextURL); -->
@@ -35,56 +35,60 @@
 
     <!-- ### data ### -->
     <div v-if="SelectedSectionCategoryData" id="data">
-      
-      <!-- check if category has image gallery -->
-      <div id="image-gallery-wrapper" v-if="SelectedSectionCategoryData[0].galleryImages.length > 0">
-        
-        <!-- arrow previous gallery image -->
-        <h1 id="arrowPreviousGalleryImage" class="arrowsImageGallery" v-on:click="showPreviousGalleryImage()">❮</h1>
+   
+      <!-- check if section is not index page -->
+      <div v-if="SelectedSection.title != 'index'">
 
-        <!-- image gallery -->
-        <div id="image-gallery">
+        <!-- check if category has image gallery -->
+        <div id="image-gallery-wrapper" v-if="SelectedSectionCategoryData[0].galleryImages.length > 0">
+          
+          <!-- arrow previous gallery image -->
+          <h1 id="arrowPreviousGalleryImage" class="arrowsImageGallery" v-on:click="showPreviousGalleryImage()">❮</h1>
 
-          <!-- image -->
-          <div class="galleryImageDiv" v-for="(image, itemObjKey) in SelectedSectionCategoryData[0].galleryImages.sort((a, b) => {return a.pos - b.pos})" v-bind:key="image.id">
-            <img v-if="(itemObjKey + 1) == 1" v-bind:id="'galleryImage#' + (itemObjKey + 1)" class="galleryImage" v-bind:src="image.image" v-bind:title="'image' + ' ' + (itemObjKey + 1) + ' of ' + SelectedSectionCategoryData[0].galleryImages.length" /> <!--  + ' pos ' + image.pos -->
-            <img v-if="(itemObjKey + 1) != 1" v-bind:id="'galleryImage#' + (itemObjKey + 1)" class="galleryImage galleryImageHidden" v-bind:src="image.image" v-bind:title="'image' + ' ' + (itemObjKey + 1) + ' of ' + SelectedSectionCategoryData[0].galleryImages.length" /> <!--  + ' pos ' + image.pos -->
+          <!-- image gallery -->
+          <div id="image-gallery">
+
+            <!-- image -->
+            <div class="galleryImageDiv" v-for="(image, itemObjKey) in SelectedSectionCategoryData[0].galleryImages.sort((a, b) => {return a.pos - b.pos})" v-bind:key="image.id">
+              <img v-if="(itemObjKey + 1) == 1" v-bind:id="'galleryImage#' + (itemObjKey + 1)" class="galleryImage" v-bind:src="image.image" v-bind:title="'image' + ' ' + (itemObjKey + 1) + ' of ' + SelectedSectionCategoryData[0].galleryImages.length" /> <!--  + ' pos ' + image.pos -->
+              <img v-if="(itemObjKey + 1) != 1" v-bind:id="'galleryImage#' + (itemObjKey + 1)" class="galleryImage galleryImageHidden" v-bind:src="image.image" v-bind:title="'image' + ' ' + (itemObjKey + 1) + ' of ' + SelectedSectionCategoryData[0].galleryImages.length" /> <!--  + ' pos ' + image.pos -->
+            </div>
+
+            <!-- <b>image description</b> -->
           </div>
 
-          <!-- <b>image description</b> -->
+          <!-- arrow next gallery image -->
+          <h1 id="arrowNextGalleryImage" class="arrowsImageGallery" v-on:click="showNextGalleryImage()">❯</h1>
         </div>
 
-        <!-- arrow next gallery image -->
-        <h1 id="arrowNextGalleryImage" class="arrowsImageGallery" v-on:click="showNextGalleryImage()">❯</h1>
-      </div>
+        <!-- text data -->
+        <div class="data-div" v-for="data in SelectedSectionCategoryData[0].obj.sort((a, b) => {return a.pos - b.pos})" v-bind:key="data.id">
+            <!-- print data obj -->
+            <!-- {{data}} -->
 
-      <!-- text data -->
-      <div class="data-div" v-for="data in SelectedSectionCategoryData[0].obj.sort((a, b) => {return a.pos - b.pos})" v-bind:key="data.id">
-          <!-- print data obj -->
-          <!-- {{data}} -->
+            <!-- filter hidden data -->          
+            <div v-if="data.hidden == 'False'">
 
-          <!-- filter hidden data -->          
-          <div v-if="data.hidden == 'False'">
+              <!-- single line text -->
+              <div v-if="data.multiline == 'False'">              
+                <div v-for="o in Object.entries(data)" v-bind:key="o.id">
+                  <p class="data-text data-text-singleline" v-if="!o.toString().includes('pos') && !o.toString().includes('hidden') && !o.toString().includes('multiline')">
+                    <b>{{o.toString().split(",")[0].substring(0, 1).toUpperCase()}}{{o.toString().split(",")[0].substring(1, o.toString().length).toLowerCase()}}</b> = {{o.toString().split(",")[1]}} <!-- messy string -->
+                  </p>
+                </div>
+              </div>
 
-            <!-- single line text -->
-            <div v-if="data.multiline == 'False'">              
-              <div v-for="o in Object.entries(data)" v-bind:key="o.id">
-                <p class="data-text data-text-singleline" v-if="!o.toString().includes('pos') && !o.toString().includes('hidden') && !o.toString().includes('multiline')">
-                  <b>{{o.toString().split(",")[0].substring(0, 1).toUpperCase()}}{{o.toString().split(",")[0].substring(1, o.toString().length).toLowerCase()}}</b> = {{o.toString().split(",")[1]}} <!-- messy string -->
-                </p>
+              <!-- multiline text -->
+              <div v-if="data.multiline == 'True'">
+                <div v-for="o in Object.entries(data)" v-bind:key="o.id">
+                  <p class="data-text data-text-multiline" v-if="!o.toString().includes('pos') && !o.toString().includes('hidden') && !o.toString().includes('multiline')">
+                    <b>{{o.toString().split(",")[0].substring(0, 1).toUpperCase()}}{{o.toString().split(",")[0].substring(1, o.toString().length).toLowerCase()}}</b><br />
+                    {{o.toString().split(",")[1]}}<br /> <!-- messy string -->
+                  </p>
+                </div>
               </div>
             </div>
-
-            <!-- multiline text -->
-            <div v-if="data.multiline == 'True'">
-              <div v-for="o in Object.entries(data)" v-bind:key="o.id">
-                <p class="data-text data-text-multiline" v-if="!o.toString().includes('pos') && !o.toString().includes('hidden') && !o.toString().includes('multiline')">
-                  <b>{{o.toString().split(",")[0].substring(0, 1).toUpperCase()}}{{o.toString().split(",")[0].substring(1, o.toString().length).toLowerCase()}}</b><br />
-                  {{o.toString().split(",")[1]}}<br /> <!-- messy string -->
-                </p>
-              </div>
-            </div>
-          </div>
+        </div>
       </div>
     </div>
 
@@ -120,49 +124,16 @@ export default {
     //lifecycle hooks
     onMounted(() => {
         console.log("sectionData mounted")
-        // var t = computed(() => {return store.getters['storage/selectedSectionCategories']})
-        // console.log(t[0])
-        // var t = document.getElementById("section#1")
-        // console.log(t)
     })
     
     onUpdated(() => {
-        // console.log("sections updated")
-        // var t = document.getElementById("category-1")
-        // console.log(t)
-        // t.click()
+        // console.log("sectionData updated")
     })
     
     //variables
     var imagePos = 1
 
     //functions
-    function loadCategory(category, data, pos)
-    {
-        //filter data for selected category
-        var categoryData = []
-        for (var d in data)
-        {
-          if(data[d].category == category.title)
-          {
-            categoryData.push(data[d])
-          }
-
-          // console.log(categories.categories[c].section)
-          // console.log(section.title)
-          // console.log(data[d])
-        }
-
-        // console.log(pos)
-        // var categoryElement = document.getElementById("category-" + pos)
-        // var categoryElements = document.getElementsByClassName("category")
-        // categoryElement.style.color = "red"
-        // console.log(categoryElements)
-
-      //vuex
-      store.dispatch('storage/actionSetSelectedSectionCategoryData', categoryData)
-    }
-    
     function showNextGalleryImage() {
       var galleryImages = document.getElementsByClassName("galleryImage")
 
@@ -227,55 +198,130 @@ export default {
 
       }
     }
-    
-    function loadSection(title, sections, categories, data)
+
+    function loadCategory(category, data, pos)
     {
-        var section = null 
-
-        //filter sections for selected section
-        for (var c in sections.sections)
+      //filter data for selected category
+      var categoryData = []
+      for (var d in data)
+      {
+        if(data[d].category == category.title)
         {
-          if (title == sections.sections[c].title)
-          {
-            section = sections.sections[c]
-          }
+          categoryData.push(data[d])
         }
 
-        //filter categories for selected section
-        var sectionCategories = []
-        for (var c in categories.categories)
-        {
-          if(categories.categories[c].section == section.title)
-          {
-            sectionCategories.push(categories.categories[c])
-          }
+        // console.log(categories.categories[c].section)
+        // console.log(section.title)
+        // console.log(data[d])
+      }
 
-          // console.log(section.title)
-          // console.log(categories.categories[c].section)
-          // console.log(data)
+      //vuex
+      store.dispatch('storage/actionSetSelectedSectionCategoryData', categoryData)
+      // console.log(categoryData[0])
+
+      //update color of section buttons
+      for (var c = 1; c <= SelectedSectionCategories.value.length; c++)
+      {
+        var categoryButton = document.getElementById("category-" + c)
+        
+        if (c == pos)
+        {
+          categoryButton.style.textDecoration = "underline"
+        }
+        else
+        {
+          categoryButton.style.textDecoration = "none"
+        }
+      }
+    }
+    
+    function loadSectionFromIndex(title, sections, categories, data, pos)
+    {
+      var section = null
+
+      //filter sections for selected section
+      for (var c in sections.sections)
+      {
+        if (title == sections.sections[c].title)
+        {
+          section = sections.sections[c]
+        }
+      }
+
+      //filter categories for selected section
+      var sectionCategories = []
+      for (var c in categories.categories)
+      {
+        if(categories.categories[c].section == section.title)
+        {
+          sectionCategories.push(categories.categories[c])
         }
 
-        //filter data for selected section
-        var sectionData = []
-        for (var d in data.data)
-        {
-          if(data.data[d].section == section.title)
-          {
-            sectionData.push(data.data[d])
-          }
+        // console.log(section.title)
+        // console.log(categories.categories[c])
+        // console.log(data)
+      }
 
-          // console.log(section.title)
-          // console.log(categories.categories[c].section)
-          // console.log(data.data[d])
+      //filter data for selected section
+      var sectionData = []
+      for (var d in data.data)
+      {
+        if(data.data[d].section == section.title)
+        {
+          sectionData.push(data.data[d])
         }
 
-        //vuex
-        store.dispatch('storage/actionSetSelectedSection', section)
-        store.dispatch('storage/actionSetSelectedSectionCategories', sectionCategories)
-        store.dispatch('storage/actionSetSelectedSectionData', sectionData)
+        // console.log(section.title)
+        // console.log(categories.categories[c].section)
+        // console.log(data.data[d])
+      }
 
-        //set history test 
-        // window.history.pushState(null, null, "/" + title)
+      //filter data for selected section category data
+      var defaultCategoryTitle = "defaultCategoryTitle"
+      var defaultCategoryData = []
+
+      for (var c in sectionCategories)
+      {
+        if (sectionCategories[c].pos == "1")
+        {
+          defaultCategoryTitle = sectionCategories[c].title
+        }
+      }
+
+      for (var c in sectionData)
+      {
+        if (sectionData[c].category == defaultCategoryTitle)
+        {
+          defaultCategoryData.push(sectionData[c])
+        }
+      }
+
+      //vuex
+      store.dispatch('storage/actionSetSelectedSection', section)
+      store.dispatch('storage/actionSetSelectedSectionCategories', sectionCategories)
+      store.dispatch('storage/actionSetSelectedSectionData', sectionData)
+      if (section.title != "index")
+      {
+        store.dispatch('storage/actionSetSelectedSectionCategoryData', defaultCategoryData)
+      }
+
+      //set history test 
+      // window.history.pushState(null, null, "/" + title)
+
+      //update color of section buttons
+      for (var c = 0; c < sections.sections.length; c++)
+      {
+        var sectionButton = document.getElementById("section#" + c)
+        
+        if (c == pos)
+        {
+          sectionButton.style.border = "2px solid black"
+        }
+        else
+        {
+          sectionButton.style.border = "0px solid black"
+        }
+      }
     }
     
     return {
@@ -294,7 +340,7 @@ export default {
       loadCategory,
       showNextGalleryImage,
       showPreviousGalleryImage,
-      loadSection
+      loadSectionFromIndex
     }   
   }
 }
@@ -475,5 +521,9 @@ export default {
 
 .indexCategory {
 
+}
+
+#category-1 {
+  text-decoration: underline;
 }
 </style>

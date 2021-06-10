@@ -1,11 +1,14 @@
 <template>
   <div id="sections">
-    <!-- test -->
-    <p class="section">t</p>
-
     <!-- sections from api -->
     <div v-if="getSections">
-      <p v-for="section in getSections.sections.sort((a, b) => {return a.pos - b.pos})" v-bind:key="section.id" v-bind:id="'section#' + section.pos" v-on:click="loadSection(section, getCategories, getData)" class="section">{{section.pos}}</p>      
+      <p v-for="section in getSections.sections.sort((a, b) => {return a.pos - b.pos})" v-bind:key="section.id" v-bind:id="'section#' + section.pos" v-on:click="loadSection(section, getCategories, getData, section.pos)" class="section">
+        <!-- index -->
+        <b v-if="section.pos == '0'">i</b>
+
+        <!-- specific categories -->
+        <span v-else>{{section.pos}}</span>
+      </p>      
     </div>
 
   </div>
@@ -21,6 +24,7 @@ export default {
     //variables
     var defaultSectionTitle = "defaultSectionTitle"
     var defaultSectionNumber = 0 //0 = index
+    var defaultCategory = "defaultCategory"
 
     //vuex
     const store = useStore()
@@ -34,32 +38,22 @@ export default {
     //lifecycle hooks
     onMounted(() => {
         console.log("sections mounted")
-        // var t = document.getElementById("section#1")
-        // console.log(t)
-        // console.log("setSections")
-        // var t = computed(() => { return store.getters['storage/sections']})
-        // console.log(t.value.sections[0])
-        
+
         //fetch all data
         fetchSections()
         .then(() => fetchCategories())
         .then(() => fetchData())
-
-        // var x = fetchSections().then(() => {console.log(asdf.sections[0])})
-        // var y = fetchCategories()
-        // var z = fetchData()
     })
     
     onUpdated(() => {
         // console.log("sections updated")
-        // var t = document.getElementById("category-1")
-        // console.log(t)
-        // t.click()
     })
 
     //functions
     async function fetchSections() {
+      
       let url = "https://wq5can.deta.dev/sections"
+      
       await fetch(url) //(url, {method: 'get'})
       .then((response) => response.json()) //convert response to json object
       .then(jsondata => {
@@ -150,11 +144,19 @@ export default {
         {
           if (jsondata.categories[c].section == defaultSectionTitle)
           {
-            // console.log(jsondata.categories[c])
             sectionCategories.push(jsondata.categories[c])
           }
         }
         store.dispatch('storage/actionSetSelectedSectionCategories', sectionCategories)
+        
+        //set default category
+        for (var c in sectionCategories)
+        {
+          if (sectionCategories[c].pos == "1")
+          {
+            defaultCategory = sectionCategories[c].title
+          }
+        }
 
       })
     }
@@ -169,25 +171,41 @@ export default {
 
         //vuex
         store.dispatch('storage/actionSetData', jsondata)
-        // console.log(getCategories.value.categories)
 
-        //set default data
+        //set default selected section data
         var sectionData = []
         for (var c in jsondata.data)
         {
           if(jsondata.data[c].section == defaultSectionTitle)
           {
-            // console.log(jsondata.data[c])
             sectionData.push(jsondata.data[c])
           }
         }
         store.dispatch('storage/actionSetSelectedSectionData', sectionData)
         
+        //set default selected section category data
+        for (var c in sectionData) 
+        {
+          if (sectionData[c].category == defaultCategory)
+          {
+            if (sectionData[c].title != "index")
+            {
+              var dataInArray = []
+              dataInArray.push(sectionData[c])
+              store.dispatch('storage/actionSetSelectedSectionCategoryData', dataInArray)
+            }
+          }        
+        }
+        
       })
     }
 
-    function loadSection(section, categories, data)
-    {
+    function loadSection(section, categories, data, pos)
+    {   
+        //variables
+        var categoryTitle = null
+        var categoryData = []
+
         //filter categories for selected section
         var sectionCategories = []
         for (var c in categories.categories)
@@ -216,20 +234,46 @@ export default {
           // console.log(data.data[d])
         }
 
+        //filter data for selected section category data
+        for (var c in sectionData) 
+        {
+          if (sectionCategories[c].pos == 1)
+          {
+            categoryTitle = sectionCategories[c].title
+          }
+
+          if (sectionData[c].category == categoryTitle)
+          {
+            categoryData.push(sectionData[c])
+          }
+
+          // console.log(sectionData[c])
+        }
+
         //vuex
         store.dispatch('storage/actionSetSelectedSection', section)
         store.dispatch('storage/actionSetSelectedSectionCategories', sectionCategories)
-        store.dispatch('storage/actionSetSelectedSectionData', sectionData)
+        if (section.title != "index")
+        {
+          store.dispatch('storage/actionSetSelectedSectionData', sectionData)
+          store.dispatch('storage/actionSetSelectedSectionCategoryData', categoryData)
+        }
+
+        //update color of section buttons
+        for (var c = 0; c < getSections.value.sections.length; c++)
+        {
+          var sectionButton = document.getElementById("section#" + c)
+
+          if (c == pos)
+          {
+            sectionButton.style.border = "2px solid black"
+          }
+          else
+          {
+            sectionButton.style.border = "0px solid black"
+          }
+        }
     }
-
-    // function loadDefaultSection() {
-
-    // }
-
-    //onload
-    // fetchSections()
-    // fetchCategories()
-    // fetchData()
 
     return {
       //variables
