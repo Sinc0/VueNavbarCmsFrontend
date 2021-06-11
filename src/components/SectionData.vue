@@ -26,7 +26,7 @@
             <!-- <router-link v-bind:to="section.title"><b>{{section.title}}</b></router-link> -->
             <!-- window.history.pushState(nextState, nextTitle, nextURL); -->
             <div v-for="category in Categories.categories.sort((a, b) => {return a.pos - b.pos})" v-bind:key="category.id">
-              <p class="indexCategory" v-if="category.section == section.title">{{category.title}}</p>
+              <router-link class="indexCategory" v-if="category.section == section.title" v-bind:to="'/'" v-on:click="loadCategoryFromIndex(section, Sections, Categories, Data, section.pos, category)">{{category.title}}</router-link>
             </div>
           </div>
         </div>
@@ -127,7 +127,55 @@ export default {
     })
     
     onUpdated(() => {
-        // console.log("sectionData updated")
+        console.log("sectionData updated")
+
+        //update color of section buttons
+        var sections = Sections.value.sections
+        var selectedSectionPos = SelectedSection.value.pos
+        
+        for (var c in sections)
+        {
+          var sectionButton = document.getElementById("section#" + c)
+          var sectionPos = sectionButton.id.substr(-1)
+          
+          if (sectionPos== selectedSectionPos)
+          {
+            sectionButton.style.border = "2px solid black"
+          }
+          else
+          {
+            sectionButton.style.border = "0px solid black"
+          }
+        }
+
+        //update color of category buttons
+        var selectedCategoryTitle = null
+        var selectedSectionCategories = SelectedSectionCategories.value
+        var selectedCategoryData = SelectedSectionCategoryData.value
+
+        for (var c in selectedCategoryData)
+        {
+          selectedCategoryTitle = selectedCategoryData[c].category
+        }
+        // console.log("selected category title: " + selectedCategoryTitle)
+
+        
+        for (var c in selectedSectionCategories)
+        {
+          c++ //category ids start 1
+          var categoryButton = document.getElementById("category-" + c)
+          // console.log(categoryButton.innerText)
+
+          if (categoryButton.innerText == selectedCategoryTitle)
+          {
+            categoryButton.style.textDecoration = "underline"
+          }
+          else
+          {
+            categoryButton.style.textDecoration = "none"
+          }
+        }
+
     })
     
     //variables
@@ -219,20 +267,20 @@ export default {
       store.dispatch('storage/actionSetSelectedSectionCategoryData', categoryData)
       // console.log(categoryData[0])
 
-      //update color of section buttons
-      for (var c = 1; c <= SelectedSectionCategories.value.length; c++)
-      {
-        var categoryButton = document.getElementById("category-" + c)
+      //update color of category buttons
+      // for (var c = 1; c <= SelectedSectionCategories.value.length; c++)
+      // {
+      //   var categoryButton = document.getElementById("category-" + c)
         
-        if (c == pos)
-        {
-          categoryButton.style.textDecoration = "underline"
-        }
-        else
-        {
-          categoryButton.style.textDecoration = "none"
-        }
-      }
+      //   if (c == pos)
+      //   {
+      //     categoryButton.style.textDecoration = "underline"
+      //   }
+      //   else
+      //   {
+      //     categoryButton.style.textDecoration = "none"
+      //   }
+      // }
     }
     
     function loadSectionFromIndex(title, sections, categories, data, pos)
@@ -309,19 +357,108 @@ export default {
       // window.history.pushState(null, null, "/" + title)
 
       //update color of section buttons
-      for (var c = 0; c < sections.sections.length; c++)
-      {
-        var sectionButton = document.getElementById("section#" + c)
+      // for (var c = 0; c < sections.sections.length; c++)
+      // {
+      //   var sectionButton = document.getElementById("section#" + c)
         
-        if (c == pos)
+      //   if (c == pos)
+      //   {
+      //     sectionButton.style.border = "2px solid black"
+      //   }
+      //   else
+      //   {
+      //     sectionButton.style.border = "0px solid black"
+      //   }
+      // }
+    }
+
+    function loadCategoryFromIndex(title, sections, categories, data, pos, category)
+    {
+      console.log("loadCategoryFromIndex")
+
+      var section = title
+      var category = category
+      // console.log(section)
+      // console.log(category)
+
+      // //filter sections for selected section
+      // for (var c in sections.sections)
+      // {
+      //   if (title == sections.sections[c].title)
+      //   {
+      //     section = sections.sections[c]
+      //   }
+      // }
+
+      //filter categories for selected section
+      var sectionCategories = []
+      for (var c in categories.categories)
+      {
+        if(categories.categories[c].section == section.title)
         {
-          sectionButton.style.border = "2px solid black"
+          sectionCategories.push(categories.categories[c])
         }
-        else
+
+        // console.log(section.title)
+        // console.log(categories.categories[c])
+        // console.log(data)
+      }
+      // console.log(sectionCategories)
+
+      //filter data for selected section
+      var sectionData = []
+      for (var d in data.data)
+      {
+        if(data.data[d].section == section.title)
         {
-          sectionButton.style.border = "0px solid black"
+          sectionData.push(data.data[d])
+        }
+
+        // console.log(section.title)
+        // console.log(categories.categories[c].section)
+        // console.log(data.data[d])
+      }
+      // console.log(sectionData)
+
+      //filter data for selected section category data
+      var defaultCategoryTitle = "defaultCategoryTitle"
+      var defaultCategoryData = []
+
+      for (var c in sectionData)
+      {
+        if (sectionData[c].category == category.title)
+        {
+          defaultCategoryData.push(sectionData[c])
         }
       }
+
+      //vuex
+      store.dispatch('storage/actionSetSelectedSection', section)
+      store.dispatch('storage/actionSetSelectedSectionCategories', sectionCategories)
+      store.dispatch('storage/actionSetSelectedSectionData', sectionData)
+      if (section.title != "index")
+      {
+        store.dispatch('storage/actionSetSelectedSectionCategoryData', defaultCategoryData)
+      }
+
+      //set history test 
+      // window.history.pushState(null, null, "/" + title)
+
+      //update color of section buttons
+      // for (var c = 0; c < sections.sections.length; c++)
+      // {
+      //   var sectionButton = document.getElementById("section#" + c)
+        
+      //   if (c == pos)
+      //   {
+      //     sectionButton.style.border = "2px solid black"
+      //   }
+      //   else
+      //   {
+      //     sectionButton.style.border = "0px solid black"
+      //   }
+      // }
+
     }
     
     return {
@@ -340,7 +477,8 @@ export default {
       loadCategory,
       showNextGalleryImage,
       showPreviousGalleryImage,
-      loadSectionFromIndex
+      loadSectionFromIndex,
+      loadCategoryFromIndex
     }   
   }
 }

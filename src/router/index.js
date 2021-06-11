@@ -26,6 +26,13 @@ const routes = [
     path: '/:sectionId',
     name: 'specifiedWithSectionId',
     component: Home,
+  },
+  
+  //section id and section category
+  {
+    path: '/:sectionId/:sectionCategory',
+    name: 'specifiedWithSectionIdAndSectionCategory',
+    component: Home,
   }
 ]
 
