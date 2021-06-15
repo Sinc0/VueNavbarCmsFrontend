@@ -19,16 +19,36 @@
     <div v-if="Sections && Categories">
       <div v-if="SelectedSection.title == 'index'">
         <div v-for="section in Sections.sections.sort((a, b) => {return a.pos - b.pos})" v-bind:key="section.id">
-          <div v-if="section.title != 'index'">
-            <br />
-            <router-link class="indexSection" v-bind:to="'/' + section.title" v-on:click="loadSectionFromIndex(section.title, Sections, Categories, Data, section.pos)">{{section.title}}</router-link>
+          <div v-if="section.title != 'index' && section.title != 'search'">
+            <router-link class="indexSection" v-bind:to="'/' + section.title" v-on:click="loadSectionFromIndex(section.title, section.pos)">{{section.title}}</router-link>
             <!-- <p class="indexSection" v-bind:to="'/' + section.title" v-on:click="loadSection(section.title, Sections, Categories, Data)">{{section.title}}</p> -->
             <!-- <router-link v-bind:to="section.title"><b>{{section.title}}</b></router-link> -->
             <!-- window.history.pushState(nextState, nextTitle, nextURL); -->
             <div v-for="category in Categories.categories.sort((a, b) => {return a.pos - b.pos})" v-bind:key="category.id">
-              <router-link class="indexCategory" v-if="category.section == section.title" v-bind:to="'/'" v-on:click="loadCategoryFromIndex(section, Sections, Categories, Data, section.pos, category)">{{category.title}}</router-link>
+              <router-link class="indexCategory" v-if="category.section == section.title" v-bind:to="'/'" v-on:click="loadCategoryFromIndex(section.title, section.pos, category.title)">{{category.title}}</router-link>
             </div>
           </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ### search box ### -->
+    <div v-if="Sections && Categories && Data">
+      <div id="searchBox" v-if="SelectedSection.title == 'search'">
+        <!-- search bar -->
+        <form v-on:submit.prevent="onSubmit">
+          <input id="searchBarInput" placeholder="Enter search text..." /> <!-- v-on:keyup.enter="loadSearch($event)" -->
+          <button id="searchBarSubmitButton" v-on:click="loadSearch($event)">Enter</button>
+        </form>
+        
+        <!-- search hits -->
+        <p v-if="SearchResults" id="searchHitCount">{{SearchResults.length}} results found</p>
+        <div class="searchHit" v-for="(h, itemObjKey) in SearchResults" v-bind:key="h.id" v-bind:id="'searchHit' + (itemObjKey + 1)">
+          <!-- {{h}} -->
+          <div v-if="h.searchMatchType == 'section'" v-on:click="loadSectionFromIndex(h.section)">{{itemObjKey+1}}: <b>section</b> {{h.section}}</div>
+          <div v-if="h.searchMatchType == 'category'" v-on:click="loadCategoryFromIndex(h.section, null, h.category)">{{itemObjKey+1}}: <b>category</b> in {{h.section}} = <b>{{h.value}}</b></div>
+          <div v-if="h.searchMatchType == 'data'" v-on:click="loadCategoryFromIndex(h.section, null, h.category, h.key)">{{itemObjKey+1}}: <b>data</b> in {{h.section}} ➞ {{h.category}} ➞ {{h.key.substr(0, 1).toUpperCase() + h.key.substr(1, h.key.length)}} = <b>{{h.value}}</b></div>
+          <div v-if="h.searchMatchType == 'image description'" v-on:click="loadCategoryFromIndex(h.section, null, h.category)">{{itemObjKey+1}}: <b>image</b> {{h.key}} in {{h.section}} ➞ {{h.category}} = <b>{{h.value}}</b></div>
         </div>
       </div>
     </div>
@@ -36,8 +56,8 @@
     <!-- ### data ### -->
     <div v-if="SelectedSectionCategoryData" id="data">
    
-      <!-- check if section is not index page -->
-      <div v-if="SelectedSection.title != 'index'">
+      <!-- check if section is not index or search -->
+      <div v-if="SelectedSection.title != 'index' && SelectedSection.title != 'search'">
 
         <!-- check if category has image gallery -->
         <div id="image-gallery-wrapper" v-if="SelectedSectionCategoryData[0].galleryImages.length > 0">
@@ -50,8 +70,8 @@
 
             <!-- image -->
             <div class="galleryImageDiv" v-for="(image, itemObjKey) in SelectedSectionCategoryData[0].galleryImages.sort((a, b) => {return a.pos - b.pos})" v-bind:key="image.id">
-              <img v-if="(itemObjKey + 1) == 1" v-bind:id="'galleryImage#' + (itemObjKey + 1)" class="galleryImage" v-bind:src="image.image" v-bind:title="'image' + ' ' + (itemObjKey + 1) + ' of ' + SelectedSectionCategoryData[0].galleryImages.length" /> <!--  + ' pos ' + image.pos -->
-              <img v-if="(itemObjKey + 1) != 1" v-bind:id="'galleryImage#' + (itemObjKey + 1)" class="galleryImage galleryImageHidden" v-bind:src="image.image" v-bind:title="'image' + ' ' + (itemObjKey + 1) + ' of ' + SelectedSectionCategoryData[0].galleryImages.length" /> <!--  + ' pos ' + image.pos -->
+              <img v-if="(itemObjKey + 1) == 1" v-bind:id="'galleryImage#' + (itemObjKey + 1)" class="galleryImage" v-bind:src="image.image" v-bind:title="image.description" /> <!--  + ' pos ' + image.pos --> <!-- 'image' + ' ' + (itemObjKey + 1) + ' of ' + SelectedSectionCategoryData[0].galleryImages.length -->
+              <img v-if="(itemObjKey + 1) != 1" v-bind:id="'galleryImage#' + (itemObjKey + 1)" class="galleryImage galleryImageHidden" v-bind:src="image.image" v-bind:title="image.description" />
             </div>
 
             <!-- <b>image description</b> -->
@@ -70,9 +90,9 @@
             <div v-if="data.hidden == 'False'">
 
               <!-- single line text -->
-              <div v-if="data.multiline == 'False'">              
+              <div v-if="data.multiline == 'False'">
                 <div v-for="o in Object.entries(data)" v-bind:key="o.id">
-                  <p class="data-text data-text-singleline" v-if="!o.toString().includes('pos') && !o.toString().includes('hidden') && !o.toString().includes('multiline')">
+                  <p class="data-text data-text-singleline" v-bind:id="'data-' + o[0]" v-if="!o.toString().includes('pos') && !o.toString().includes('hidden') && !o.toString().includes('multiline')">
                     <b>{{o.toString().split(",")[0].substring(0, 1).toUpperCase()}}{{o.toString().split(",")[0].substring(1, o.toString().length).toLowerCase()}}</b> = {{o.toString().split(",")[1]}} <!-- messy string -->
                   </p>
                 </div>
@@ -81,9 +101,8 @@
               <!-- multiline text -->
               <div v-if="data.multiline == 'True'">
                 <div v-for="o in Object.entries(data)" v-bind:key="o.id">
-                  <p class="data-text data-text-multiline" v-if="!o.toString().includes('pos') && !o.toString().includes('hidden') && !o.toString().includes('multiline')">
-                    <b>{{o.toString().split(",")[0].substring(0, 1).toUpperCase()}}{{o.toString().split(",")[0].substring(1, o.toString().length).toLowerCase()}}</b><br />
-                    {{o.toString().split(",")[1]}}<br /> <!-- messy string -->
+                  <p class="data-text data-text-multiline" v-bind:id="'data-' + o[0]" v-if="!o.toString().includes('pos') && !o.toString().includes('hidden') && !o.toString().includes('multiline')">
+                    <b>{{o.toString().split(",")[0].substring(0, 1).toUpperCase()}}{{o.toString().split(",")[0].substring(1, o.toString().length).toLowerCase()}}</b><br />{{o.toString().split(",")[1]}}<br /> <!-- messy string -->
                   </p>
                 </div>
               </div>
@@ -120,6 +139,7 @@ export default {
     const Sections = computed(() => { return store.getters['storage/sections']})
     const Categories = computed(() => { return store.getters['storage/categories']})
     const Data = computed(() => { return store.getters['storage/data']})
+    const SearchResults = computed(() => { return store.getters['storage/searchResults']})
         
     //lifecycle hooks
     onMounted(() => {
@@ -138,7 +158,7 @@ export default {
           var sectionButton = document.getElementById("section#" + c)
           var sectionPos = sectionButton.id.substr(-1)
           
-          if (sectionPos== selectedSectionPos)
+          if (sectionPos == selectedSectionPos)
           {
             sectionButton.style.border = "2px solid black"
           }
@@ -176,10 +196,20 @@ export default {
           }
         }
 
+        //set last searched text to search bar
+        var searchBarText = document.getElementById("searchBarInput")
+        if (searchBarText != null)
+        {
+          searchBarText.value = searchText
+        }
+        
+        //scroll window to top
+        window.scrollTo(0,0)
     })
     
     //variables
     var imagePos = 1
+    var searchText = null
 
     //functions
     function showNextGalleryImage() {
@@ -267,25 +297,23 @@ export default {
       store.dispatch('storage/actionSetSelectedSectionCategoryData', categoryData)
       // console.log(categoryData[0])
 
-      //update color of category buttons
-      // for (var c = 1; c <= SelectedSectionCategories.value.length; c++)
-      // {
-      //   var categoryButton = document.getElementById("category-" + c)
-        
-      //   if (c == pos)
-      //   {
-      //     categoryButton.style.textDecoration = "underline"
-      //   }
-      //   else
-      //   {
-      //     categoryButton.style.textDecoration = "none"
-      //   }
-      // }
     }
     
-    function loadSectionFromIndex(title, sections, categories, data, pos)
+    function loadSectionFromIndex(title, pos)
     {
+      console.log("loadSectionFromIndex")
+      console.log("section title: " + title)
+      console.log("section pos: " + pos)
+      console.log("section category: " + "default")
+
       var section = null
+
+      var sections = Sections.value
+      var categories = Categories.value 
+      var data = Data.value
+      // console.log(sections.sections)
+      // console.log(categories.categories)
+      // console.log(data.data)
 
       //filter sections for selected section
       for (var c in sections.sections)
@@ -348,7 +376,7 @@ export default {
       store.dispatch('storage/actionSetSelectedSection', section)
       store.dispatch('storage/actionSetSelectedSectionCategories', sectionCategories)
       store.dispatch('storage/actionSetSelectedSectionData', sectionData)
-      if (section.title != "index")
+      if (section.title != "index" || section.title != "search")
       {
         store.dispatch('storage/actionSetSelectedSectionCategoryData', defaultCategoryData)
       }
@@ -356,41 +384,38 @@ export default {
       //set history test 
       // window.history.pushState(null, null, "/" + title)
 
-      //update color of section buttons
-      // for (var c = 0; c < sections.sections.length; c++)
-      // {
-      //   var sectionButton = document.getElementById("section#" + c)
-        
-      //   if (c == pos)
-      //   {
-      //     sectionButton.style.border = "2px solid black"
-      //   }
-      //   else
-      //   {
-      //     sectionButton.style.border = "0px solid black"
-      //   }
-      // }
     }
 
-    function loadCategoryFromIndex(title, sections, categories, data, pos, category)
+    function loadCategoryFromIndex(title, pos, category)
     {
       console.log("loadCategoryFromIndex")
+      console.log("section title: " + title)
+      console.log("section pos: " + pos)
+      console.log("section category: " + category)
 
-      var section = title
+      var section = null
       var category = category
+      var title = title
+
+      var sections = Sections.value
+      var categories = Categories.value 
+      var data = Data.value
+      
+      // console.log(sections.sections)
+      // console.log(categories.categories)
+      // console.log(data.data)
+
+      // filter sections for selected section
+      for (var c in sections.sections)
+      {
+        if (title == sections.sections[c].title)
+        {
+          section = sections.sections[c]
+        }
+      }
       // console.log(section)
-      // console.log(category)
 
-      // //filter sections for selected section
-      // for (var c in sections.sections)
-      // {
-      //   if (title == sections.sections[c].title)
-      //   {
-      //     section = sections.sections[c]
-      //   }
-      // }
-
-      //filter categories for selected section
+      // filter categories for selected section
       var sectionCategories = []
       for (var c in categories.categories)
       {
@@ -405,7 +430,7 @@ export default {
       }
       // console.log(sectionCategories)
 
-      //filter data for selected section
+      // filter data for selected section
       var sectionData = []
       for (var d in data.data)
       {
@@ -420,23 +445,24 @@ export default {
       }
       // console.log(sectionData)
 
-      //filter data for selected section category data
+      // filter data for selected section category data
       var defaultCategoryTitle = "defaultCategoryTitle"
       var defaultCategoryData = []
 
       for (var c in sectionData)
       {
-        if (sectionData[c].category == category.title)
+        if (sectionData[c].category == category)
         {
           defaultCategoryData.push(sectionData[c])
         }
       }
+      // console.log(defaultCategoryData)
 
-      //vuex
+      // vuex
       store.dispatch('storage/actionSetSelectedSection', section)
       store.dispatch('storage/actionSetSelectedSectionCategories', sectionCategories)
       store.dispatch('storage/actionSetSelectedSectionData', sectionData)
-      if (section.title != "index")
+      if (section.title != "index" || section.title != "search")
       {
         store.dispatch('storage/actionSetSelectedSectionCategoryData', defaultCategoryData)
       }
@@ -444,23 +470,244 @@ export default {
       //set history test 
       // window.history.pushState(null, null, "/" + title)
 
-      //update color of section buttons
-      // for (var c = 0; c < sections.sections.length; c++)
-      // {
-      //   var sectionButton = document.getElementById("section#" + c)
+    }
+
+    function loadSearch(event)
+    {
+      // console.log(event)
+      
+      //variables
+      var searchObjects = []
+      var searchString = document.getElementById("searchBarInput")
+      var allDataFromDb = Data.value.data
+      var searchMatchType = ""
+      var searchHitCounter = 0
+      var foundIn = []
+
+      //set searchText
+      searchText = searchString.value
+    
+      //input error handling
+      if (searchString.value == "" || searchString.value[0] == " ")
+      {
+        console.log("empty string search error")
+        return
+      }
+
+      for (var d in allDataFromDb)
+      {
+        //variables
+        var searchObject = ""
+        var x = allDataFromDb[d]
+        var y = Object.entries(x)
+
+        //sort data into search objects
+        for (var c in y)
+        {
+          //variables
+          var dataType = y[c][0].toString()
+
+          //filter data to find data.section and data.category
+          if (dataType != "backgroundColor" && dataType != "backgroundImage" && dataType != "key" && dataType != "lastEdited" && dataType != "type" && dataType != "obj" && dataType != "galleryImages")
+          {
+            var cleanStr1 = JSON.stringify(y[c])
+            var cleanStr2 = cleanStr1.substr(1, (cleanStr1.length - 2))
+            // var cleanStr3 = cleanStr2.replaceAll("\"", "'")
+            var cleanStr4 = cleanStr2.replace(",", ":")
+            // var cleanStr5 = "{" + cleanStr4 + "}"
+            // console.log(cleanStr4)
+            
+            searchObject += cleanStr4 + ","
+          }
+
+          //filter relevant data from data.galleryImages
+          if (dataType == "galleryImages")
+          { 
+            var imageGallery = y[c][1]
+            if (imageGallery != "null")
+            {
+              // console.log("galleryImages")
+              for (var c in imageGallery)
+              {
+                if (imageGallery[c].hidden == "False" || imageGallery[c].hidden == "false")
+                {
+                  cleanStr1 = "\"image-" + c + "\"" + ":" + "\"" + imageGallery[c].description + "\""
+                  // console.log(cleanStr1)
+
+                  searchObject += cleanStr1 + ","
+                }
+              }
+            }
+          }
+
+          //filter relevant data from data.obj
+          if (dataType == "obj")
+          {
+            var obj = y[c][1]
+            if (obj != "null")
+            {
+              // console.log("obj")
+              for (var c in obj)
+              {
+                if (obj[c].hidden == "False")
+                {
+                  var k = Object.entries(obj[c])
+                  for(var x in k)
+                  {
+                    if (k[x][0] != "hidden" && k[x][0] != "multiline" && k[x][0] != "pos")
+                    {
+                      var cleanStr1 = JSON.stringify(k[x])
+                      var cleanStr2 = cleanStr1.substr(1, (cleanStr1.length - 2))
+                      // var cleanStr3 = cleanStr2.replaceAll("\"", "'")
+                      var cleanStr4 = cleanStr2.replace(",", ":")
+                      // var cleanStr5 = "{" + cleanStr4 + "}"
+                      // console.log(cleanStr4)
+                      
+                      searchObject += cleanStr4 + ","
+
+                      // console.log(JSON.stringify(k[x]))
+                    }
+                  }
+
+                  // console.log(JSON.stringify(obj[c]))
+                }
+              }
+            }
+          }
+        }
         
-      //   if (c == pos)
-      //   {
-      //     sectionButton.style.border = "2px solid black"
-      //   }
-      //   else
-      //   {
-      //     sectionButton.style.border = "0px solid black"
-      //   }
-      // }
+        //parse data to json and add into searchable objects array
+        searchObject = "{" + searchObject.substr(0, searchObject.length - 1) + "}"
+        searchObject = JSON.parse(searchObject)
+        searchObjects.push(searchObject)
+        // console.log("searchObject: " + searchObject)
+        // console.log("")
+      }
+
+      // console.log("searchObjects")
+      // console.log(searchObjects)
+
+
+      for (var c in searchObjects)
+      {
+        // console.log(searchObjects[c])
+        // console.log(searchObjects[c].section)
+        // console.log(searchObjects[c].category)
+
+        //variables
+        var t = Object.entries(searchObjects[c])
+        if (c > 1)
+        {
+          var previousSection = searchObjects[c - 1].section 
+        }
+        var currentSection = searchObjects[c].section
+        var currentCategory = searchObjects[c].category
+        
+        //check if section is not index or search
+        if (currentSection != 'index' && currentSection != 'search')
+        {
+          for(var x in t)
+          { 
+            var objectKey = t[x][0]
+            var objectValue = t[x][1]
+            // console.log("objectKey: " + objectKey)
+            // console.log("objectValue: " + objectValue)
+            
+            //search match found in category
+            if(objectKey == "category")
+            {
+              if(objectValue.includes(searchString.value))
+              {
+                var categoryName = objectValue
+                searchHitCounter++
+                searchMatchType = "category"
+                // foundIn += "{" + "section: " + currentSection + " category: " + currentCategory + " / " + "category" + "},"
+                var formatToJson1 = "\"section\":" + "\"" + currentSection + "\"," + "\"category\":" + "\"" + currentCategory + "\"," + "\"searchMatchType\":" + "\"category\"," + "\"value\":" + "\"" + categoryName + "\""
+                var formatToJson2 = "{" + formatToJson1 + "}"
+                var parsedToObject = JSON.parse(formatToJson2)
+                foundIn.push(parsedToObject)
+              }
+            }
+            
+            //search match found in section
+            else if(objectKey == "section")
+            {
+              if(objectValue.includes(searchString.value))
+              {
+                searchHitCounter++
+                searchMatchType = "section"
+                // console.log("previous section: " + previousSection)
+                // console.log("current section: " + currentSection)
+                
+                // foundIn += "{" + "section: " + currentSection + " category: " + currentCategory + " / " + "section" + "},"
+                var formatToJson1 = "\"section\":" + "\"" + currentSection + "\"," + "\"searchMatchType\":" + "\"section\""
+                var formatToJson2 = "{" + formatToJson1 + "}"
+                var parsedToObject = JSON.parse(formatToJson2)
+                
+                //section duplicate check
+                if (previousSection != null && currentSection != previousSection)
+                {
+                  foundIn.push(parsedToObject)
+                }
+              }
+            }
+                      
+            //search match found in image description
+            else if(objectKey.substring(0, 5) == "image")
+            {
+              var imageNumber = objectKey.substring(6, 7)
+              imageNumber++
+              var imageDescription = objectValue
+              
+              if(objectValue.includes(searchString.value))
+              {
+                searchHitCounter++
+                searchMatchType = "image"
+                // foundIn += "{" + "section: " + currentSection + " category: " + currentCategory + " / " + "image description" + "},"
+                var formatToJson1 = "\"section\":" + "\"" + currentSection + "\"," + "\"category\":" + "\"" + currentCategory + "\"," + "\"searchMatchType\":" + "\"image description\"," + "\"key\":" + "\"" + imageNumber + "\"," + "\"value\":" + "\"" + imageDescription + "\""
+                var formatToJson2 = "{" + formatToJson1 + "}"
+                var parsedToObject = JSON.parse(formatToJson2)
+                foundIn.push(parsedToObject)
+              }
+            }
+  
+            //search match found in data var
+            else
+            {
+              if(objectValue.includes(searchString.value))
+              {
+                var dataKey = objectKey
+                var dataValue = objectValue
+                searchHitCounter++
+                searchMatchType = "data"
+                // foundIn += "{" + "section: " + currentSection + " category: " + currentCategory + " / " + "data" + "},"
+                var formatToJson1 = "\"section\":" + "\"" + currentSection + "\"," + "\"category\":" + "\"" + currentCategory + "\"," + "\"searchMatchType\":" + "\"data\"," + "\"key\":" + "\"" + dataKey + "\"," + "\"value\":" + "\"" + dataValue + "\"" 
+                var formatToJson2 = "{" + formatToJson1 + "}"
+                var parsedToObject = JSON.parse(formatToJson2)
+                foundIn.push(parsedToObject)
+              }
+            }
+  
+            // console.log(t[x])
+          }
+        }
+
+        // console.log("")
+      }
+      // console.log("search hit counter: " + searchHitCounter)
+      
+      //alphabetically sort search hits by searchMatchType
+      foundIn.sort((a, b) => {
+        if (a.searchMatchType < b.searchMatchType) {return -1}
+        if (a.searchMatchType > b.searchMatchType) {return 1}
+        return 0
+      })
+
+      //vuex
+      store.dispatch('storage/actionSetSearchResults', foundIn)
 
     }
-    
+
     return {
       //variables
       SelectedSectionCategoryData,
@@ -472,13 +719,15 @@ export default {
       Sections,
       Categories,
       Data,
+      SearchResults,
 
       //functions
       loadCategory,
       showNextGalleryImage,
       showPreviousGalleryImage,
       loadSectionFromIndex,
-      loadCategoryFromIndex
+      loadCategoryFromIndex,
+      loadSearch
     }   
   }
 }
@@ -663,5 +912,69 @@ export default {
 
 #category-1 {
   text-decoration: underline;
+}
+
+#searchBox {
+  margin: 0px;
+  margin: auto;
+  padding: 0px;
+  width: 40vw;
+  background-color: lightgreen;
+  border: 1px solid black;
+}
+
+#searchBarInput, #searchBarSubmitButton {
+  margin: 0px;
+  padding: 0px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  border-radius: 0%;
+  border: 0px;
+  border-bottom: 1px solid black;
+}
+
+#searchBarInput {
+  padding-left: 1%;
+  width: 83%;
+  font-weight: bold;
+  outline: none;
+}
+
+#searchBarSubmitButton {
+  width: 16%;
+  font-weight: bold;
+  background-color: lightgreen;
+  border-left: 1px solid black;
+}
+
+#searchBarSubmitButton:active {
+  background-color: yellow;
+}
+
+#searchHitCount {
+  margin: 0px;
+  padding: 0px;
+  padding-top: 7px;
+  padding-bottom: 7px;
+  font-weight: bold;
+  color: white;
+  background-color: black; /* #2c3e50 */
+}
+
+.searchHit {
+  margin: 0px;
+  margin: auto;
+  padding: 8px;
+  text-align: left;
+  background-color: lightgreen;
+  border-top: 1px solid black;
+}
+
+.searchHit:hover {
+  background-color: yellow;
+}
+
+.searchHit:active {
+  background-color: yellow;
 }
 </style>

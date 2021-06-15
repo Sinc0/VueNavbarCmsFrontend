@@ -21,11 +21,12 @@ export default createStore({
         sections: null,
         categories: null,
         data: null,
+        searchResults: null,
         selectedMovie: null,
         selectedSection: null,
         selectedSectionCategories: null,
         selectedSectionData: null,
-        selectedSectionCategoryData: null
+        selectedSectionCategoryData: null,
       },
       
       //getters
@@ -68,6 +69,11 @@ export default createStore({
         selectedSectionCategoryData(state)
         {
           return state.selectedSectionCategoryData
+        },
+        
+        searchResults(state)
+        {
+          return state.searchResults
         }
       },
 
@@ -103,6 +109,10 @@ export default createStore({
 
         mutationSetSelectedSectionCategoryData(state, value) {
           state.selectedSectionCategoryData = value
+        },
+
+        mutationSetSearchResults(state, value) {
+          state.searchResults = value
         }
       },
 
@@ -146,6 +156,11 @@ export default createStore({
         actionSetSelectedSectionCategoryData({commit}, value)
         {
           commit('mutationSetSelectedSectionCategoryData', value)
+        },
+
+        actionSetSearchResults({commit}, value)
+        {
+          commit('mutationSetSearchResults', value)
         }
       }
       

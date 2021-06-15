@@ -2,13 +2,16 @@
   <div id="sections">
     <!-- sections from api -->
     <div v-if="getSections">
-      <p v-for="section in getSections.sections.sort((a, b) => {return a.pos - b.pos})" v-bind:key="section.id" v-bind:id="'section#' + section.pos" v-on:click="loadSection(section, getCategories, getData, section.pos)" class="section">
+      <div v-for="section in getSections.sections.sort((a, b) => {return a.pos - b.pos})" v-bind:key="section.id" v-on:click="loadSection(section, getCategories, getData, section.pos)">
         <!-- index -->
-        <b v-if="section.title == 'index'">i</b>
+        <p v-bind:id="'section#' + section.pos" class="section" v-if="section.title == 'index'"><b>i</b></p>
+        
+        <!-- search -->
+        <p v-bind:id="'section#' + section.pos" class="section" v-else-if="section.title == 'search'"><b>S</b></p>
 
         <!-- specific categories -->
-        <span v-else>{{section.pos}}</span>
-      </p>      
+        <p v-bind:id="'section#' + section.pos" class="section" v-else>{{section.pos}}</p>
+      </div>      
     </div>
 
   </div>
