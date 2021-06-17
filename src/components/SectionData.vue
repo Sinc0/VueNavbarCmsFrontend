@@ -20,7 +20,7 @@
     <div v-if="Sections && Categories">
       <div v-if="SelectedSection.title == 'index'">
         <div v-for="section in Sections.sections.sort((a, b) => {return a.pos - b.pos})" v-bind:key="section.id">
-          <div v-if="section.title != 'index' && section.title != 'search'">
+          <div id="indexSectionDiv" v-if="section.title != 'index' && section.title != 'search'">
             <router-link class="indexSection" v-bind:to="'/' + section.title" v-on:click="loadSectionFromIndex(section.title, section.pos)">{{section.title}}</router-link>
             <!-- <p class="indexSection" v-bind:to="'/' + section.title" v-on:click="loadSection(section.title, Sections, Categories, Data)">{{section.title}}</p> -->
             <!-- <router-link v-bind:to="section.title"><b>{{section.title}}</b></router-link> -->
@@ -935,20 +935,29 @@ export default {
   height: 100%;
 }
 
+#indexSectionDiv {
+  margin: 0px;
+  margin-top: 10px;
+  padding: 0px;
+}
+
 .indexSection, .indexCategory {
   margin: 0px;
   padding: 0px;
 }
 
 .indexSection {
-  margin-top: 10px;
+  margin: 0px;
+  padding: 10px;
   font-weight: bold;
-  color: black;
   text-decoration: none;
+  color: black;
 }
 
 .indexCategory {
-
+  font-weight: normal;
+  text-decoration: none;
+  color: black;
 }
 
 #searchBox {
