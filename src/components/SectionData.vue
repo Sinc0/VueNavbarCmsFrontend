@@ -46,7 +46,7 @@
         <p v-if="SearchResults" id="searchHitCount">{{SearchResults.length}} results found</p>
         <div class="searchHit" v-for="(h, itemObjKey) in SearchResults" v-bind:key="h.id" v-bind:id="'searchHit' + (itemObjKey + 1)">
           <!-- {{h}} -->
-          <div v-if="h.searchMatchType == 'section'" v-on:click="loadSectionFromIndex(h.section)">{{itemObjKey+1}}: <b>section</b> {{h.section}}</div>
+          <div v-if="h.searchMatchType == 'section'" v-on:click="loadSectionFromIndex(null, h.section)">{{itemObjKey+1}}: <b>section</b> {{h.section}}</div>
           <div v-if="h.searchMatchType == 'category'" v-on:click="loadCategoryFromIndex(h.section, null, h.category)">{{itemObjKey+1}}: <b>category</b> in {{h.section}} = <b>{{h.value}}</b></div>
           <div v-if="h.searchMatchType == 'data'" v-on:click="loadCategoryFromIndex(h.section, null, h.category, h.key)">{{itemObjKey+1}}: <b>data</b> in {{h.section}} ➞ {{h.category}} ➞ {{h.key.substr(0, 1).toUpperCase() + h.key.substr(1, h.key.length)}} = <b>{{h.value}}</b></div>
           <div v-if="h.searchMatchType == 'image description'" v-on:click="loadCategoryFromIndex(h.section, null, h.category)">{{itemObjKey+1}}: <b>image</b> {{h.key}} in {{h.section}} ➞ {{h.category}} = <b>{{h.value}}</b></div>
@@ -243,11 +243,11 @@ export default {
         }
         
         //scroll window to top
-        window.scrollTo(0,0)        
+        window.scrollTo(0,0)     
     })
 
-      //keybinds
-      document.addEventListener('keyup', (e) => {
+    //keybinds
+    document.addEventListener('keyup', (e) => {
         var totalSections = Sections.value.sections.length - 1
         var p = parseInt(SelectedSection.value.pos)
         
@@ -290,7 +290,7 @@ export default {
             loadSectionFromIndex(p)
           }
         }
-      });
+    });
     
     //variables
     var imagePos = 1
@@ -384,7 +384,7 @@ export default {
 
     }
     
-    function loadSectionFromIndex(pos)
+    function loadSectionFromIndex(pos, title)
     {
       // console.log("loadSectionFromIndex")
       // console.log("section pos: " + pos)
@@ -400,21 +400,26 @@ export default {
       // console.log(data.data)
 
       //filter sections for selected section
-      for (var c in sections.sections)
+      if (pos != null)
       {
-        if (pos == sections.sections[c].pos)
+        for (var c in sections.sections)
         {
-          section = sections.sections[c]
+          if (pos == sections.sections[c].pos)
+          {
+            section = sections.sections[c]
+          }
         }
       }
-
-      // for (var c in sections.sections)
-      // {
-      //   if (title == sections.sections[c].title)
-      //   {
-      //     section = sections.sections[c]
-      //   }
-      // }
+      else if (title != null)
+      {
+        for (var c in sections.sections)
+        {
+          if (title == sections.sections[c].title)
+          {
+            section = sections.sections[c]
+          }
+        }
+      }
 
       //filter categories for selected section
       var sectionCategories = []
