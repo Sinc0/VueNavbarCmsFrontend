@@ -1,13 +1,14 @@
 <template>
-  <div class="sectionData">
+  <div id="sectionData">
     <!-- ### categories ### -->
     <div id="flexContainer">
       <!-- <h1 id="arrowScrollLeft" class="arrowScroll" v-on:click="scrollCategoriesToLeft()">❮</h1> -->
 
       <div v-if="SelectedSectionCategories" id="categories">
         <span v-for="category in SelectedSectionCategories.sort((a, b) => {return a.pos - b.pos})" v-bind:key="category.key">
-          <h1 v-bind:id="'category-' + category.pos" class="category" v-if="category.title == 'Index Tree'">{{category.title}}</h1>
-          <h1 v-bind:id="'category-' + category.pos" class="category" v-if="category.title != 'Index Tree'" v-on:click="loadCategory(category, SelectedSectionData, category.pos)">{{category.title}}</h1>
+          <!-- <h1 v-bind:id="'category-' + category.pos" class="category" v-if="category.title == 'Index Test'">{{category.title}}</h1>
+          <h1 v-bind:id="'category-' + category.pos" class="category" v-if="category.title != 'Index Tree'" v-on:click="loadCategory(category, SelectedSectionData, category.pos)">{{category.title}}</h1> -->
+          <h1 v-bind:id="'category-' + category.pos" class="category" v-on:click="loadCategory(category, SelectedSectionData, category.pos)">{{category.title}}</h1>
         </span>
       </div>
 
@@ -112,8 +113,10 @@
     </div>
 
     <!-- print section obj -->
-    <!-- <p v-if="SelectedSection"><b>Section = {{SelectedSection.title}}</b></p> -->
-    <!-- <p v-if="SelectedSection"><b>Section Data </b><br />{{SelectedSection}}</p> -->
+    <!-- <p v-if="SelectedSection"><b>Section = {{SelectedSection.title}}</b></p>
+    <p v-if="SelectedSection"><b>Section Data </b><br />{{SelectedSection}}</p>
+    <p v-if="SelectedSection"><b>App Background Color </b><br />{{SelectedSection.appBackgroundColor}}</p>
+    <p v-if="SelectedSection"><b>Section Background Color </b><br />{{SelectedSection.sectionBackgroundColor}}</p> -->
     
     <!-- print category obj -->
     <!-- <p v-if="SelectedSectionCategoryData"><b>Category = {{SelectedSectionCategoryData[0].category}}</b></p> -->
@@ -148,6 +151,42 @@ export default {
     
     onUpdated(() => {
         console.log("sectionData updated")
+
+        //update app background color
+        if (SelectedSection.value.appBackgroundColor)
+        {
+          var appBackground = document.getElementById("app")
+          var sectionsBackground = document.getElementById("Sections")
+          // var dataBackground = document.getElementById("sectionData")
+
+          //set specified data background color
+          appBackground.style.backgroundColor = SelectedSection.value.appBackgroundColor
+
+          //default sections sidenav backgroundcolor
+          if (SelectedSection.value.sectionBackgroundColor != "")
+          {
+            sectionsBackground.style.backgroundColor = SelectedSection.value.sectionBackgroundColor
+          }
+          
+          // console.log("section background-color:" + SelectedSection.value.sectionBackgroundColor)
+          // console.log("app background color: " + SelectedSection.value.appBackgroundColor)
+        }
+        else
+        {
+          //variables
+          var defaultColor = "white"
+
+          //set default app background color
+          var appBackground = document.getElementById("app")
+          appBackground.style.backgroundColor = defaultColor
+
+          //set default section background color
+          var sectionsBackground = document.getElementById("Sections")
+          sectionsBackground.style.backgroundColor = defaultColor
+          
+          // console.log("section background-color:" + SelectedSection.value.sectionBackgroundColor)
+          // console.log("app background color: " + SelectedSection.value.appBackgroundColor)
+        }
 
         //update color of section buttons
         var sections = Sections.value.sections
@@ -186,13 +225,13 @@ export default {
           var categoryButton = document.getElementById("category-" + c)
           // console.log(categoryButton.innerText)
 
-          if (categoryButton.innerText == selectedCategoryTitle)
+          if (categoryButton.innerText == 'Index Tree' || categoryButton.innerText == selectedCategoryTitle)
           {
-            categoryButton.style.textDecoration = "underline"
+            categoryButton.style.fontWeight = "bold"
           }
           else
           {
-            categoryButton.style.textDecoration = "none"
+            categoryButton.style.fontWeight = "normal"
           }
         }
 
@@ -753,7 +792,7 @@ export default {
   background: #555;
 }
 
-.sectionData {
+#sectionData {
   margin-left: 80px;
   padding: 10px;
   /* border: 1px solid black; */
@@ -812,6 +851,7 @@ export default {
   padding: 10px;
   width: 60vw;
   text-align: left;
+  background-color: white;
   border: 1px solid black;
 }
 
@@ -840,6 +880,7 @@ export default {
   padding-right: 10px;
   width: 60vw;
   height: 30vw;
+  background-color: black;
   border: 1px solid black;
 }
 
@@ -908,10 +949,6 @@ export default {
 
 .indexCategory {
 
-}
-
-#category-1 {
-  text-decoration: underline;
 }
 
 #searchBox {

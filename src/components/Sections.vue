@@ -412,7 +412,14 @@ export default {
   }
 
   .sectionIcon {
+    -webkit-user-drag: none;
+    -webkit-user-select: none;
+    user-select: none;
     width: 40px;
+    background-color: transparent;
+  }
+
+  .sectionIcon:active {
     background-color: transparent;
   }
 
