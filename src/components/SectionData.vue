@@ -160,11 +160,11 @@ export default {
           
           if (sectionPos == selectedSectionPos)
           {
-            sectionButton.style.border = "2px solid black"
+            sectionButton.style.opacity = "100%"
           }
           else
           {
-            sectionButton.style.border = "0px solid black"
+            sectionButton.style.opacity = "30%"
           }
         }
 

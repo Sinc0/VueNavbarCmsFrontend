@@ -4,13 +4,16 @@
     <div v-if="getSections">
       <div v-for="section in getSections.sections.sort((a, b) => {return a.pos - b.pos})" v-bind:key="section.id" v-on:click="loadSection(section, getCategories, getData, section.pos)">
         <!-- index -->
-        <p v-bind:id="'section#' + section.pos" class="section" v-if="section.title == 'index'"><b>i</b></p>
+        <p v-bind:id="'section#' + section.pos" class="section" v-if="section.title == 'index'" v-bind:title="section.title"><b>i</b></p>
         
         <!-- search -->
-        <p v-bind:id="'section#' + section.pos" class="section" v-else-if="section.title == 'search'"><b>S</b></p>
+        <p v-bind:id="'section#' + section.pos" class="section" v-else-if="section.title == 'search'" v-bind:title="section.title"><b>S</b></p>
 
         <!-- specific categories -->
-        <p v-bind:id="'section#' + section.pos" class="section" v-else>{{section.pos}}</p>
+        <img v-bind:id="'section#' + section.pos" class="section sectionIcon" v-bind:src="section.iconImage" v-if="section.iconImage != ''" v-bind:title="section.title"/>
+        <p v-bind:id="'section#' + section.pos" class="section" v-else-if="section.iconImage == '' && section.title != 'index' && section.title != 'search'" v-bind:title="section.title">{{section.pos}}</p>
+        <!-- <p v-bind:id="'section#' + section.pos" class="section" v-else>{{section.pos}}</p> -->
+
       </div>      
     </div>
 
@@ -406,6 +409,11 @@ export default {
   .section:active
   {
     background-color: yellow;
+  }
+
+  .sectionIcon {
+    width: 40px;
+    background-color: transparent;
   }
 
   p {
