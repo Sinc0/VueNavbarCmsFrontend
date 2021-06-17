@@ -21,7 +21,7 @@
       <div v-if="SelectedSection.title == 'index'">
         <div v-for="section in Sections.sections.sort((a, b) => {return a.pos - b.pos})" v-bind:key="section.id">
           <div id="indexSectionDiv" v-if="section.title != 'index' && section.title != 'search'">
-            <router-link class="indexSection" v-bind:to="'/' + section.title" v-on:click="loadSectionFromIndex(section.title, section.pos)">{{section.title}}</router-link>
+            <router-link class="indexSection" v-bind:to="'/' + section.title" v-on:click="loadSectionFromIndex(section.pos)">{{section.title}}</router-link>
             <!-- <p class="indexSection" v-bind:to="'/' + section.title" v-on:click="loadSection(section.title, Sections, Categories, Data)">{{section.title}}</p> -->
             <!-- <router-link v-bind:to="section.title"><b>{{section.title}}</b></router-link> -->
             <!-- window.history.pushState(nextState, nextTitle, nextURL); -->
@@ -225,7 +225,7 @@ export default {
           var categoryButton = document.getElementById("category-" + c)
           // console.log(categoryButton.innerText)
 
-          if (categoryButton.innerText == 'Index Tree' || categoryButton.innerText == selectedCategoryTitle)
+          if (categoryButton.innerText == selectedCategoryTitle)
           {
             categoryButton.style.fontWeight = "bold"
           }
@@ -243,8 +243,54 @@ export default {
         }
         
         //scroll window to top
-        window.scrollTo(0,0)
+        window.scrollTo(0,0)        
     })
+
+      //keybinds
+      document.addEventListener('keyup', (e) => {
+        var totalSections = Sections.value.sections.length - 1
+        var p = parseInt(SelectedSection.value.pos)
+        
+        //arrow down
+        if (e.code === "ArrowDown" && e.shiftKey === true)
+        {
+          if (p < totalSections)
+          {
+            p++
+            loadSectionFromIndex(p)
+          }
+        }
+
+        //s
+        if (e.code === "KeyS" && e.shiftKey === true)
+        {
+          if (p < totalSections)
+          {
+            p++
+            loadSectionFromIndex(p)
+          }
+        }
+        
+        //arrow up
+        if (e.code === "ArrowUp" && e.shiftKey === true)
+        {
+          if (p > 0)
+          {
+            p--
+            loadSectionFromIndex(p)
+          }
+        }
+
+        //w
+        if (e.code === "KeyW" && e.shiftKey === true)
+        {
+          if (p > 0)
+          {
+            p--
+            loadSectionFromIndex(p)
+          }
+        }
+      });
     
     //variables
     var imagePos = 1
@@ -338,12 +384,11 @@ export default {
 
     }
     
-    function loadSectionFromIndex(title, pos)
+    function loadSectionFromIndex(pos)
     {
-      console.log("loadSectionFromIndex")
-      console.log("section title: " + title)
-      console.log("section pos: " + pos)
-      console.log("section category: " + "default")
+      // console.log("loadSectionFromIndex")
+      // console.log("section pos: " + pos)
+      // console.log("section category: " + "default")
 
       var section = null
 
@@ -357,11 +402,19 @@ export default {
       //filter sections for selected section
       for (var c in sections.sections)
       {
-        if (title == sections.sections[c].title)
+        if (pos == sections.sections[c].pos)
         {
           section = sections.sections[c]
         }
       }
+
+      // for (var c in sections.sections)
+      // {
+      //   if (title == sections.sections[c].title)
+      //   {
+      //     section = sections.sections[c]
+      //   }
+      // }
 
       //filter categories for selected section
       var sectionCategories = []

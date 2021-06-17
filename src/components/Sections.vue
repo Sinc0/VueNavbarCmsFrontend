@@ -1,8 +1,8 @@
 <template>
   <div id="sections">
     <!-- sections from api -->
-    <div v-if="getSections">
-      <div v-for="section in getSections.sections.sort((a, b) => {return a.pos - b.pos})" v-bind:key="section.id" v-on:click="loadSection(section, getCategories, getData, section.pos)">
+    <div v-if="Sections">
+      <div v-for="section in Sections.sections.sort((a, b) => {return a.pos - b.pos})" v-bind:key="section.id" v-on:click="loadSection(section.pos)">
         <!-- index -->
         <p v-bind:id="'section#' + section.pos" class="section" v-if="section.title == 'index'" v-bind:title="section.title"><b>i</b></p>
         
@@ -35,9 +35,9 @@ export default {
 
     //vuex
     const store = useStore()
-    const getSections = computed(() => { return store.getters['storage/sections']})
-    const getCategories = computed(() => { return store.getters['storage/categories']})
-    const getData = computed(() => { return store.getters['storage/data']})
+    const Sections = computed(() => { return store.getters['storage/sections']})
+    const Categories = computed(() => { return store.getters['storage/categories']})
+    const Data = computed(() => { return store.getters['storage/data']})
 
     //router
     let sectionSpecified = useRouter().currentRoute.value.params.sectionId
@@ -71,7 +71,7 @@ export default {
 
         //vuex
         store.dispatch('storage/actionSetSections', jsondata)
-        // console.log(getSections.value.sections)
+        // console.log(Sections.value.sections)
 
         //set specified section
         if (sectionSpecified != null)
@@ -155,7 +155,7 @@ export default {
 
         //vuex
         store.dispatch('storage/actionSetCategories', jsondata)
-        // console.log(getCategories.value.categories)
+        // console.log(Categories.value.categories)
 
         //set default categories
         var sectionCategories = []
@@ -279,88 +279,102 @@ export default {
       })
     }
 
-    function loadSection(section, categories, data, pos)
+    function loadSection(pos)
     {   
-        //variables
-        var categoryTitle = null
-        var categoryData = []
+      //variables
+      var categoryTitle = null
+      var categoryData = []
+      var section = null
+      
+      var sections = Sections.value
+      var categories = Categories.value
+      var data = Data.value
+      // console.log(sections)
+      // console.log(categories)
+      // console.log(data)
 
-        //filter categories for selected section
-        var sectionCategories = []
-        for (var c in categories.categories)
+      //filter sections for selected section
+      for (var c in sections.sections)
+      {
+        if (pos == sections.sections[c].pos)
         {
-          if(categories.categories[c].section == section.title)
-          {
-            sectionCategories.push(categories.categories[c])
-          }
+          section = sections.sections[c]
+        }
+      }
 
-          // console.log(section.title)
-          // console.log(categories.categories[c].section)
-          // console.log(data)
+      // for (var c in sections.sections)
+      // {
+      //   if (title == sections.sections[c].title)
+      //   {
+      //     section = sections.sections[c]
+      //   }
+      // }
+
+      //filter categories for selected section
+      var sectionCategories = []
+      for (var c in categories.categories)
+      {
+        if(categories.categories[c].section == section.title)
+        {
+          sectionCategories.push(categories.categories[c])
         }
 
-        //filter data for selected section
-        var sectionData = []
-        for (var d in data.data)
-        {
-          if(data.data[d].section == section.title)
-          {
-            sectionData.push(data.data[d])
-          }
+        // console.log(section.title)
+        // console.log(categories.categories[c])
+        // console.log(data)
+      }
 
-          // console.log(section.title)
-          // console.log(categories.categories[c].section)
-          // console.log(data.data[d])
+      //filter data for selected section
+      var sectionData = []
+      for (var d in data.data)
+      {
+        if(data.data[d].section == section.title)
+        {
+          sectionData.push(data.data[d])
         }
 
-        //filter data for selected section category data
-        for (var c in sectionData) 
+        // console.log(section.title)
+        // console.log(categories.categories[c].section)
+        // console.log(data.data[d])
+      }
+
+      //filter data for selected section category data
+      var defaultCategoryTitle = "defaultCategoryTitle"
+      var defaultCategoryData = []
+
+      for (var c in sectionCategories)
+      {
+        if (sectionCategories[c].pos == "1")
         {
-          if (sectionCategories[c].pos == 1)
-          {
-            categoryTitle = sectionCategories[c].title
-          }
-
-          if (sectionData[c].category == categoryTitle)
-          {
-            categoryData.push(sectionData[c])
-          }
-
-          // console.log(sectionData[c])
+          defaultCategoryTitle = sectionCategories[c].title
         }
+      }
 
-        //vuex
-        store.dispatch('storage/actionSetSelectedSection', section)
-        store.dispatch('storage/actionSetSelectedSectionCategories', sectionCategories)
-        if (section.title != "index")
+      for (var c in sectionData)
+      {
+        if (sectionData[c].category == defaultCategoryTitle)
         {
-          store.dispatch('storage/actionSetSelectedSectionData', sectionData)
-          store.dispatch('storage/actionSetSelectedSectionCategoryData', categoryData)
+          defaultCategoryData.push(sectionData[c])
         }
+      }
 
-        //update color of section buttons
-        // for (var c = 0; c < getSections.value.sections.length; c++)
-        // {
-        //   var sectionButton = document.getElementById("section#" + c)
-
-        //   if (c == pos)
-        //   {
-        //     sectionButton.style.border = "2px solid black"
-        //   }
-        //   else
-        //   {
-        //     sectionButton.style.border = "0px solid black"
-        //   }
-        // }
+      //vuex
+      store.dispatch('storage/actionSetSelectedSection', section)
+      store.dispatch('storage/actionSetSelectedSectionCategories', sectionCategories)
+      store.dispatch('storage/actionSetSelectedSectionData', sectionData)
+      if (section.title != "index" || section.title != "search")
+      {
+        store.dispatch('storage/actionSetSelectedSectionCategoryData', defaultCategoryData)
+      }
     }
 
     return {
       //variables
       
       //vuex
-      getSections,
-      getCategories,
-      getData,
+      Sections,
+      Categories,
+      Data,
 
       //functions
       loadSection,
