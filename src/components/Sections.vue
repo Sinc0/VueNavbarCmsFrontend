@@ -2,7 +2,7 @@
   <div id="sections">
     <!-- sections from api -->
     <div v-if="Sections">
-      <div v-for="section in Sections.sections.sort((a, b) => {return a.pos - b.pos})" v-bind:key="section.id" v-on:click="loadSection(section.pos)">
+      <div v-for="section in Sections.sections.sort((a, b) => {return a.pos - b.pos})" v-bind:key="section.pos" v-on:click="loadSection(section.pos)">
         <!-- index -->
         <p v-bind:id="'section#' + section.pos" class="section" v-if="section.title == 'index'" v-bind:title="section.title"><b>i</b></p>
         
@@ -13,8 +13,7 @@
         <img v-bind:id="'section#' + section.pos" class="section sectionIcon" v-bind:src="section.iconImage" v-if="section.iconImage != ''" v-bind:title="section.title"/>
         <p v-bind:id="'section#' + section.pos" class="section" v-else-if="section.iconImage == '' && section.title != 'index' && section.title != 'search'" v-bind:title="section.title">{{section.pos}}</p>
         <!-- <p v-bind:id="'section#' + section.pos" class="section" v-else>{{section.pos}}</p> -->
-
-      </div>      
+      </div>
     </div>
 
   </div>

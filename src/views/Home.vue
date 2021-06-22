@@ -4,7 +4,7 @@
     <div class="flex-container">
       <div id="Sections" class="flex-item"><Sections/></div>
       <div id="SectionData" class="flex-item"><SectionData/></div>
-  </div>
+    </div>
   </div>
 </template>
 
@@ -13,6 +13,7 @@
 import {useStore} from 'vuex'
 import { useRouter, useRoute } from 'vue-router' //instead of this.$route
 import {computed} from 'vue'
+
 import SectionData from '@/components/SectionData.vue'
 import Sections from '@/components/Sections.vue'
 

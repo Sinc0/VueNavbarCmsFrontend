@@ -1,5 +1,6 @@
 <template>
   <div id="sectionData">
+    
     <!-- ### categories ### -->
     <div id="flexContainer">
       <!-- <h1 id="arrowScrollLeft" class="arrowScroll" v-on:click="scrollCategoriesToLeft()">❮</h1> -->
@@ -19,9 +20,9 @@
     <!-- ### index tree ### -->
     <div v-if="Sections && Categories">
       <div v-if="SelectedSection.title == 'index'">
-        <div v-for="section in Sections.sections.sort((a, b) => {return a.pos - b.pos})" v-bind:key="section.id">
+        <div v-for="section in Sections.sections.sort((a, b) => {return a.pos - b.pos})" v-bind:key="section.pos">
           <div id="indexSectionDiv" v-if="section.title != 'index' && section.title != 'search'">
-            <router-link class="indexSection" v-bind:to="'/' + section.title" v-on:click="loadSectionFromIndex(section.pos)">{{section.title}}</router-link>
+            <router-link class="indexSection" v-bind:to="'/' + section.title" v-on:click="loadSectionFromIndex(section.pos)">{{section.title.substr(0, 1).toUpperCase()}}{{section.title.substr(1, section.title.length - 1)}}</router-link>
             <!-- <p class="indexSection" v-bind:to="'/' + section.title" v-on:click="loadSection(section.title, Sections, Categories, Data)">{{section.title}}</p> -->
             <!-- <router-link v-bind:to="section.title"><b>{{section.title}}</b></router-link> -->
             <!-- window.history.pushState(nextState, nextTitle, nextURL); -->
@@ -159,13 +160,21 @@ export default {
           var sectionsBackground = document.getElementById("Sections")
           // var dataBackground = document.getElementById("sectionData")
 
+          //set body background
+          var b = document.body
+          b.style.backgroundColor = SelectedSection.value.appBackgroundColor
+
           //set specified data background color
           appBackground.style.backgroundColor = SelectedSection.value.appBackgroundColor
 
-          //default sections sidenav backgroundcolor
+          //set sections sidenav backgroundcolor
           if (SelectedSection.value.sectionBackgroundColor != "")
           {
             sectionsBackground.style.backgroundColor = SelectedSection.value.sectionBackgroundColor
+          }
+          else
+          {
+            sectionsBackground.style.backgroundColor = "white"
           }
           
           // console.log("section background-color:" + SelectedSection.value.sectionBackgroundColor)
@@ -175,20 +184,20 @@ export default {
         {
           //variables
           var defaultColor = "white"
+          
+          //set body background
+          var b = document.body
+          b.style.backgroundColor = defaultColor
 
           //set default app background color
           var appBackground = document.getElementById("app")
           appBackground.style.backgroundColor = defaultColor
-
-          //set default section background color
-          var sectionsBackground = document.getElementById("Sections")
-          sectionsBackground.style.backgroundColor = defaultColor
           
           // console.log("section background-color:" + SelectedSection.value.sectionBackgroundColor)
           // console.log("app background color: " + SelectedSection.value.appBackgroundColor)
         }
 
-        //update color of section buttons
+        //update opacity of section buttons
         var sections = Sections.value.sections
         var selectedSectionPos = SelectedSection.value.pos
         
@@ -248,7 +257,7 @@ export default {
 
     //keybinds
     document.addEventListener('keyup', (e) => {
-        var totalSections = Sections.value.sections.length - 1
+        var totalSections = Sections.value.sections.length
         var p = parseInt(SelectedSection.value.pos)
         
         //arrow down
@@ -890,6 +899,8 @@ export default {
   margin-left: 8px;
   margin-right: 8px;
   padding: 0px;
+  padding-top: 4px;
+  padding-bottom: 8px;
   vertical-align: top;
   user-select: none;
   -webkit-user-select: none;
@@ -903,23 +914,35 @@ export default {
   color: lightgreen;
 }
 
+#data {
+  /* border: 1px solid black;   */
+}
+
 .data-text {
   margin: 0px;
   margin: auto;
   padding: 10px;
-  width: 60vw;
+  width: 40vw;
   text-align: left;
   background-color: white;
-  border: 1px solid black;
+  border-bottom: 1px solid black;
+  border-left: 1px solid  black;
+  border-right: 1px solid black;
+  border-top: 1px solid black;
 }
 
 .data-text-singleline
 {
+  padding-top: 4px;
+  padding-bottom: 4px
   /* border: 1px solid black; */
 }
 
 .data-text-multiline
 {
+  /* text-align: center; */
+  /* border-top: 1px solid black;
+  border-bottom: 1px solid black; */
   /* border: 1px solid black; */
 }
 
@@ -936,8 +959,8 @@ export default {
   padding-left: 10px;
   padding-top: 10px;
   padding-right: 10px;
-  width: 60vw;
-  height: 30vw;
+  width: 40vw;
+  height: 20vw;
   background-color: black;
   border: 1px solid black;
 }
@@ -954,7 +977,7 @@ export default {
   -webkit-user-select: none; */
   /* border: 1px solid black; */
   margin: 0;
-  margin-top: 18vh;
+  margin-top: 10%;
   padding-left: 10px;
   padding-right: 10px;
   padding-bottom: 3px;
@@ -995,8 +1018,8 @@ export default {
 
 #indexSectionDiv {
   margin: 0px;
-  margin-top: 10px;
   padding: 0px;
+  padding-bottom: 14px;
 }
 
 .indexSection, .indexCategory {
@@ -1006,7 +1029,7 @@ export default {
 
 .indexSection {
   margin: 0px;
-  padding: 10px;
+  padding: 0px;
   font-weight: bold;
   text-decoration: none;
   color: black;
@@ -1024,7 +1047,7 @@ export default {
   padding: 0px;
   width: 40vw;
   background-color: lightgreen;
-  border: 1px solid black;
+  border: 2px solid black;
 }
 
 #searchBarInput, #searchBarSubmitButton {
@@ -1044,11 +1067,16 @@ export default {
   outline: none;
 }
 
+#searchBarInput::placeholder
+{
+  color: black;
+}
+
 #searchBarSubmitButton {
   width: 16%;
   font-weight: bold;
   background-color: lightgreen;
-  border-left: 1px solid black;
+  border-left: 2px solid black;
 }
 
 #searchBarSubmitButton:active {

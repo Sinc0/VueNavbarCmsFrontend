@@ -36,6 +36,7 @@ body {
 
 #app {
   margin: 0px;
+  margin-bottom: 40px;
   padding: 0px;
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
