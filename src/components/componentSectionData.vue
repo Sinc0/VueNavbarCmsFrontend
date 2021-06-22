@@ -1,0 +1,417 @@
+<template>
+  <!-- ### data ### -->
+  <div id="sectionData">
+    <div v-if="SelectedSectionCategoryData" id="data">
+      <div v-if="SelectedSection.title != 'index' && SelectedSection.title != 'search'"> <!-- check if section is not index or search -->
+        
+        <div id="image-gallery-wrapper" v-if="SelectedSectionCategoryData[0].galleryImages.length > 0"> <!-- check if category has image gallery -->
+          <h1 id="arrowPreviousGalleryImage" class="arrowsImageGallery" v-on:click="showPreviousGalleryImage()">❮</h1> <!-- arrow previous gallery image -->
+
+          <!-- image gallery -->
+          <div id="image-gallery">
+            <div class="galleryImageDiv" v-for="(image, itemObjKey) in SelectedSectionCategoryData[0].galleryImages.sort((a, b) => {return a.pos - b.pos})" v-bind:key="image.id">
+              <img v-if="(itemObjKey + 1) == 1" v-bind:id="'galleryImage#' + (itemObjKey + 1)" class="galleryImage" v-bind:src="image.image" v-bind:title="image.description" /> <!--  + ' pos ' + image.pos --> <!-- 'image' + ' ' + (itemObjKey + 1) + ' of ' + SelectedSectionCategoryData[0].galleryImages.length -->
+              <img v-if="(itemObjKey + 1) != 1" v-bind:id="'galleryImage#' + (itemObjKey + 1)" class="galleryImage galleryImageHidden" v-bind:src="image.image" v-bind:title="image.description" />
+            </div>
+
+            <!-- <b>image description</b> -->
+          </div>
+
+          <h1 id="arrowNextGalleryImage" class="arrowsImageGallery" v-on:click="showNextGalleryImage()">❯</h1> <!-- arrow next gallery image -->
+        </div>
+
+        <!-- text data -->
+        <div class="data-div" v-for="data in SelectedSectionCategoryData[0].obj.sort((a, b) => {return a.pos - b.pos})" v-bind:key="data.id">
+            <!-- {{data}} -->
+                    
+            <div v-if="data.hidden == 'False'"> <!-- filter hidden data -->  
+              <!-- single line text -->
+              <div v-if="data.multiline == 'False'">
+                <div v-for="o in Object.entries(data)" v-bind:key="o.id">
+                  <p class="data-text data-text-singleline" v-bind:id="'data-' + o[0]" v-if="!o.toString().includes('pos') && !o.toString().includes('hidden') && !o.toString().includes('multiline')">
+                    <b>{{o.toString().split(",")[0].substring(0, 1).toUpperCase()}}{{o.toString().split(",")[0].substring(1, o.toString().length).toLowerCase()}}</b> = {{o.toString().split(",")[1]}} <!-- messy string -->
+                  </p>
+                </div>
+              </div>
+
+              <!-- multiline text -->
+              <div v-if="data.multiline == 'True'">
+                <div v-for="o in Object.entries(data)" v-bind:key="o.id">
+                  <p class="data-text data-text-multiline" v-bind:id="'data-' + o[0]" v-if="!o.toString().includes('pos') && !o.toString().includes('hidden') && !o.toString().includes('multiline')">
+                    <b>{{o.toString().split(",")[0].substring(0, 1).toUpperCase()}}{{o.toString().split(",")[0].substring(1, o.toString().length).toLowerCase()}}</b><br />{{o.toString().split(",")[1]}}<br /> <!-- messy string -->
+                  </p>
+                </div>
+              </div>
+
+            </div>
+         </div>
+
+      </div>
+    </div>
+
+    <!-- print section obj -->
+    <!-- <p v-if="SelectedSection"><b>Section = {{SelectedSection.title}}</b></p>
+    <p v-if="SelectedSection"><b>Section Data </b><br />{{SelectedSection}}</p>
+    <p v-if="SelectedSection"><b>App Background Color </b><br />{{SelectedSection.appBackgroundColor}}</p>
+    <p v-if="SelectedSection"><b>Section Background Color </b><br />{{SelectedSection.sectionBackgroundColor}}</p> -->
+    
+    <!-- print category obj -->
+    <!-- <p v-if="SelectedSectionCategoryData"><b>Category = {{SelectedSectionCategoryData[0].category}}</b></p> -->
+    
+  </div>
+</template>
+
+<script>
+import {useStore} from 'vuex'
+import {computed, onMounted, onUpdated} from 'vue'
+
+export default {
+  setup() {
+    //vuex
+    const store = useStore()
+
+    const SelectedSection = computed(() => { return store.getters['storage/selectedSection']})
+    const SelectedSectionCategories = computed(() => { return store.getters['storage/selectedSectionCategories']})
+    const SelectedSectionData = computed(() => { return store.getters['storage/selectedSectionData']})
+    const SelectedSectionCategoryData = computed(() => { return store.getters['storage/selectedSectionCategoryData']})
+
+    const Sections = computed(() => { return store.getters['storage/sections']})
+    const Categories = computed(() => { return store.getters['storage/categories']})
+    const Data = computed(() => { return store.getters['storage/data']})
+    const SearchResults = computed(() => { return store.getters['storage/searchResults']})
+    const SearchString = computed(() => { return store.getters['storage/searchString']})
+    
+        
+    //lifecycle hooks
+    onMounted(() => {
+        console.log("sectionData mounted")
+    })
+    
+    onUpdated(() => {
+        console.log("sectionData updated")
+
+        //update app background color
+        if (SelectedSection.value.appBackgroundColor)
+        {
+          var appBackground = document.getElementById("app")
+          var sectionsBackground = document.getElementById("Sections")
+          // var dataBackground = document.getElementById("sectionData")
+
+          //set body background
+          var b = document.body
+          b.style.backgroundColor = SelectedSection.value.appBackgroundColor
+
+          //set specified data background color
+          appBackground.style.backgroundColor = SelectedSection.value.appBackgroundColor
+
+          //set sections sidenav backgroundcolor
+          if (SelectedSection.value.sectionBackgroundColor != "")
+          {
+            sectionsBackground.style.backgroundColor = SelectedSection.value.sectionBackgroundColor
+          }
+          else
+          {
+            sectionsBackground.style.backgroundColor = "white"
+          }
+          
+          // console.log("section background-color:" + SelectedSection.value.sectionBackgroundColor)
+          // console.log("app background color: " + SelectedSection.value.appBackgroundColor)
+        }
+        else
+        {
+          //variables
+          var defaultColor = "white"
+          
+          //set body background
+          var b = document.body
+          b.style.backgroundColor = defaultColor
+
+          //set default app background color
+          var appBackground = document.getElementById("app")
+          appBackground.style.backgroundColor = defaultColor
+          
+          // console.log("section background-color:" + SelectedSection.value.sectionBackgroundColor)
+          // console.log("app background color: " + SelectedSection.value.appBackgroundColor)
+        }
+
+        //update opacity of section buttons
+        var sections = Sections.value.sections
+        var selectedSectionPos = SelectedSection.value.pos
+        
+        for (var c in sections)
+        {
+          var sectionButton = document.getElementById("section#" + c)
+          var sectionPos = sectionButton.id.substr(-1)
+          
+          if (sectionPos == selectedSectionPos)
+          {
+            sectionButton.style.opacity = "100%"
+          }
+          else
+          {
+            sectionButton.style.opacity = "30%"
+          }
+        }
+
+        //update color of category buttons
+        var selectedCategoryTitle = null
+        var selectedSectionCategories = SelectedSectionCategories.value
+        var selectedCategoryData = SelectedSectionCategoryData.value
+
+        for (var c in selectedCategoryData)
+        {
+          selectedCategoryTitle = selectedCategoryData[c].category
+        }
+        // console.log("selected category title: " + selectedCategoryTitle)
+
+        
+        for (var c in selectedSectionCategories)
+        {
+          c++ //category ids start 1
+          var categoryButton = document.getElementById("category-" + c)
+          // console.log(categoryButton.innerText)
+
+          if (categoryButton.innerText == selectedCategoryTitle)
+          {
+            categoryButton.style.fontWeight = "bold"
+          }
+          else
+          {
+            categoryButton.style.fontWeight = "normal"
+          }
+        }
+
+        //set last searched text to search bar
+        var searchBarText = document.getElementById("searchBarInput")
+        if (searchBarText != null)
+        {
+          searchBarText.value = SearchString.value
+        }
+        
+        //scroll window to top
+        window.scrollTo(0,0)     
+    })
+    
+    //variables
+    var imagePos = 1
+
+    //functions
+    function showNextGalleryImage() {
+      var galleryImages = document.getElementsByClassName("galleryImage")
+
+      // set ImagePos
+      if (imagePos < galleryImages.length)
+      {
+        imagePos++
+      }
+      else 
+      {
+        imagePos = 1
+      }
+      // console.log(imagePos)
+
+      // display correct gallery image
+      for(var c = 1; c <= galleryImages.length; c++)
+      {
+        var setDisplayedImage = document.getElementById("galleryImage#" + c)
+
+        if (c == imagePos)
+        {
+          setDisplayedImage.style.display = "block"
+          // console.log(setDisplayedImage.id)
+        }
+        else 
+        {
+          setDisplayedImage.style.display = "none"
+        }
+
+      }
+    }
+
+    function showPreviousGalleryImage()
+    {
+      var galleryImages = document.getElementsByClassName("galleryImage")
+      
+      // set ImagePos
+      if (imagePos > 1)
+      {
+        imagePos--
+      }
+      else 
+      {
+        imagePos = galleryImages.length
+      }
+      // console.log(imagePos)
+
+      // display correct gallery image
+      for(var c = 1; c <= galleryImages.length; c++)
+      {
+        var setDisplayedImage = document.getElementById("galleryImage#" + c)
+
+        if (c == imagePos)
+        {
+          setDisplayedImage.style.display = "block"
+          // console.log(setDisplayedImage.id)
+        }
+        else 
+        {
+          setDisplayedImage.style.display = "none"
+        }
+
+      }
+    }
+
+    return {
+      //vuex
+      SelectedSectionCategoryData,
+      SelectedSection,
+      SelectedSectionCategories,
+      SelectedSectionData,
+      Sections,
+      Categories,
+      Data,
+      SearchResults,
+
+      //functions
+      showNextGalleryImage,
+      showPreviousGalleryImage,
+    }   
+  }
+}
+</script>
+
+<!-- Add "scoped" attribute to limit CSS to this component only -->
+<style scoped>
+/* scrollbar styling */
+::-webkit-scrollbar {
+  height: 4px;
+  width: 0px;
+}
+
+::-webkit-scrollbar-track {
+  background: lightgray;
+}
+
+::-webkit-scrollbar-thumb {
+  background: black;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+#sectionData {
+  margin: 0px;
+  padding: 0px;
+  /* border: 1px solid black; */
+}
+
+#data {
+  margin: 0px;
+  padding: 0px;
+  /* border: 1px solid black;   */
+}
+
+.data-text {
+  margin: 0px;
+  margin: auto;
+  padding: 10px;
+  width: 40vw;
+  text-align: left;
+  background-color: white;
+  border-bottom: 1px solid black;
+  border-left: 1px solid  black;
+  border-right: 1px solid black;
+  border-top: 1px solid black;
+}
+
+.data-text-singleline
+{
+  padding-top: 4px;
+  padding-bottom: 4px
+  /* border: 1px solid black; */
+}
+
+.data-text-multiline
+{
+  /* text-align: center; */
+  /* border-top: 1px solid black;
+  border-bottom: 1px solid black; */
+  /* border: 1px solid black; */
+}
+
+.data-div {
+  margin: 0px;
+  padding: 0px;
+}
+
+#image-gallery-wrapper {
+  margin: 0px;
+  padding: 0px;
+}
+
+#image-gallery {
+  display: inline-flex;
+  margin: 0px;
+  margin-top: 7px;
+  padding-bottom: 10px;
+  padding-left: 10px;
+  padding-top: 10px;
+  padding-right: 10px;
+  width: 40vw;
+  height: 20vw;
+  background-color: black;
+  border: 1px solid black;
+}
+
+.arrowsImageGallery {  
+  display: inline-flex;
+  /* margin: 0px;
+  padding: 0px;
+  padding-bottom: 0px;
+  padding-left: 10px;
+  padding-top: 16vh;
+  padding-right: 10px;
+  user-select: none;
+  -webkit-user-select: none; */
+  /* border: 1px solid black; */
+  margin: 0;
+  margin-top: 20%;
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-bottom: 3px;
+  padding-top: 0px;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  -webkit-user-select: none;
+  vertical-align: top;
+  /* border: 1px solid black; */
+}
+
+.arrowsImageGallery:active {
+  color: lightgreen;
+}
+
+#arrowPreviousGalleryImage {
+  margin-left: 0px;
+}
+
+.galleryImage {
+  display: block;
+  margin: 0px;
+  padding: 0px;
+  width: 100%;
+  height: 100%;
+  /* width: 400px;
+  height: 300px; */
+}
+
+.galleryImageHidden {
+  display: none;
+  margin: 0px;
+  padding: 0px;
+  width: 100%;
+  height: 100%;
+}
+</style>

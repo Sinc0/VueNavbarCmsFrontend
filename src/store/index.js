@@ -21,7 +21,10 @@ export default createStore({
         sections: null,
         categories: null,
         data: null,
+        
         searchResults: null,
+        searchString: null,
+
         selectedMovie: null,
         selectedSection: null,
         selectedSectionCategories: null,
@@ -74,6 +77,11 @@ export default createStore({
         searchResults(state)
         {
           return state.searchResults
+        },
+        
+        searchString(state)
+        {
+          return state.searchString
         }
       },
 
@@ -113,6 +121,10 @@ export default createStore({
 
         mutationSetSearchResults(state, value) {
           state.searchResults = value
+        },
+
+        mutationSetSearchString(state, value) {
+          state.searchString = value
         }
       },
 
@@ -161,6 +173,11 @@ export default createStore({
         actionSetSearchResults({commit}, value)
         {
           commit('mutationSetSearchResults', value)
+        },
+
+        actionSetSearchString({commit}, value)
+        {
+          commit('mutationSetSearchString', value)
         }
       }
       

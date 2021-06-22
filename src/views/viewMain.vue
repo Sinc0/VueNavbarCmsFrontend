@@ -1,25 +1,39 @@
 <template>
-  <div class="home">
-    <!-- <img alt="Vue logo" src="../assets/logo.png"> -->
-    <div class="flex-container">
+  <div id="Main">
+    <!-- fetch all data -->
+    <FetchData />
+    
+    <div id="flex-container">
+      <!-- sidenav -->
       <div id="Sections" class="flex-item"><Sections/></div>
-      <div id="SectionData" class="flex-item"><SectionData/></div>
+      
+      <!-- Data -->
+      <div id="Data">
+        <div id="Categories" class="flex-item"><Categories /></div>
+        <div id="Index" class="flex-item"><Index /></div>
+        <div id="Search" class="flex-item"><Search /></div>
+        <div id="SectionData" class="flex-item"><SectionData/></div>
+      </div>
     </div>
+
   </div>
 </template>
 
 <script>
-// @ is an alias to /src
-import {useStore} from 'vuex'
-import { useRouter, useRoute } from 'vue-router' //instead of this.$route
-import {computed} from 'vue'
-
-import SectionData from '@/components/SectionData.vue'
-import Sections from '@/components/Sections.vue'
+import FetchData from '@/components/componentFetchData.vue'
+import Categories from '@/components/componentCategories.vue'
+import Index from '@/components/componentIndex.vue'
+import Search from '@/components/componentSearch.vue'
+import SectionData from '@/components/componentSectionData.vue'
+import Sections from '@/components/componentSections.vue'
 
 export default {
   name: 'Home',
   components: {
+    FetchData,
+    Categories,
+    Index, 
+    Search,
     Sections,
     SectionData
   },
@@ -36,8 +50,10 @@ export default {
 </script>
 
 <style scoped>
-  .flex-container {
+  #flex-container {
     display: flex;
+    margin: 0px;
+    padding: 0px;
     flex-direction: row;
     flex-wrap: nowrap;
     justify-content: center; /* flex-start, center, flex-end */
@@ -49,6 +65,16 @@ export default {
   .flex-item {
     margin: 0px;
     padding: 0px;
+  }
+
+  #Categories {
+    margin: 0px;
+    margin: auto;
+    margin-top: 16px;
+    margin-bottom: 10px;
+    padding: 0px;
+    width: 40vw;
+    /* border: 1px solid black; */
   }
 
   #Sections {
