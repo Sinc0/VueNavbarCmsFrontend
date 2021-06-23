@@ -105,13 +105,9 @@ export default {
           appBackground.style.backgroundColor = SelectedSection.value.appBackgroundColor
 
           //set sections sidenav backgroundcolor
-          if (SelectedSection.value.sectionBackgroundColor != "")
+          if (SelectedSection.value.sectionBackgroundColor)
           {
             sectionsBackground.style.backgroundColor = SelectedSection.value.sectionBackgroundColor
-          }
-          else
-          {
-            sectionsBackground.style.backgroundColor = "white"
           }
           
           // console.log("section background-color:" + SelectedSection.value.sectionBackgroundColor)
@@ -129,6 +125,10 @@ export default {
           //set default app background color
           var appBackground = document.getElementById("app")
           appBackground.style.backgroundColor = defaultColor
+        
+          //set default section background color
+          var sectionsBackground = document.getElementById("Sections")
+          sectionsBackground.style.backgroundColor = "white"
           
           // console.log("section background-color:" + SelectedSection.value.sectionBackgroundColor)
           // console.log("app background color: " + SelectedSection.value.appBackgroundColor)
