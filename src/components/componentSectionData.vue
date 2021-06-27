@@ -3,7 +3,6 @@
   <div id="sectionData">
     <div v-if="SelectedSectionCategoryData" id="data">
       <div v-if="SelectedSection.title != 'index' && SelectedSection.title != 'search'"> <!-- check if section is not index or search -->
-        
         <!-- image gallery -->
         <div id="image-gallery-wrapper" v-if="SelectedSectionCategoryData[0].galleryImages.length > 0"> <!-- check if category has image gallery -->
           <h1 id="arrowPreviousGalleryImage" class="arrowsImageGallery" v-on:click="showPreviousGalleryImage()">❮</h1> <!-- arrow previous gallery image -->
@@ -15,12 +14,12 @@
             <!-- <b>image description</b> -->
           </div>
           <h1 id="arrowNextGalleryImage" class="arrowsImageGallery" v-on:click="showNextGalleryImage()">❯</h1> <!-- arrow next gallery image -->
-        </div>
         
-        <!-- mobile arrows -->
-        <div id="mobile-arrows-image-gallery-wrapper" v-if="SelectedSectionCategoryData[0].galleryImages.length > 0">
-          <h1 id="arrowPreviousGalleryImage" class="arrowsImageGalleryMobile" v-on:click="showPreviousGalleryImage()">❮</h1>
-          <h1 id="arrowNextGalleryImage" class="arrowsImageGalleryMobile" v-on:click="showNextGalleryImage()">❯</h1>
+          <!-- mobile arrows -->
+          <div id="mobile-arrows-image-gallery-wrapper" v-if="SelectedSectionCategoryData[0].galleryImages.length > 0">
+            <h1 id="arrowPreviousGalleryImage" class="arrowsImageGalleryMobile" v-on:click="showPreviousGalleryImage()">❮</h1>
+            <h1 id="arrowNextGalleryImage" class="arrowsImageGalleryMobile" v-on:click="showNextGalleryImage()">❯</h1>
+          </div>
         </div>
 
         <!-- text data -->

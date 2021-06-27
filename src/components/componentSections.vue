@@ -7,11 +7,14 @@
         <p v-bind:id="'section#' + section.pos" class="section" v-if="section.title == 'index'" v-bind:title="section.title"><b>i</b></p>
         
         <!-- search -->
-        <p v-bind:id="'section#' + section.pos" class="section" v-else-if="section.title == 'search'" v-bind:title="section.title"><b>S</b></p>
+        <p v-bind:id="'section#' + section.pos" class="section" v-else-if="section.title == 'search'" v-bind:title="section.title"><b>s</b></p>
+
+        <!-- about -->
+        <p v-bind:id="'section#' + section.pos" class="section" v-if="section.title == 'about'" v-bind:title="section.title"><b>a</b></p>
 
         <!-- specific categories -->
         <img v-bind:id="'section#' + section.pos" class="section sectionIcon" v-bind:src="section.iconImage" v-if="section.iconImage != ''" v-bind:title="section.title"/>
-        <p v-bind:id="'section#' + section.pos" class="section" v-else-if="section.iconImage == '' && section.title != 'index' && section.title != 'search'" v-bind:title="section.title">{{section.pos}}</p>
+        <p v-bind:id="'section#' + section.pos" class="section" v-else-if="section.iconImage == '' && section.title != 'index' && section.title != 'search' && section.title != 'about'" v-bind:title="section.title">{{section.pos}}</p>
         <!-- <p v-bind:id="'section#' + section.pos" class="section" v-else>{{section.pos}}</p> -->
       </div>
     </div>
