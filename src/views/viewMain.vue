@@ -1,8 +1,10 @@
 <template>
   <div id="Main">
-    <!-- fetch all data -->
+    
+    <!-- not displayed -->
     <FetchData />
     
+    <!-- displayed -->
     <div id="flex-container">
       <!-- sidenav -->
       <div id="Sections" class="flex-item"><Sections/></div>
@@ -29,6 +31,7 @@ import Sections from '@/components/componentSections.vue'
 
 export default {
   name: 'Home',
+
   components: {
     FetchData,
     Categories,
@@ -39,9 +42,6 @@ export default {
   },
 
   setup() {
-    //router
-    //let routerIdParamExample = useRouter().currentRoute.value.params.id
-
     return {
 
     }
@@ -150,9 +150,9 @@ export default {
     }
         
     #Sections {
-      left: ;
+      /* left: 0; */
       position: relative;
-      display: ;
+      /* display: block; */
       /* margin-top: 100px; */
       height: 100%;
       /* width is 70px; */

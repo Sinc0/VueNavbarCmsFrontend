@@ -2,6 +2,7 @@
     <!-- ### search box ### -->
     <div v-if="Sections && Categories && Data">
       <div id="searchBox" v-if="SelectedSection.title == 'search'">
+
         <!-- search bar -->
         <form v-on:submit.prevent="onSubmit">
           <input id="searchBarInput" placeholder="Enter search text..." /> <!-- v-on:keyup.enter="loadSearch($event)" -->
@@ -11,12 +12,12 @@
         <!-- search hits -->
         <p v-if="SearchResults" id="searchHitCount">{{SearchResults.length}} results found</p>
         <div class="searchHit" v-for="(h, itemObjKey) in SearchResults" v-bind:key="h.id" v-bind:id="'searchHit' + (itemObjKey + 1)">
-          <!-- {{h}} -->
           <div v-if="h.searchMatchType == 'section'" v-on:click="loadSectionFromSearch(null, h.section)">{{itemObjKey+1}}: <b>section</b> {{h.section}}</div>
           <div v-if="h.searchMatchType == 'category'" v-on:click="loadCategoryFromSearch(h.section, null, h.category)">{{itemObjKey+1}}: <b>category</b> in {{h.section}} = <b>{{h.value}}</b></div>
           <div v-if="h.searchMatchType == 'data'" v-on:click="loadCategoryFromSearch(h.section, null, h.category, h.key)">{{itemObjKey+1}}: <b>data</b> in {{h.section}} ➞ {{h.category}} ➞ {{h.key.substr(0, 1).toUpperCase() + h.key.substr(1, h.key.length)}} = <b>{{h.value}}</b></div>
           <div v-if="h.searchMatchType == 'image description'" v-on:click="loadCategoryFromSearch(h.section, null, h.category)">{{itemObjKey+1}}: <b>image</b> {{h.key}} in {{h.section}} ➞ {{h.category}} = <b>{{h.value}}</b></div>
         </div>
+
       </div>
     </div>
 </template>
@@ -45,18 +46,20 @@ export default {
         //functions
         function loadSectionFromSearch(pos, title)
         {
-          // console.log("loadSectionFromIndex")
-          // console.log("section pos: " + pos)
-          // console.log("section category: " + "default")
-
-          var section = null
-
-          var sections = Sections.value
-          var categories = Categories.value 
-          var data = Data.value
+          //debugging
           // console.log(sections.sections)
           // console.log(categories.categories)
           // console.log(data.data)
+
+          //variables
+          var section = null
+          var sections = Sections.value
+          var categories = Categories.value 
+          var data = Data.value
+          var sectionCategories = []
+          var sectionData = []
+          var defaultCategoryTitle = "defaultCategoryTitle"
+          var defaultCategoryData = []
 
           //filter sections for selected section
           if (pos != null)
@@ -81,37 +84,24 @@ export default {
           }
 
           //filter categories for selected section
-          var sectionCategories = []
           for (var c in categories.categories)
           {
             if(categories.categories[c].section == section.title)
             {
               sectionCategories.push(categories.categories[c])
             }
-
-            // console.log(section.title)
-            // console.log(categories.categories[c])
-            // console.log(data)
           }
 
           //filter data for selected section
-          var sectionData = []
           for (var d in data.data)
           {
             if(data.data[d].section == section.title)
             {
               sectionData.push(data.data[d])
             }
-
-            // console.log(section.title)
-            // console.log(categories.categories[c].section)
-            // console.log(data.data[d])
           }
 
-          //filter data for selected section category data
-          var defaultCategoryTitle = "defaultCategoryTitle"
-          var defaultCategoryData = []
-
+          //filter data for default category title
           for (var c in sectionCategories)
           {
             if (sectionCategories[c].pos == "1")
@@ -120,6 +110,7 @@ export default {
             }
           }
 
+          //filter data for selected section category data
           for (var c in sectionData)
           {
             if (sectionData[c].category == defaultCategoryTitle)
@@ -144,24 +135,23 @@ export default {
 
         function loadCategoryFromSearch(title, pos, category)
         {
-            console.log("loadCategoryFromIndex")
-            console.log("section title: " + title)
-            console.log("section pos: " + pos)
-            console.log("section category: " + category)
-
-            var section = null
-            var category = category
-            var title = title
-
-            var sections = Sections.value
-            var categories = Categories.value 
-            var data = Data.value
-            
+            //debugging
             // console.log(sections.sections)
             // console.log(categories.categories)
             // console.log(data.data)
 
-            // filter sections for selected section
+            //variables
+            var section = null
+            var category = category
+            var title = title
+            var sections = Sections.value
+            var categories = Categories.value 
+            var data = Data.value
+            var sectionCategories = []
+            var defaultCategoryTitle = "defaultCategoryTitle"
+            var defaultCategoryData = []
+
+            //filter sections for selected section
             for (var c in sections.sections)
             {
                 if (title == sections.sections[c].title)
@@ -169,50 +159,34 @@ export default {
                 section = sections.sections[c]
                 }
             }
-            // console.log(section)
 
-            // filter categories for selected section
-            var sectionCategories = []
+            //filter categories for selected section
             for (var c in categories.categories)
             {
                 if(categories.categories[c].section == section.title)
                 {
-                sectionCategories.push(categories.categories[c])
+                  sectionCategories.push(categories.categories[c])
                 }
-
-                // console.log(section.title)
-                // console.log(categories.categories[c])
-                // console.log(data)
             }
-            // console.log(sectionCategories)
 
-            // filter data for selected section
+            //filter data for selected section
             var sectionData = []
             for (var d in data.data)
             {
                 if(data.data[d].section == section.title)
                 {
-                sectionData.push(data.data[d])
+                  sectionData.push(data.data[d])
                 }
-
-                // console.log(section.title)
-                // console.log(categories.categories[c].section)
-                // console.log(data.data[d])
             }
-            // console.log(sectionData)
 
-            // filter data for selected section category data
-            var defaultCategoryTitle = "defaultCategoryTitle"
-            var defaultCategoryData = []
-
+            //filter data for selected section category data
             for (var c in sectionData)
             {
                 if (sectionData[c].category == category)
                 {
-                defaultCategoryData.push(sectionData[c])
+                  defaultCategoryData.push(sectionData[c])
                 }
             }
-            // console.log(defaultCategoryData)
 
             // vuex
             store.dispatch('storage/actionSetSelectedSection', section)
@@ -230,6 +204,7 @@ export default {
 
         function loadSearch(event)
         {
+            //debugging
             // console.log(event)
             
             //variables
@@ -249,6 +224,7 @@ export default {
                 return
             }
 
+            //find and set search objects
             for (var d in allDataFromDb)
             {
                 //variables
@@ -259,92 +235,81 @@ export default {
                 //sort data into search objects
                 for (var c in y)
                 {
-                //variables
-                var dataType = y[c][0].toString()
+                  //variables
+                  var dataType = y[c][0].toString()
 
-                //filter data to find data.section and data.category
-                if (dataType != "backgroundColor" && dataType != "backgroundImage" && dataType != "key" && dataType != "lastEdited" && dataType != "type" && dataType != "obj" && dataType != "galleryImages")
-                {
-                    var cleanStr1 = JSON.stringify(y[c])
-                    var cleanStr2 = cleanStr1.substr(1, (cleanStr1.length - 2))
-                    // var cleanStr3 = cleanStr2.replaceAll("\"", "'")
-                    var cleanStr4 = cleanStr2.replace(",", ":")
-                    // var cleanStr5 = "{" + cleanStr4 + "}"
-                    // console.log(cleanStr4)
-                    
-                    searchObject += cleanStr4 + ","
-                }
+                  //filter data to find data.section and data.category
+                  if (dataType != "backgroundColor" && dataType != "backgroundImage" && dataType != "key" && dataType != "lastEdited" && dataType != "type" && dataType != "obj" && dataType != "galleryImages")
+                  {
+                      var cleanStr1 = JSON.stringify(y[c])
+                      var cleanStr2 = cleanStr1.substr(1, (cleanStr1.length - 2))
+                      // var cleanStr3 = cleanStr2.replaceAll("\"", "'")
+                      var cleanStr4 = cleanStr2.replace(",", ":")
+                      // var cleanStr5 = "{" + cleanStr4 + "}"
+                      
+                      searchObject += cleanStr4 + ","
+                  }
 
-                //filter relevant data from data.galleryImages
-                if (dataType == "galleryImages")
-                { 
-                    var imageGallery = y[c][1]
-                    if (imageGallery != "null")
-                    {
-                    // console.log("galleryImages")
-                    for (var c in imageGallery)
-                    {
-                        if (imageGallery[c].hidden == "False" || imageGallery[c].hidden == "false")
-                        {
-                        cleanStr1 = "\"image-" + c + "\"" + ":" + "\"" + imageGallery[c].description + "\""
-                        // console.log(cleanStr1)
-
-                        searchObject += cleanStr1 + ","
-                        }
-                    }
-                    }
-                }
-
-                //filter relevant data from data.obj
-                if (dataType == "obj")
-                {
-                    var obj = y[c][1]
-                    if (obj != "null")
-                    {
-                    // console.log("obj")
-                      for (var c in obj)
+                  //filter relevant data from data.galleryImages
+                  if (dataType == "galleryImages")
+                  { 
+                      var imageGallery = y[c][1]
+                      
+                      if (imageGallery != "null")
                       {
-                          if (obj[c].hidden == "False")
-                          {
-                            var k = Object.entries(obj[c])
-                            for(var x in k)
+                        for (var c in imageGallery)
+                        {
+                            if (imageGallery[c].hidden == "False" || imageGallery[c].hidden == "false")
                             {
-                                if (k[x][0] != "hidden" && k[x][0] != "multiline" && k[x][0] != "pos")
-                                {
-                                var cleanStr1 = JSON.stringify(k[x])
-                                var cleanStr2 = cleanStr1.substr(1, (cleanStr1.length - 2))
-                                // var cleanStr3 = cleanStr2.replaceAll("\"", "'")
-                                var cleanStr4 = cleanStr2.replace(",", ":")
-                                // var cleanStr5 = "{" + cleanStr4 + "}"
-                                // console.log(cleanStr4)
-                                
-                                searchObject += cleanStr4 + ","
+                              cleanStr1 = "\"image-" + c + "\"" + ":" + "\"" + imageGallery[c].description + "\""
 
-                                // console.log(JSON.stringify(k[x]))
-                                }
+                              searchObject += cleanStr1 + ","
                             }
-
-                            // console.log(JSON.stringify(obj[c]))
-                          }
+                        }
                       }
-                    }
-                }
+                  }
+
+                  //filter relevant data from data.obj
+                  if (dataType == "obj")
+                  {
+                      var obj = y[c][1]
+                      if (obj != "null")
+                      {
+                        for (var c in obj)
+                        {
+                            if (obj[c].hidden == "False")
+                            {
+                              var k = Object.entries(obj[c])
+
+                              for(var x in k)
+                              {
+                                  if (k[x][0] != "hidden" && k[x][0] != "multiline" && k[x][0] != "pos")
+                                  {
+                                    var cleanStr1 = JSON.stringify(k[x])
+                                    var cleanStr2 = cleanStr1.substr(1, (cleanStr1.length - 2))
+                                    // var cleanStr3 = cleanStr2.replaceAll("\"", "'")
+                                    var cleanStr4 = cleanStr2.replace(",", ":")
+                                    // var cleanStr5 = "{" + cleanStr4 + "}"
+                                    
+                                    searchObject += cleanStr4 + ","
+                                  }
+                              }
+                            }
+                        }
+                      }
+                  }
                 }
                 
                 //parse data to json and add into searchable objects array
                 searchObject = "{" + searchObject.substr(0, searchObject.length - 1) + "}"
                 searchObject = JSON.parse(searchObject)
                 searchObjects.push(searchObject)
-                // console.log("searchObject: " + searchObject)
-                // console.log("")
             }
 
-            // console.log("searchObjects")
-            // console.log(searchObjects)
-
-
+            //filter search objects
             for (var c in searchObjects)
             {
+                //debugging
                 // console.log(searchObjects[c])
                 // console.log(searchObjects[c].section)
                 // console.log(searchObjects[c].category)
@@ -353,7 +318,7 @@ export default {
                 var t = Object.entries(searchObjects[c])
                 if (c > 1)
                 {
-                var previousSection = searchObjects[c - 1].section 
+                  var previousSection = searchObjects[c - 1].section 
                 }
                 var currentSection = searchObjects[c].section
                 var currentCategory = searchObjects[c].category
@@ -361,95 +326,92 @@ export default {
                 //check if section is not index or search
                 if (currentSection != 'index' && currentSection != 'search')
                 {
-                for(var x in t)
-                { 
-                    var objectKey = t[x][0]
-                    var objectValue = t[x][1]
-                    // console.log("objectKey: " + objectKey)
-                    // console.log("objectValue: " + objectValue)
-                    
-                    //search match found in category
-                    if(objectKey == "category")
-                    {
-                      if(objectValue.includes(searchString.value))
+                  for(var x in t)
+                  { 
+                      var objectKey = t[x][0]
+                      var objectValue = t[x][1]
+                      
+                      //search match found in category
+                      if(objectKey == "category")
                       {
-                          var categoryName = objectValue
-                          searchHitCounter++
-                          searchMatchType = "category"
-                          // foundIn += "{" + "section: " + currentSection + " category: " + currentCategory + " / " + "category" + "},"
-                          var formatToJson1 = "\"section\":" + "\"" + currentSection + "\"," + "\"category\":" + "\"" + currentCategory + "\"," + "\"searchMatchType\":" + "\"category\"," + "\"value\":" + "\"" + categoryName + "\""
-                          var formatToJson2 = "{" + formatToJson1 + "}"
-                          var parsedToObject = JSON.parse(formatToJson2)
-                          foundIn.push(parsedToObject)
-                      }
-                    }
-                    
-                    //search match found in section
-                    else if(objectKey == "section")
-                    {
-                      if(objectValue.includes(searchString.value))
-                      {
-                          searchHitCounter++
-                          searchMatchType = "section"
-                          // console.log("previous section: " + previousSection)
-                          // console.log("current section: " + currentSection)
-                          
-                          // foundIn += "{" + "section: " + currentSection + " category: " + currentCategory + " / " + "section" + "},"
-                          var formatToJson1 = "\"section\":" + "\"" + currentSection + "\"," + "\"searchMatchType\":" + "\"section\""
-                          var formatToJson2 = "{" + formatToJson1 + "}"
-                          var parsedToObject = JSON.parse(formatToJson2)
-                          
-                          //section duplicate check
-                          if (previousSection != null && currentSection != previousSection)
+                          if(objectValue.includes(searchString.value))
                           {
-                          foundIn.push(parsedToObject)
+                              var categoryName = objectValue
+
+                              searchHitCounter++
+                              searchMatchType = "category"
+                              
+                              var formatToJson1 = "\"section\":" + "\"" + currentSection + "\"," + "\"category\":" + "\"" + currentCategory + "\"," + "\"searchMatchType\":" + "\"category\"," + "\"value\":" + "\"" + categoryName + "\""
+                              var formatToJson2 = "{" + formatToJson1 + "}"
+                              var parsedToObject = JSON.parse(formatToJson2)
+                              
+                              foundIn.push(parsedToObject)
                           }
                       }
-                    }
+                    
+                      //search match found in section
+                      else if(objectKey == "section")
+                      {
+                          if(objectValue.includes(searchString.value))
+                          {
+                              searchHitCounter++
+                              searchMatchType = "section"
+                              
+                              var formatToJson1 = "\"section\":" + "\"" + currentSection + "\"," + "\"searchMatchType\":" + "\"section\""
+                              var formatToJson2 = "{" + formatToJson1 + "}"
+                              var parsedToObject = JSON.parse(formatToJson2)
+                              
+                              //section duplicate check
+                              if (previousSection != null && currentSection != previousSection)
+                              {
+                                foundIn.push(parsedToObject)
+                              }
+                          }
+                      }
                             
-                    //search match found in image description
-                    else if(objectKey.substring(0, 5) == "image")
-                    {
-                      var imageNumber = objectKey.substring(6, 7)
-                      imageNumber++
-                      var imageDescription = objectValue
-                      
-                      if(objectValue.includes(searchString.value))
+                      //search match found in image description
+                      else if(objectKey.substring(0, 5) == "image")
                       {
-                          searchHitCounter++
-                          searchMatchType = "image"
-                          // foundIn += "{" + "section: " + currentSection + " category: " + currentCategory + " / " + "image description" + "},"
-                          var formatToJson1 = "\"section\":" + "\"" + currentSection + "\"," + "\"category\":" + "\"" + currentCategory + "\"," + "\"searchMatchType\":" + "\"image description\"," + "\"key\":" + "\"" + imageNumber + "\"," + "\"value\":" + "\"" + imageDescription + "\""
-                          var formatToJson2 = "{" + formatToJson1 + "}"
-                          var parsedToObject = JSON.parse(formatToJson2)
-                          foundIn.push(parsedToObject)
+                        var imageNumber = objectKey.substring(6, 7)
+                        imageNumber++
+                        var imageDescription = objectValue
+                        
+                        if(objectValue.includes(searchString.value))
+                        {
+                            searchHitCounter++
+                            searchMatchType = "image"
+
+                            var formatToJson1 = "\"section\":" + "\"" + currentSection + "\"," + "\"category\":" + "\"" + currentCategory + "\"," + "\"searchMatchType\":" + "\"image description\"," + "\"key\":" + "\"" + imageNumber + "\"," + "\"value\":" + "\"" + imageDescription + "\""
+                            var formatToJson2 = "{" + formatToJson1 + "}"
+                            var parsedToObject = JSON.parse(formatToJson2)
+
+                            foundIn.push(parsedToObject)
+                        }
                       }
-                    }
         
-                    //search match found in data var
-                    else
-                    {
-                      if(objectValue.includes(searchString.value))
+                      //search match found in data var
+                      else
                       {
-                          var dataKey = objectKey
-                          var dataValue = objectValue
-                          searchHitCounter++
-                          searchMatchType = "data"
-                          // foundIn += "{" + "section: " + currentSection + " category: " + currentCategory + " / " + "data" + "},"
-                          var formatToJson1 = "\"section\":" + "\"" + currentSection + "\"," + "\"category\":" + "\"" + currentCategory + "\"," + "\"searchMatchType\":" + "\"data\"," + "\"key\":" + "\"" + dataKey + "\"," + "\"value\":" + "\"" + dataValue + "\"" 
-                          var formatToJson2 = "{" + formatToJson1 + "}"
-                          var parsedToObject = JSON.parse(formatToJson2)
-                          foundIn.push(parsedToObject)
+                        if(objectValue.includes(searchString.value))
+                        {
+                            var dataKey = objectKey
+                            var dataValue = objectValue
+
+                            searchHitCounter++
+                            searchMatchType = "data"
+
+                            var formatToJson1 = "\"section\":" + "\"" + currentSection + "\"," + "\"category\":" + "\"" + currentCategory + "\"," + "\"searchMatchType\":" + "\"data\"," + "\"key\":" + "\"" + dataKey + "\"," + "\"value\":" + "\"" + dataValue + "\"" 
+                            var formatToJson2 = "{" + formatToJson1 + "}"
+                            var parsedToObject = JSON.parse(formatToJson2)
+
+                            foundIn.push(parsedToObject)
+                        }
                       }
-                    }
-        
-                    // console.log(t[x])
-                }
+          
+                  }
                 }
 
-                // console.log("")
             }
-            // console.log("search hit counter: " + searchHitCounter)
             
             //alphabetically sort search hits by searchMatchType
             foundIn.sort((a, b) => {
@@ -462,7 +424,7 @@ export default {
             store.dispatch('storage/actionSetSearchResults', foundIn)
             store.dispatch('storage/actionSetSearchString', searchText)
 
-            }
+        }
 
         return {
             //vuex
@@ -555,10 +517,10 @@ export default {
     background-color: yellow;
     }
 
-  /* mobile styling */
-  @media screen and (max-width: 700px) {
-    #searchBox {
-      width: 88vw;
+    /* mobile styling */
+    @media screen and (max-width: 700px) {
+      #searchBox {
+        width: 88vw;
+      }
     }
-  }
 </style>

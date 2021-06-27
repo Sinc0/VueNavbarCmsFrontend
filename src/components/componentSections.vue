@@ -15,7 +15,6 @@
         <!-- specific categories -->
         <img v-bind:id="'section#' + section.pos" class="section sectionIcon" v-bind:src="section.iconImage" v-if="section.iconImage != ''" v-bind:title="section.title"/>
         <p v-bind:id="'section#' + section.pos" class="section" v-else-if="section.iconImage == '' && section.title != 'index' && section.title != 'search' && section.title != 'about'" v-bind:title="section.title">{{section.pos}}</p>
-        <!-- <p v-bind:id="'section#' + section.pos" class="section" v-else>{{section.pos}}</p> -->
       </div>
     </div>
 
@@ -47,18 +46,21 @@ export default {
 
     //functions
     function loadSection(pos)
-    {   
+    {
+      //debugging
+      // console.log(sections)
+      // console.log(categories)
+      // console.log(data)
+
       //variables
       var categoryTitle = null
       var categoryData = []
       var section = null
-      
       var sections = Sections.value
       var categories = Categories.value
       var data = Data.value
-      // console.log(sections)
-      // console.log(categories)
-      // console.log(data)
+      var defaultCategoryTitle = "defaultCategoryTitle"
+      var defaultCategoryData = []
 
       //filter sections for selected section
       for (var c in sections.sections)
@@ -69,14 +71,6 @@ export default {
         }
       }
 
-      // for (var c in sections.sections)
-      // {
-      //   if (title == sections.sections[c].title)
-      //   {
-      //     section = sections.sections[c]
-      //   }
-      // }
-
       //filter categories for selected section
       var sectionCategories = []
       for (var c in categories.categories)
@@ -85,10 +79,6 @@ export default {
         {
           sectionCategories.push(categories.categories[c])
         }
-
-        // console.log(section.title)
-        // console.log(categories.categories[c])
-        // console.log(data)
       }
 
       //filter data for selected section
@@ -99,16 +89,9 @@ export default {
         {
           sectionData.push(data.data[d])
         }
-
-        // console.log(section.title)
-        // console.log(categories.categories[c].section)
-        // console.log(data.data[d])
       }
 
-      //filter data for selected section category data
-      var defaultCategoryTitle = "defaultCategoryTitle"
-      var defaultCategoryData = []
-
+      //filter data for default category title
       for (var c in sectionCategories)
       {
         if (sectionCategories[c].pos == "1")
@@ -117,6 +100,7 @@ export default {
         }
       }
 
+      //filter data for selected section category data
       for (var c in sectionData)
       {
         if (sectionData[c].category == defaultCategoryTitle)
@@ -243,7 +227,7 @@ export default {
       padding: 0px;
       width: 100%;
       height: 100%;
-      background-color: ;
+      /* background-color: black; */
     }
   }
 </style>

@@ -1,17 +1,11 @@
 <template>
     <!-- ### categories ### -->
     <div id="flexContainer">
-      <!-- <h1 id="arrowScrollLeft" class="arrowScroll" v-on:click="scrollCategoriesToLeft()">❮</h1> -->
-
       <div v-if="SelectedSectionCategories" id="categories">
         <span v-for="category in SelectedSectionCategories.sort((a, b) => {return a.pos - b.pos})" v-bind:key="category.key">
-          <!-- <h1 v-bind:id="'category-' + category.pos" class="category" v-if="category.title == 'Index Test'">{{category.title}}</h1>
-          <h1 v-bind:id="'category-' + category.pos" class="category" v-if="category.title != 'Index Tree'" v-on:click="loadCategory(category, SelectedSectionData, category.pos)">{{category.title}}</h1> -->
           <h1 v-bind:id="'category-' + category.pos" class="category" v-on:click="loadCategory(category, SelectedSectionData, category.pos)">{{category.title}}</h1>
         </span>
       </div>
-
-      <!-- <h1 id="arrowScrollRight" class="arrowScroll" v-on:click="scrollCategoriesToRight()">❯</h1> -->
     </div>
 </template>
 
@@ -36,23 +30,20 @@ export default {
 
         function loadCategory(category, data, pos)
         {
-            //filter data for selected category
+            //variables
             var categoryData = []
+
+            //filter data for selected category
             for (var d in data)
             {
                 if(data[d].category == category.title)
                 {
-                categoryData.push(data[d])
+                  categoryData.push(data[d])
                 }
-
-                // console.log(categories.categories[c].section)
-                // console.log(section.title)
-                // console.log(data[d])
             }
 
             //vuex
             store.dispatch('storage/actionSetSelectedSectionCategoryData', categoryData)
-            // console.log(categoryData[0])
         }
 
         return {

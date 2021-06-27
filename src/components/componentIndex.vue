@@ -4,13 +4,15 @@
       <div v-if="SelectedSection.title == 'index'">
         <div v-for="section in Sections.sections.sort((a, b) => {return a.pos - b.pos})" v-bind:key="section.pos">
           <div id="indexSectionDiv" v-if="section.title != 'index' && section.title != 'search' && section.title != 'about'">
+              
+            <!-- section -->
             <router-link class="indexSection" v-bind:to="'/' + section.title" v-on:click="loadSectionFromIndex(section.pos)">{{section.title.substr(0, 1).toUpperCase()}}{{section.title.substr(1, section.title.length - 1)}}</router-link>
-            <!-- <p class="indexSection" v-bind:to="'/' + section.title" v-on:click="loadSection(section.title, Sections, Categories, Data)">{{section.title}}</p> -->
-            <!-- <router-link v-bind:to="section.title"><b>{{section.title}}</b></router-link> -->
-            <!-- window.history.pushState(nextState, nextTitle, nextURL); -->
+
+            <!-- section category -->
             <div v-for="category in Categories.categories.sort((a, b) => {return a.pos - b.pos})" v-bind:key="category.id">
               <router-link class="indexCategory" v-if="category.section == section.title" v-bind:to="'/'" v-on:click="loadCategoryFromIndex(section.title, section.pos, category.title)">{{category.title}}</router-link>
             </div>
+
           </div>
         </div>
       </div>
@@ -83,186 +85,154 @@ export default {
         //functions  
         function loadSectionFromIndex(pos, title)
         {
-        // console.log("loadSectionFromIndex")
-        // console.log("section pos: " + pos)
-        // console.log("section category: " + "default")
+            //variables
+            var section = null
+            var sections = Sections.value
+            var categories = Categories.value 
+            var data = Data.value
+            var sectionCategories = []
+            var sectionData = []
+            var defaultCategoryTitle = "defaultCategoryTitle"
+            var defaultCategoryData = []
 
-        var section = null
-
-        var sections = Sections.value
-        var categories = Categories.value 
-        var data = Data.value
-        // console.log(sections.sections)
-        // console.log(categories.categories)
-        // console.log(data.data)
-
-        //filter sections for selected section
-        if (pos != null)
-        {
-            for (var c in sections.sections)
+            //filter sections for selected section
+            if (pos != null)
             {
-            if (pos == sections.sections[c].pos)
-            {
-                section = sections.sections[c]
+                for (var c in sections.sections)
+                {
+                    if (pos == sections.sections[c].pos)
+                    {
+                        section = sections.sections[c]
+                    }
+                }
             }
-            }
-        }
-        else if (title != null)
-        {
-            for (var c in sections.sections)
+            else if (title != null)
             {
-            if (title == sections.sections[c].title)
-            {
-                section = sections.sections[c]
-            }
-            }
-        }
-
-        //filter categories for selected section
-        var sectionCategories = []
-        for (var c in categories.categories)
-        {
-            if(categories.categories[c].section == section.title)
-            {
-            sectionCategories.push(categories.categories[c])
+                for (var c in sections.sections)
+                {
+                    if (title == sections.sections[c].title)
+                    {
+                        section = sections.sections[c]
+                    }
+                }
             }
 
-            // console.log(section.title)
-            // console.log(categories.categories[c])
-            // console.log(data)
-        }
-
-        //filter data for selected section
-        var sectionData = []
-        for (var d in data.data)
-        {
-            if(data.data[d].section == section.title)
+            //filter categories for selected section
+            for (var c in categories.categories)
             {
-            sectionData.push(data.data[d])
+                if(categories.categories[c].section == section.title)
+                {
+                    sectionCategories.push(categories.categories[c])
+                }
             }
 
-            // console.log(section.title)
-            // console.log(categories.categories[c].section)
-            // console.log(data.data[d])
-        }
-
-        //filter data for selected section category data
-        var defaultCategoryTitle = "defaultCategoryTitle"
-        var defaultCategoryData = []
-
-        for (var c in sectionCategories)
-        {
-            if (sectionCategories[c].pos == "1")
+            //filter data for selected section
+            for (var d in data.data)
             {
-            defaultCategoryTitle = sectionCategories[c].title
+                if(data.data[d].section == section.title)
+                {
+                    sectionData.push(data.data[d])
+                }
             }
-        }
 
-        for (var c in sectionData)
-        {
-            if (sectionData[c].category == defaultCategoryTitle)
+            //filter data for default category title
+            for (var c in sectionCategories)
             {
-            defaultCategoryData.push(sectionData[c])
+                if (sectionCategories[c].pos == "1")
+                {
+                    defaultCategoryTitle = sectionCategories[c].title
+                }
             }
-        }
 
-        //vuex
-        store.dispatch('storage/actionSetSelectedSection', section)
-        store.dispatch('storage/actionSetSelectedSectionCategories', sectionCategories)
-        store.dispatch('storage/actionSetSelectedSectionData', sectionData)
-        if (section.title != "index" || section.title != "search")
-        {
-            store.dispatch('storage/actionSetSelectedSectionCategoryData', defaultCategoryData)
-        }
+            //filter data for selected section category data
+            for (var c in sectionData)
+            {
+                if (sectionData[c].category == defaultCategoryTitle)
+                {
+                    defaultCategoryData.push(sectionData[c])
+                }
+            }
 
-        //set history test 
-        // window.history.pushState(null, null, "/" + title)
+            //vuex
+            store.dispatch('storage/actionSetSelectedSection', section)
+            store.dispatch('storage/actionSetSelectedSectionCategories', sectionCategories)
+            store.dispatch('storage/actionSetSelectedSectionData', sectionData)
+            if (section.title != "index" || section.title != "search")
+            {
+                store.dispatch('storage/actionSetSelectedSectionCategoryData', defaultCategoryData)
+            }
+
+            //set history test 
+            // window.history.pushState(null, null, "/" + title)
 
         }
         
         function loadCategoryFromIndex(title, pos, category)
         {
-        console.log("loadCategoryFromIndex")
-        console.log("section title: " + title)
-        console.log("section pos: " + pos)
-        console.log("section category: " + category)
+            //debugging           
+            // console.log(sections.sections)
+            // console.log(categories.categories)
+            // console.log(data.data)
+            
+            //variables
+            var section = null
+            var category = category
+            var title = title
+            var sections = Sections.value
+            var categories = Categories.value 
+            var data = Data.value
+            var sectionCategories = []
+            var defaultCategoryTitle = "defaultCategoryTitle"
+            var defaultCategoryData = []
 
-        var section = null
-        var category = category
-        var title = title
-
-        var sections = Sections.value
-        var categories = Categories.value 
-        var data = Data.value
-        
-        // console.log(sections.sections)
-        // console.log(categories.categories)
-        // console.log(data.data)
-
-        // filter sections for selected section
-        for (var c in sections.sections)
-        {
-            if (title == sections.sections[c].title)
+            //filter sections for selected section
+            for (var c in sections.sections)
             {
-            section = sections.sections[c]
-            }
-        }
-        // console.log(section)
-
-        // filter categories for selected section
-        var sectionCategories = []
-        for (var c in categories.categories)
-        {
-            if(categories.categories[c].section == section.title)
-            {
-            sectionCategories.push(categories.categories[c])
+                if (title == sections.sections[c].title)
+                {
+                    section = sections.sections[c]
+                }
             }
 
-            // console.log(section.title)
-            // console.log(categories.categories[c])
-            // console.log(data)
-        }
-        // console.log(sectionCategories)
-
-        // filter data for selected section
-        var sectionData = []
-        for (var d in data.data)
-        {
-            if(data.data[d].section == section.title)
+            //filter categories for selected section
+            for (var c in categories.categories)
             {
-            sectionData.push(data.data[d])
+                if(categories.categories[c].section == section.title)
+                {
+                    sectionCategories.push(categories.categories[c])
+                }
             }
 
-            // console.log(section.title)
-            // console.log(categories.categories[c].section)
-            // console.log(data.data[d])
-        }
-        // console.log(sectionData)
-
-        // filter data for selected section category data
-        var defaultCategoryTitle = "defaultCategoryTitle"
-        var defaultCategoryData = []
-
-        for (var c in sectionData)
-        {
-            if (sectionData[c].category == category)
+            //filter data for selected section
+            var sectionData = []
+            for (var d in data.data)
             {
-            defaultCategoryData.push(sectionData[c])
+                if(data.data[d].section == section.title)
+                {
+                    sectionData.push(data.data[d])
+                }
             }
-        }
-        // console.log(defaultCategoryData)
 
-        // vuex
-        store.dispatch('storage/actionSetSelectedSection', section)
-        store.dispatch('storage/actionSetSelectedSectionCategories', sectionCategories)
-        store.dispatch('storage/actionSetSelectedSectionData', sectionData)
-        if (section.title != "index" || section.title != "search")
-        {
-            store.dispatch('storage/actionSetSelectedSectionCategoryData', defaultCategoryData)
-        }
+            //filter data for selected section category data
+            for (var c in sectionData)
+            {
+                if (sectionData[c].category == category)
+                {
+                    defaultCategoryData.push(sectionData[c])
+                }
+            }
 
-        //set history test 
-        // window.history.pushState(null, null, "/" + title)
+            //vuex
+            store.dispatch('storage/actionSetSelectedSection', section)
+            store.dispatch('storage/actionSetSelectedSectionCategories', sectionCategories)
+            store.dispatch('storage/actionSetSelectedSectionData', sectionData)
+            if (section.title != "index" || section.title != "search")
+            {
+                store.dispatch('storage/actionSetSelectedSectionCategoryData', defaultCategoryData)
+            }
+
+            //set history test 
+            // window.history.pushState(null, null, "/" + title)
 
         }
 
