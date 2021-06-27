@@ -53,6 +53,7 @@ export default {
   #flex-container {
     display: flex;
     margin: 0px;
+    margin-left: 60px;
     padding: 0px;
     flex-direction: row;
     flex-wrap: nowrap;
@@ -108,5 +109,65 @@ export default {
 
   ::-webkit-scrollbar-thumb:hover {
     background: #555;
+  }
+  
+  /* mobile styling */
+  @media screen and (max-width: 700px) {
+    /* scrollbar styling */
+    ::-webkit-scrollbar {
+      width: 0px;
+      height: 0px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: #f1f1f1;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: black;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: #555;
+    }
+    
+    #flex-container {
+      display: flex;
+      margin: 0px;
+      padding: 0px;
+      flex-direction: column;
+      flex-wrap: nowrap;
+      justify-content: center; /* flex-start, center, flex-end */
+      /* align-items: ; */
+      /* align-content: ; */
+      min-height: 0px;
+    }
+    
+    .flex-item {
+      margin: 0px;
+      padding: 0px;
+      /* border: 1px solid black; */
+    }
+        
+    #Sections {
+      left: ;
+      position: relative;
+      display: ;
+      /* margin-top: 100px; */
+      height: 100%;
+      /* width is 70px; */
+      overflow: unset;
+      border: 0px solid black;
+      border-bottom: 2px solid black;
+    }
+
+    #Data {
+      margin: auto;
+      width: 90vw;
+    }
+
+    #Categories {
+      width: 90vw;
+    }
   }
 </style>

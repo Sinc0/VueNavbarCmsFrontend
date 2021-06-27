@@ -15,7 +15,7 @@
           <div v-if="h.searchMatchType == 'section'" v-on:click="loadSectionFromSearch(null, h.section)">{{itemObjKey+1}}: <b>section</b> {{h.section}}</div>
           <div v-if="h.searchMatchType == 'category'" v-on:click="loadCategoryFromSearch(h.section, null, h.category)">{{itemObjKey+1}}: <b>category</b> in {{h.section}} = <b>{{h.value}}</b></div>
           <div v-if="h.searchMatchType == 'data'" v-on:click="loadCategoryFromSearch(h.section, null, h.category, h.key)">{{itemObjKey+1}}: <b>data</b> in {{h.section}} ➞ {{h.category}} ➞ {{h.key.substr(0, 1).toUpperCase() + h.key.substr(1, h.key.length)}} = <b>{{h.value}}</b></div>
-          <div v-if="h.searchMatchType == 'image description'" v-on:click="loadCategorySearch(h.section, null, h.category)">{{itemObjKey+1}}: <b>image</b> {{h.key}} in {{h.section}} ➞ {{h.category}} = <b>{{h.value}}</b></div>
+          <div v-if="h.searchMatchType == 'image description'" v-on:click="loadCategoryFromSearch(h.section, null, h.category)">{{itemObjKey+1}}: <b>image</b> {{h.key}} in {{h.section}} ➞ {{h.category}} = <b>{{h.value}}</b></div>
         </div>
       </div>
     </div>
@@ -554,4 +554,11 @@ export default {
     .searchHit:active {
     background-color: yellow;
     }
+
+  /* mobile styling */
+  @media screen and (max-width: 700px) {
+    #searchBox {
+      width: 88vw;
+    }
+  }
 </style>

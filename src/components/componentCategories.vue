@@ -146,4 +146,20 @@ export default {
   #category-1 {
     font-weight: bold;
   }
+
+  /* mobile styling */
+  @media screen and (max-width: 700px) {
+    #categories {
+      margin: 0px;
+      padding: 0px;
+      padding-bottom: 4px;
+      max-width: 90vw;
+    }
+
+    .category {
+      margin: 0px;
+      padding: 0px;
+      padding-right: 10px;
+    }
+  }
 </style>

@@ -49,4 +49,11 @@ body {
   text-align: center;
   color: #2c3e50;
 }
+
+/* mobile styling */
+@media screen and (max-width: 700px) {
+  #app {
+    margin-bottom: 3.5vh;
+  }
+}
 </style>

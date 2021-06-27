@@ -1,8 +1,8 @@
 <template>
   <!-- ### sections ### -->
   <div id="sections">
-    <div v-if="Sections">
-      <div v-for="section in Sections.sections.sort((a, b) => {return a.pos - b.pos})" v-bind:key="section.pos" v-on:click="loadSection(section.pos)">
+    <div id="sections-wrapper" v-if="Sections">
+      <div class="section-icon-wrapper" v-for="section in Sections.sections.sort((a, b) => {return a.pos - b.pos})" v-bind:key="section.pos" v-on:click="loadSection(section.pos)">
         <!-- index -->
         <p v-bind:id="'section#' + section.pos" class="section" v-if="section.title == 'index'" v-bind:title="section.title"><b>i</b></p>
         
@@ -205,5 +205,42 @@ export default {
     padding: 10px;
     user-select: none;
     -webkit-user-select: none;
+  }
+
+  /* mobile styling */
+  @media screen and (max-width: 700px) {
+    #sections {
+      width: 97%;
+      overflow-x: scroll;
+      overflow-y: unset;
+    }
+
+    .section, .sectionIcon {
+      margin: 0px;
+      vertical-align: top;
+    }
+
+    .section-icon-wrapper {
+      position: relative;
+      display: inline-block;
+      margin: 0px;
+      margin-left: 10px;
+      padding: 4px;
+      border: 0px solid black;
+    }
+
+    #sections-wrapper {
+      position: relative;
+      display: inline-block;
+      display: flex;
+      flex-direction: row;
+      flex-wrap: nowrap;
+      flex-direction: row;
+      margin: 0px;
+      padding: 0px;
+      width: 100%;
+      height: 100%;
+      background-color: ;
+    }
   }
 </style>
