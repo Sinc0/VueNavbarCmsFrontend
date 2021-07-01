@@ -1,6 +1,6 @@
 <template>
     <!-- ### search box ### -->
-    <div v-if="Sections && Categories && Data">
+    <div v-if="Sections && Categories && Data && SelectedSection">
       <div id="searchBox" v-if="SelectedSection.title == 'search'">
 
         <!-- search bar -->
@@ -12,10 +12,10 @@
         <!-- search hits -->
         <p v-if="SearchResults" id="searchHitCount">{{SearchResults.length}} results found</p>
         <div class="searchHit" v-for="(h, itemObjKey) in SearchResults" v-bind:key="h.id" v-bind:id="'searchHit' + (itemObjKey + 1)">
-          <div v-if="h.searchMatchType == 'section'" v-on:click="loadSectionFromSearch(null, h.section)">{{itemObjKey+1}}: <b>section</b> {{h.section}}</div>
-          <div v-if="h.searchMatchType == 'category'" v-on:click="loadCategoryFromSearch(h.section, null, h.category)">{{itemObjKey+1}}: <b>category</b> in {{h.section}} = <b>{{h.value}}</b></div>
-          <div v-if="h.searchMatchType == 'data'" v-on:click="loadCategoryFromSearch(h.section, null, h.category, h.key)">{{itemObjKey+1}}: <b>data</b> in {{h.section}} ➞ {{h.category}} ➞ {{h.key.substr(0, 1).toUpperCase() + h.key.substr(1, h.key.length)}} = <b>{{h.value}}</b></div>
-          <div v-if="h.searchMatchType == 'image description'" v-on:click="loadCategoryFromSearch(h.section, null, h.category)">{{itemObjKey+1}}: <b>image</b> {{h.key}} in {{h.section}} ➞ {{h.category}} = <b>{{h.value}}</b></div>
+          <div v-if="h.searchMatchType == 'section'" v-on:click="loadSectionFromSearch(null, h.section)"><router-link v-bind:to="'/' + h.section">{{itemObjKey+1}}: <b>section</b> {{h.section}}</router-link></div>
+          <div v-if="h.searchMatchType == 'category'" v-on:click="loadCategoryFromSearch(h.section, null, h.category)"><router-link v-bind:to="'/' + h.section + '/' + h.category">{{itemObjKey+1}}: <b>category</b> in {{h.section}} = <b>{{h.value}}</b></router-link></div>
+          <div v-if="h.searchMatchType == 'data'" v-on:click="loadCategoryFromSearch(h.section, null, h.category, h.key)"><router-link v-bind:to="'/' + h.section + '/' + h.category">{{itemObjKey+1}}: <b>data</b> in {{h.section}} ➞ {{h.category}} ➞ {{h.key.substr(0, 1).toUpperCase() + h.key.substr(1, h.key.length)}} = <b>{{h.value}}</b></router-link></div>
+          <div v-if="h.searchMatchType == 'image description'" v-on:click="loadCategoryFromSearch(h.section, null, h.category)"><router-link v-bind:to="'/' + h.section + '/' + h.category">{{itemObjKey+1}}: <b>image</b> {{h.key}} in {{h.section}} ➞ {{h.category}} = <b>{{h.value}}</b></router-link></div>
         </div>
 
       </div>
@@ -449,72 +449,77 @@ export default {
 
 <style scoped>
     #searchBox {
-    margin: 0px;
-    margin: auto;
-    padding: 0px;
-    width: 40vw;
-    background-color: lightgreen;
-    border: 2px solid black;
+      margin: 0px;
+      margin: auto;
+      padding: 0px;
+      width: 40vw;
+      background-color: lightgreen;
+      border: 2px solid black;
     }
 
     #searchBarInput, #searchBarSubmitButton {
-    margin: 0px;
-    padding: 0px;
-    padding-top: 10px;
-    padding-bottom: 10px;
-    border-radius: 0%;
-    border: 0px;
-    border-bottom: 1px solid black;
+      margin: 0px;
+      padding: 0px;
+      padding-top: 10px;
+      padding-bottom: 10px;
+      border-radius: 0%;
+      border: 0px;
+      border-bottom: 1px solid black;
     }
 
     #searchBarInput {
-    padding-left: 1%;
-    width: 83%;
-    font-weight: bold;
-    outline: none;
+      padding-left: 1%;
+      width: 83%;
+      font-weight: bold;
+      outline: none;
     }
 
     #searchBarInput::placeholder
     {
-    color: black;
+      color: black;
     }
 
     #searchBarSubmitButton {
-    width: 16%;
-    font-weight: bold;
-    background-color: lightgreen;
-    border-left: 2px solid black;
+      width: 16%;
+      font-weight: bold;
+      background-color: lightgreen;
+      border-left: 2px solid black;
     }
 
     #searchBarSubmitButton:active {
-    background-color: yellow;
+      background-color: yellow;
     }
 
     #searchHitCount {
-    margin: 0px;
-    padding: 0px;
-    padding-top: 7px;
-    padding-bottom: 7px;
-    font-weight: bold;
-    color: white;
-    background-color: black; /* #2c3e50 */
+      margin: 0px;
+      padding: 0px;
+      padding-top: 7px;
+      padding-bottom: 7px;
+      font-weight: bold;
+      color: white;
+      background-color: black; /* #2c3e50 */
     }
 
     .searchHit {
-    margin: 0px;
-    margin: auto;
-    padding: 8px;
-    text-align: left;
-    background-color: lightgreen;
-    border-top: 1px solid black;
+      margin: 0px;
+      margin: auto;
+      padding: 8px;
+      text-align: left;
+      background-color: lightgreen;
+      border-top: 1px solid black;
+    }
+
+    .searchHit a {
+      text-decoration: none;
+      color: black;
     }
 
     .searchHit:hover {
-    background-color: yellow;
+      background-color: yellow;
     }
 
     .searchHit:active {
-    background-color: yellow;
+      background-color: yellow;
     }
 
     /* mobile styling */

@@ -83,9 +83,9 @@ export default {
                     {
                         if (jsondata.sections[c].pos == defaultSectionNumber)
                         {
-                        defaultSectionTitle = jsondata.sections[c].title
-                        defaultSectionNumber = jsondata.sections[c].pos
-                        defaultSectionData = jsondata.sections[c]
+                            defaultSectionTitle = jsondata.sections[c].title
+                            defaultSectionNumber = jsondata.sections[c].pos
+                            defaultSectionData = jsondata.sections[c]
                         }
                     }
 
@@ -212,11 +212,11 @@ export default {
                         for (var c = 1; c <= sectionData.length; c++)
                         {
                             var categoryButton = document.getElementById("category-" + c)
-                            categoryButton.style.textDecoration = "underline"
+                            categoryButton.style.fontWeight = "bold"
                             
                             if (c == defaultCategoryNumber)
                             {
-                                categoryButton.style.textDecoration = "underline"
+                                categoryButton.style.fontWeight = "bold"
                             }
                             else
                             {

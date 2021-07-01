@@ -15,7 +15,7 @@ const routes = [
   {
     path: '/',
     name: 'Main',
-    component: viewMain
+    component: viewMain,
   },
   
   //section id

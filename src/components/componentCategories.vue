@@ -3,7 +3,9 @@
     <div id="flexContainer">
       <div v-if="SelectedSectionCategories" id="categories">
         <span v-for="category in SelectedSectionCategories.sort((a, b) => {return a.pos - b.pos})" v-bind:key="category.key">
-          <h1 v-bind:id="'category-' + category.pos" class="category" v-on:click="loadCategory(category, SelectedSectionData, category.pos)">{{category.title}}</h1>
+          <h1 v-bind:id="'category-' + category.pos" class="category" v-on:click="loadCategory(category, SelectedSectionData, category.pos)">
+            <router-link v-bind:to="'/' + category.section + '/' + category.title">{{category.title}}</router-link>
+          </h1>
         </span>
       </div>
     </div>
@@ -132,6 +134,11 @@ export default {
 
   .category:active {
     color: lightgreen;
+  }
+
+  .category a {
+    text-decoration: none;
+    color: black;
   }
 
   #category-1 {
