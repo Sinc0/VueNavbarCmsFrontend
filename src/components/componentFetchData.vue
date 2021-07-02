@@ -1,5 +1,5 @@
 <template>
-  
+
 </template>
 
 <script>
@@ -24,8 +24,8 @@ export default {
 
         //lifecycle hooks
         onMounted(() => {
-            console.log("fetchSections mounted")
-
+            console.log("fetchData mounted")
+            
             //fetch all data
             fetchSections()
             .then(() => fetchCategories())
@@ -231,7 +231,7 @@ export default {
         }
 
         return {
-            
+
         }
     }
 }

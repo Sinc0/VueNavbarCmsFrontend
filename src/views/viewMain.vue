@@ -1,49 +1,68 @@
 <template>
   <div id="Main">
+    <!-- load all data -->
+    <ComponentFetchData />
     
-    <!-- not displayed -->
-    <FetchData />
-    
-    <!-- displayed -->
-    <div id="flex-container">
-      <!-- sidenav -->
-      <div id="Sections" class="flex-item"><Sections/></div>
-      
-      <!-- Data -->
-      <div id="Data">
-        <div id="Categories" class="flex-item"><Categories /></div>
-        <div id="Index" class="flex-item"><Index /></div>
-        <div id="Search" class="flex-item"><Search /></div>
-        <div id="SectionData" class="flex-item"><SectionData/></div>
+    <!-- content -->
+    <div id="content" v-if="Sections && Categories && Data">
+      <div id="flex-container">
+        
+        <!-- sidenav -->
+        <div id="Sections" class="flex-item"><ComponentSections/></div>
+        
+        <!-- data -->
+        <div id="Data">
+          <div id="Categories" class="flex-item"><ComponentCategories /></div>
+          <div id="Index" class="flex-item"><ComponentIndex /></div>
+          <div id="Search" class="flex-item"><ComponentSearch /></div>
+          <div id="SectionData" class="flex-item"><ComponentSectionData/></div>
+        </div>
       </div>
     </div>
+    
 
   </div>
 </template>
 
 <script>
-import FetchData from '@/components/componentFetchData.vue'
-import Categories from '@/components/componentCategories.vue'
-import Index from '@/components/componentIndex.vue'
-import Search from '@/components/componentSearch.vue'
-import SectionData from '@/components/componentSectionData.vue'
-import Sections from '@/components/componentSections.vue'
+import ComponentFetchData from '@/components/componentFetchData.vue'
+import ComponentCategories from '@/components/componentCategories.vue'
+import ComponentIndex from '@/components/componentIndex.vue'
+import ComponentSearch from '@/components/componentSearch.vue'
+import ComponentSectionData from '@/components/componentSectionData.vue'
+import ComponentSections from '@/components/componentSections.vue'
+import {computed, onMounted} from 'vue'
+import {useStore} from 'vuex'
 
 export default {
   name: 'Home',
 
   components: {
-    FetchData,
-    Categories,
-    Index, 
-    Search,
-    Sections,
-    SectionData
+    ComponentFetchData,
+    ComponentCategories,
+    ComponentIndex, 
+    ComponentSearch,
+    ComponentSections,
+    ComponentSectionData,
   },
 
   setup() {
-    return {
+    //vuex
+    const store = useStore()
 
+    const Sections = computed(() => { return store.getters['storage/sections']})
+    const Categories = computed(() => { return store.getters['storage/categories']})
+    const Data = computed(() => { return store.getters['storage/data']})
+
+    //lifecycle hooks
+    onMounted(() => {
+        console.log("viewMain mounted")
+    })
+
+    return {
+      Sections,
+      Categories,
+      Data
     }
   }
 }

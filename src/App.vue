@@ -10,6 +10,25 @@
   <router-view />
 </template>
 
+<script>
+import {computed, onMounted} from 'vue'
+import {useStore} from 'vuex'
+
+  export default {
+    setup() {
+
+    //lifecycle hooks
+    onMounted(() => {
+        console.log("App mounted")
+    })
+
+      return {
+
+      }
+    }
+  }
+</script>
+
 <style>
 /* scrollbar styling */
 /* ::-webkit-scrollbar {
@@ -41,8 +60,8 @@ body {
 
 #app {
   margin: 0px;
-  margin-bottom: 40px;
   padding: 0px;
+  padding-bottom: 40px;
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
