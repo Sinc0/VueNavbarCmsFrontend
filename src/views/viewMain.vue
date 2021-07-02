@@ -4,8 +4,8 @@
     <ComponentFetchData />
     
     <!-- content -->
-    <div id="content" v-if="Sections && Categories && Data">
-      <div id="flex-container">
+    <div id="content">
+      <div id="flex-container" v-if="Sections && Categories && Data">
         
         <!-- sidenav -->
         <div id="Sections" class="flex-item"><ComponentSections/></div>

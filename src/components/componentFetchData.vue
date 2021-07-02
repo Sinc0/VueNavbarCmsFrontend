@@ -204,25 +204,6 @@ export default {
                             dataInArray.push(sectionData[c])
                             store.dispatch('storage/actionSetSelectedSectionCategoryData', dataInArray)
                         }
-                    }        
-                
-                    //update mark of category buttons
-                    if (categorySpecified != null)
-                    {
-                        for (var c = 1; c <= sectionData.length; c++)
-                        {
-                            var categoryButton = document.getElementById("category-" + c)
-                            categoryButton.style.fontWeight = "bold"
-                            
-                            if (c == defaultCategoryNumber)
-                            {
-                                categoryButton.style.fontWeight = "bold"
-                            }
-                            else
-                            {
-                                categoryButton.style.textDecoration = "none"
-                            }
-                        } 
                     }
 
                 }

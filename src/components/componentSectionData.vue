@@ -95,11 +95,96 @@ export default {
     //lifecycle hooks
     onMounted(() => {
         console.log("sectionData mounted")
+
+        //update visuals of elements
+        updateGraphics()
     })
     
     onUpdated(() => {
         console.log("sectionData updated")
+        
+        //update visuals of elements
+        updateGraphics()
 
+        //set last searched text to search bar
+        var searchBarText = document.getElementById("searchBarInput")
+        if (searchBarText != null)
+        {
+          searchBarText.value = SearchString.value
+        }
+        
+        //scroll window to top
+        window.scrollTo(0,0)     
+    })
+    
+    //variables
+    var imagePos = 1 //gallery image pos
+
+    //functions
+    function showNextGalleryImage() {
+      //variables
+      var galleryImages = document.getElementsByClassName("galleryImage")
+
+      //set ImagePos
+      if (imagePos < galleryImages.length)
+      {
+        imagePos++
+      }
+      else 
+      {
+        imagePos = 1
+      }
+
+      //display correct gallery image
+      for(var c = 1; c <= galleryImages.length; c++)
+      {
+        var setDisplayedImage = document.getElementById("galleryImage#" + c)
+
+        if (c == imagePos)
+        {
+          setDisplayedImage.style.display = "block"
+        }
+        else 
+        {
+          setDisplayedImage.style.display = "none"
+        }
+
+      }
+    }
+
+    function showPreviousGalleryImage()
+    {
+      var galleryImages = document.getElementsByClassName("galleryImage")
+      
+      //set ImagePos
+      if (imagePos > 1)
+      {
+        imagePos--
+      }
+      else 
+      {
+        imagePos = galleryImages.length
+      }
+
+      //display correct gallery image
+      for(var c = 1; c <= galleryImages.length; c++)
+      {
+        var setDisplayedImage = document.getElementById("galleryImage#" + c)
+
+        if (c == imagePos)
+        {
+          setDisplayedImage.style.display = "block"
+        }
+        else 
+        {
+          setDisplayedImage.style.display = "none"
+        }
+
+      }
+    }
+
+    function updateGraphics()
+    {
         //update app background color
         if (SelectedSection.value.appBackgroundColor)
         {
@@ -183,82 +268,6 @@ export default {
           }
           
         }
-
-        //set last searched text to search bar
-        var searchBarText = document.getElementById("searchBarInput")
-        if (searchBarText != null)
-        {
-          searchBarText.value = SearchString.value
-        }
-        
-        //scroll window to top
-        window.scrollTo(0,0)     
-    })
-    
-    //variables
-    var imagePos = 1 //gallery image pos
-
-    //functions
-    function showNextGalleryImage() {
-      //variables
-      var galleryImages = document.getElementsByClassName("galleryImage")
-
-      //set ImagePos
-      if (imagePos < galleryImages.length)
-      {
-        imagePos++
-      }
-      else 
-      {
-        imagePos = 1
-      }
-
-      //display correct gallery image
-      for(var c = 1; c <= galleryImages.length; c++)
-      {
-        var setDisplayedImage = document.getElementById("galleryImage#" + c)
-
-        if (c == imagePos)
-        {
-          setDisplayedImage.style.display = "block"
-        }
-        else 
-        {
-          setDisplayedImage.style.display = "none"
-        }
-
-      }
-    }
-
-    function showPreviousGalleryImage()
-    {
-      var galleryImages = document.getElementsByClassName("galleryImage")
-      
-      //set ImagePos
-      if (imagePos > 1)
-      {
-        imagePos--
-      }
-      else 
-      {
-        imagePos = galleryImages.length
-      }
-
-      //display correct gallery image
-      for(var c = 1; c <= galleryImages.length; c++)
-      {
-        var setDisplayedImage = document.getElementById("galleryImage#" + c)
-
-        if (c == imagePos)
-        {
-          setDisplayedImage.style.display = "block"
-        }
-        else 
-        {
-          setDisplayedImage.style.display = "none"
-        }
-
-      }
     }
 
     return {
