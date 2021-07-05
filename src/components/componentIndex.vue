@@ -4,14 +4,14 @@
       
       <div v-if="SelectedSection.title == 'index'">
         <div v-for="section in Sections.sections.sort((a, b) => {return a.pos - b.pos})" v-bind:key="section.pos">
-          <div id="indexSectionDiv" v-if="section.title != 'index' && section.title != 'search' && section.title != 'about'">
+          <div id="indexSectionDiv" v-if="section.title != 'index'">
               
             <!-- section -->
-            <router-link class="indexSection" v-bind:to="'/' + section.title" v-on:click="loadSectionFromIndex(section.pos)">{{section.title.substr(0, 1).toUpperCase()}}{{section.title.substr(1, section.title.length - 1)}}</router-link>
+            <router-link class="indexSection" v-bind:to="'/' + section.title.toLowerCase()" v-on:click="loadSectionFromIndex(section.pos)">{{section.title.substr(0, 1).toUpperCase()}}{{section.title.substr(1, section.title.length - 1)}}</router-link>
 
             <!-- section category -->
             <div v-for="category in Categories.categories.sort((a, b) => {return a.pos - b.pos})" v-bind:key="category.id">
-              <router-link class="indexCategory" v-if="category.section == section.title" v-bind:to="'/' + section.title + '/' + category.title" v-on:click="loadCategoryFromIndex(section.title, section.pos, category.title)">{{category.title}}</router-link>
+              <router-link class="indexCategory" v-if="category.section == section.title && category.title.toLowerCase() != section.title.toLowerCase()" v-bind:to="'/' + section.title.toLowerCase() + '/' + category.title.toLowerCase()" v-on:click="loadCategoryFromIndex(section.title, section.pos, category.title)">{{category.title}}</router-link>
             </div>
 
           </div>

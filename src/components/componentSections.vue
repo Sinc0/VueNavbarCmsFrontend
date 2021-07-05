@@ -3,29 +3,29 @@
   <div id="sections">
     <div id="sections-wrapper" v-if="Sections">
       <div class="section-icon-wrapper" v-for="section in Sections.sections.sort((a, b) => {return a.pos - b.pos})" v-bind:key="section.pos" v-on:click="loadSection(section.pos)">
+        
         <!-- index -->
         <router-link v-bind:id="'section-router-link#' + section.pos" v-bind:to="'/' + section.title" v-if="section.title == 'index'">
-          <p v-bind:id="'section#' + section.pos" class="section" v-bind:title="section.title"><b>i</b></p>
-        </router-link>        
+          <p v-if="section.iconImage == ''" v-bind:id="'section#' + section.pos" class="section" v-bind:title="section.title"><b>i</b></p>
+          <img v-if="section.iconImage != ''" v-bind:id="'section#' + section.pos" class="section sectionIcon" v-bind:src="section.iconImage" v-bind:title="section.title"/>
+        </router-link>     
         
         <!-- search -->
-        <router-link v-bind:id="'section-router-link#' + section.pos" v-bind:to="'/' + section.title" v-else-if="section.title == 'search'">
-          <p v-bind:id="'section#' + section.pos" class="section" v-bind:title="section.title"><b>s</b></p>
+        <router-link v-bind:id="'section-router-link#' + section.pos" v-bind:to="'/' + section.title" v-if="section.title == 'search'">
+          <p v-if="section.iconImage == ''"  v-bind:id="'section#' + section.pos" class="section" v-bind:title="section.title"><b>s</b></p>
+          <img v-if="section.iconImage != ''"  v-bind:id="'section#' + section.pos" class="section sectionIcon" v-bind:src="section.iconImage" v-bind:title="section.title"/>
         </router-link>
 
         <!-- about -->
         <router-link v-bind:id="'section-router-link#' + section.pos" v-bind:to="'/' + section.title" v-if="section.title == 'about'">
-          <p v-bind:id="'section#' + section.pos" class="section" v-bind:title="section.title"><b>a</b></p>
-        </router-link>
+          <p v-if="section.iconImage == ''"  v-bind:id="'section#' + section.pos" class="section" v-bind:title="section.title"><b>a</b></p>
+          <img v-if="section.iconImage != ''"  v-bind:id="'section#' + section.pos" class="section sectionIcon" v-bind:src="section.iconImage" v-bind:title="section.title"/>
+        </router-link> 
 
-        <!-- specific category icon -->
-        <router-link v-bind:id="'section-router-link#' + section.pos" v-bind:to="'/' + section.title" v-if="section.iconImage != ''">
-          <img v-bind:id="'section#' + section.pos" class="section sectionIcon" v-bind:src="section.iconImage" v-bind:title="section.title"/>
-        </router-link>
-
-        <!-- specific category pos -->
-        <router-link v-bind:id="'section-router-link#' + section.pos" v-bind:to="'/' + section.title" v-else-if="section.iconImage == '' && section.title != 'index' && section.title != 'search' && section.title != 'about'">
-          <p v-bind:id="'section#' + section.pos" class="section" v-bind:title="section.title">{{section.pos}}</p>
+        <!-- specific category -->
+        <router-link v-bind:id="'section-router-link#' + section.pos" v-bind:to="'/' + section.title" v-else-if="section.title != 'index' && section.title != 'search' && section.title != 'about'">
+          <p v-if="section.iconImage == ''" v-bind:id="'section#' + section.pos" class="section" v-bind:title="section.title"><b>{{section.pos}}</b></p>
+          <img v-if="section.iconImage != ''" v-bind:id="'section#' + section.pos" class="section sectionIcon" v-bind:src="section.iconImage" v-bind:title="section.title"/>
         </router-link>
       </div>
     </div>
@@ -190,6 +190,7 @@ export default {
 
   .section-icon-wrapper a {
     text-decoration: none;
+    -webkit-user-drag: none;
     color: black;
   }
 

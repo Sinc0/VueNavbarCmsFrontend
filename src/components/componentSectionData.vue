@@ -2,7 +2,6 @@
   <!-- ### data ### -->
   <div id="sectionData">
     <div v-if="SelectedSectionCategoryData && SelectedSection" id="data">
-
         <div v-if="SelectedSection.title != 'index' && SelectedSection.title != 'search'"> <!-- check if section is not index or search -->
           
           <!-- image gallery -->
@@ -30,30 +29,59 @@
       </div>
 
         <!-- text data -->
-        <div class="data-div" v-for="data in SelectedSectionCategoryData[0].obj.sort((a, b) => {return a.pos - b.pos})" v-bind:key="data.id">
-                    
+        <div id="data-div" v-for="data in SelectedSectionCategoryData[0].obj.sort((a, b) => {return a.pos - b.pos})" v-bind:key="data.id">
             <div v-if="data.hidden == 'False'"> <!-- filter hidden data -->  
 
-              <!-- single line text -->
-              <div v-if="data.multiline == 'False'">
-                <div v-for="o in Object.entries(data)" v-bind:key="o.id">
-                  <p class="data-text data-text-singleline" v-bind:id="'data-' + o[0]" v-if="!o.toString().includes('pos') && !o.toString().includes('hidden') && !o.toString().includes('multiline')">
-                    <b>{{o.toString().split(",")[0].substring(0, 1).toUpperCase()}}{{o.toString().split(",")[0].substring(1, o.toString().length).toLowerCase()}}</b> = {{o.toString().split(",")[1]}} <!-- messy string -->
-                  </p>
+              <!-- text types -->
+              <div v-for="o in Object.entries(data)" v-bind:key="o.id">
+                <div v-if="
+                  !o.toString().includes('pos') && 
+                  !o.toString().includes('hidden') && 
+                  !o.toString().includes('multiline') && 
+                  !o.toString().includes('listline') && 
+                  !o.toString().includes('timeline')"
+                >
+                  
+                  <!-- timeline text -->
+                  <div v-if="data.timeline == 'True'">
+                      <div class="timeline-wrapper" v-for="li in o[1].toString().split(',')" v-bind:key="li.id">
+                        <p class="data-text data-text-timeline" v-bind:id="'data-' + o[0]"><b>─ {{o.toString().split(",")[0]}} ➞</b> {{li}}</p> <!-- █ ─ -->
+                      </div> <!-- messy string -->
+                  </div>
+                  
+                  <!-- listline text -->
+                  <div v-else-if="data.listline == 'True'">
+                    <p class="data-text data-text-list" v-bind:id="'data-' + o[0]">
+                      <b>{{o.toString().split(",")[0]}}</b>
+                      <br />
+                      <span v-for="li in o[1].toString().split(',')" v-bind:key="li.id">• {{li}}<br /></span> <!-- messy string -->
+                    </p>
+                  </div>
+
+                  <!-- singleline text -->
+                  <div v-else-if="data.multiline == 'False'">
+                    <div v-for="o in Object.entries(data)" v-bind:key="o.id">
+                      <p class="data-text data-text-singleline" v-bind:id="'data-' + o[0]" v-if="!o.toString().includes('pos') && !o.toString().includes('hidden') && !o.toString().includes('multiline') && !o.toString().includes('listline')">
+                        <b>{{o.toString().split(",")[0]}}:</b> {{o.toString().split(",")[1]}} <!-- messy string -->
+                      </p>
+                    </div>
+                  </div>
+
+                  <!-- multiline text -->
+                  <div v-else-if="data.multiline == 'True'">
+                    <div v-for="o in Object.entries(data)" v-bind:key="o.id">
+                      <p class="data-text data-text-multiline" v-bind:id="'data-' + o[0]" v-if="!o.toString().includes('pos') && !o.toString().includes('hidden') && !o.toString().includes('multiline') && !o.toString().includes('listline')">
+                        <b>{{o.toString().split(",")[0]}}</b>
+                        <br />{{o.toString().split(",")[1]}} <!-- messy string -->
+                      </p>
+                    </div>
+                  </div>
+
                 </div>
               </div>
 
-              <!-- multiline text -->
-              <div v-if="data.multiline == 'True'">
-                <div v-for="o in Object.entries(data)" v-bind:key="o.id">
-                  <p class="data-text data-text-multiline" v-bind:id="'data-' + o[0]" v-if="!o.toString().includes('pos') && !o.toString().includes('hidden') && !o.toString().includes('multiline')">
-                    <b>{{o.toString().split(",")[0].substring(0, 1).toUpperCase()}}{{o.toString().split(",")[0].substring(1, o.toString().length).toLowerCase()}}</b><br />{{o.toString().split(",")[1]}}<br /> <!-- messy string -->
-                  </p>
-                </div>
-              </div>
 
             </div>
-
          </div>
 
       </div>
@@ -326,32 +354,50 @@ export default {
     margin: auto;
     padding: 10px;
     width: 40vw;
+    overflow-wrap: break-word;
     text-align: left;
     background-color: white;
-    border-bottom: 1px solid black;
+    /* border-bottom: 1px solid black;
     border-left: 1px solid  black;
-    border-right: 1px solid black;
+    border-right: 1px solid black; */
     border-top: 1px solid black;
   }
 
-  .data-text-singleline
-  {
-    padding-top: 4px;
-    padding-bottom: 4px
-    /* border: 1px solid black; */
-  }
+  
+  /* .data-text-singleline
+  { */
+    /* padding-top: 4px;
+    padding-bottom: 4px; */
+    /* border: 1px solid black; */ /*
+  } */
 
-  .data-text-multiline
-  {
+  /* .data-text-multiline
+  { */
     /* text-align: center; */
     /* border-top: 1px solid black;
     border-bottom: 1px solid black; */
-    /* border: 1px solid black; */
+    /* border: 1px solid black; */ /*
+  } */
+
+  /* .data-text-listline {
+
+  } */
+
+  .data-text-timeline {
+    padding-bottom: 20px;
+    padding-left: 4px;
+    padding-top: 20px;
+    padding-right: 0px;
+    border-bottom: 0px;
+    border-left: 3px solid black;
+    border-top: 0px;
+    border-right: 0px;
   }
 
-  .data-div {
+  #data-div {
     margin: 0px;
     padding: 0px;
+    /* border: 1px solid black; */
   }
 
   #image-gallery-wrapper {
@@ -395,6 +441,7 @@ export default {
     user-select: none;
     -webkit-user-select: none;
     vertical-align: top;
+    color: black;
     /* border: 1px solid black; */
   }
 
@@ -430,11 +477,11 @@ export default {
 
   /* mobile styling */
   @media screen and (max-width: 700px) {
-    #sectionData {
+    /* #sectionData {
       /* background-color: black;
       padding-top: 3px;
-      padding-bottom: 3px; */
-    }
+      padding-bottom: 3px; */ /*
+    } */
 
     .data-text {
       margin: 0px;

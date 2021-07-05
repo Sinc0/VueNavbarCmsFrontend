@@ -93,7 +93,7 @@ export default {
     margin-top: 16px;
     margin-bottom: 10px;
     padding: 0px;
-    width: 40vw;
+    width: 100%;
     /* border: 1px solid black; */
   }
 
@@ -104,7 +104,7 @@ export default {
     height: 100vh;
     /* width is 70px; */
     overflow-y: scroll;
-    border-right: 3px solid black;
+    border-right: 2px solid black;
   }
 
   #SectionData {

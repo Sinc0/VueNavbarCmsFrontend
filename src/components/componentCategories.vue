@@ -4,7 +4,7 @@
       <div v-if="SelectedSectionCategories" id="categories">
         <span v-for="category in SelectedSectionCategories.sort((a, b) => {return a.pos - b.pos})" v-bind:key="category.key">
           <h1 v-bind:id="'category-' + category.pos" class="category" v-on:click="loadCategory(category, SelectedSectionData, category.pos)">
-            <router-link v-bind:to="'/' + category.section + '/' + category.title">{{category.title}}</router-link>
+            <router-link v-bind:to="'/' + category.section + '/' + category.title.toLowerCase()">{{category.title}}</router-link> <!-- category.title[0].toUpperCase() + category.title.substring(1) -->
           </h1>
         </span>
       </div>
@@ -69,12 +69,12 @@ export default {
 <style scoped>
   /* scrollbar styling */
   ::-webkit-scrollbar {
-    height: 0px;
+    height: 4px;
     width: 0px;
   }
 
   ::-webkit-scrollbar-track {
-    background: lightgray;
+    background: transparent;
   }
 
   ::-webkit-scrollbar-thumb {
@@ -82,7 +82,7 @@ export default {
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    background: #555;
+    background: black;
   }
   
   #flexContainer
@@ -111,8 +111,9 @@ export default {
     padding: 0px;
     padding-top: 3px;
     padding-bottom: 3px;
-    max-width: 40vw;
+    max-width: 43vw;
     overflow-y: scroll;
+    overflow-x: scroll;
     /* border: 1px solid black; */
   }
 
@@ -159,5 +160,11 @@ export default {
       padding: 0px;
       padding-right: 10px;
     }
+
+    ::-webkit-scrollbar {
+      height: 0px;
+      width: 0px;
+    }
+
   }
 </style>

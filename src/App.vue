@@ -31,13 +31,13 @@ import {useStore} from 'vuex'
 
 <style>
 /* scrollbar styling */
-/* ::-webkit-scrollbar {
+::-webkit-scrollbar {
   height: 0px;
   width: 4px;
 }
 
 ::-webkit-scrollbar-track {
-  background: lightgray;
+  background: transparent;
 }
 
 ::-webkit-scrollbar-thumb {
@@ -46,7 +46,7 @@ import {useStore} from 'vuex'
 
 ::-webkit-scrollbar-thumb:hover {
   background: #555;
-} */
+}
 
 div {
   margin: 0px;

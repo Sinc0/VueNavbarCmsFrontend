@@ -25,7 +25,7 @@ export default {
         //lifecycle hooks
         onMounted(() => {
             console.log("fetchData mounted")
-            
+
             //fetch all data
             fetchSections()
             .then(() => fetchCategories())
@@ -126,13 +126,13 @@ export default {
                 //vuex
                 store.dispatch('storage/actionSetSelectedSectionCategories', sectionCategories)
                 
-                //set default or specified category
+                //set specified category
                 if (categorySpecified != null)
                 {
                     //check if category is specified by title
                     for (var c in sectionCategories)
                     {
-                        if (sectionCategories[c].title == categorySpecified)
+                        if (sectionCategories[c].title.toLowerCase() == categorySpecified)
                         {
                             defaultCategoryTitle = sectionCategories[c].title
                             defaultCategoryNumber = sectionCategories[c].pos
@@ -198,7 +198,7 @@ export default {
                 {
                     if (sectionData[c].category == defaultCategoryTitle)
                     {
-                        if (sectionData[c].title != "index")
+                        if (sectionData[c].title != "index" && sectionData[c].title != "search")
                         {
                             var dataInArray = []
                             dataInArray.push(sectionData[c])
