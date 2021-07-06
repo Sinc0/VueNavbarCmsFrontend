@@ -54,7 +54,10 @@
                     <p class="data-text data-text-list" v-bind:id="'data-' + o[0]">
                       <b>{{o.toString().split(",")[0]}}</b>
                       <br />
-                      <span v-for="li in o[1].toString().split(',')" v-bind:key="li.id">• {{li}}<br /></span> <!-- messy string -->
+                      <span v-for="li in o[1].toString().split(',')" v-bind:key="li.id">
+                        <span class="listline-text" v-if="!li.includes('https://')">• {{li}}<br /></span>
+                        <span class="listline-link" v-if="li.includes('https://')">• <a v-bind:href="li.split('>')[1]">{{li.split(">")[0]}}</a><br /></span>
+                      </span> <!-- messy string -->
                     </p>
                   </div>
 
@@ -473,6 +476,15 @@ export default {
     padding: 0px;
     width: 100%;
     height: 100%;
+  }
+
+  .listline-link a {
+    text-decoration: none;
+    color: black;
+  }
+
+  .listline-link a:active {
+    color: lightgreen;
   }
 
   /* mobile styling */
