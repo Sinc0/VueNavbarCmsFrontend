@@ -7,7 +7,7 @@
           <!-- image gallery -->
           <div id="image-gallery-wrapper" v-if="SelectedSectionCategoryData[0].galleryImages.length > 0"> <!-- check if category has image gallery -->
             
-            <h1 id="arrowPreviousGalleryImage" class="arrowsImageGallery" v-on:click="showPreviousGalleryImage()">❮</h1> <!-- arrow previous gallery image -->
+            <h1 v-if="SelectedSectionCategoryData[0].galleryImages.length > 1" id="arrowPreviousGalleryImage" class="arrowsImageGallery" v-on:click="showPreviousGalleryImage()">❮</h1> <!-- arrow previous gallery image -->
             
             <div id="image-gallery">
               <div class="galleryImageDiv" v-for="(image, itemObjKey) in SelectedSectionCategoryData[0].galleryImages.sort((a, b) => {return a.pos - b.pos})" v-bind:key="image.id">
@@ -18,7 +18,7 @@
             
             </div>
             
-            <h1 id="arrowNextGalleryImage" class="arrowsImageGallery" v-on:click="showNextGalleryImage()">❯</h1> <!-- arrow next gallery image -->
+            <h1 v-if="SelectedSectionCategoryData[0].galleryImages.length > 1" id="arrowNextGalleryImage" class="arrowsImageGallery" v-on:click="showNextGalleryImage()">❯</h1> <!-- arrow next gallery image -->
           
             <!-- mobile arrows -->
             <div id="mobile-arrows-image-gallery-wrapper" v-if="SelectedSectionCategoryData[0].galleryImages.length > 0">
@@ -56,7 +56,7 @@
                       <br />
                       <span v-for="li in o[1].toString().split(',')" v-bind:key="li.id">
                         <span class="listline-text" v-if="!li.includes('https://')">• {{li}}<br /></span>
-                        <span class="listline-link" v-if="li.includes('https://')">• <a v-bind:href="li.split('>')[1]">{{li.split(">")[0]}}</a><br /></span>
+                        <span class="listline-link" v-if="li.includes('https://')">• <a target="blank" v-bind:href="li.split('>')[1]">{{li.split(">")[0]}}</a><br /></span>
                       </span> <!-- messy string -->
                     </p>
                   </div>
@@ -121,7 +121,6 @@ export default {
     const Data = computed(() => { return store.getters['storage/data']})
     const SearchResults = computed(() => { return store.getters['storage/searchResults']})
     const SearchString = computed(() => { return store.getters['storage/searchString']})
-    
         
     //lifecycle hooks
     onMounted(() => {
@@ -134,6 +133,10 @@ export default {
     onUpdated(() => {
         console.log("sectionData updated")
         
+        //reset image gallery
+        imagePos = 1
+        showFirstGalleryImage()
+
         //update visuals of elements
         updateGraphics()
 
@@ -145,7 +148,7 @@ export default {
         }
         
         //scroll window to top
-        window.scrollTo(0,0)     
+        window.scrollTo(0,0)
     })
     
     //variables
@@ -211,6 +214,24 @@ export default {
           setDisplayedImage.style.display = "none"
         }
 
+      }
+    }
+
+    function showFirstGalleryImage() {
+      var galleryImages = document.getElementsByClassName("galleryImage")
+      
+      for(var c = 1; c <= galleryImages.length; c++)
+      {
+        var setDisplayedImage = document.getElementById("galleryImage#" + c)
+
+        if (c == 1)
+        {
+          setDisplayedImage.style.display = "block"
+        }
+        else 
+        {
+          setDisplayedImage.style.display = "none"
+        }
       }
     }
 
@@ -292,6 +313,7 @@ export default {
           if (categoryButton.innerText == selectedCategoryTitle)
           {
             categoryButton.style.fontWeight = "bold"
+            categoryButton.scrollIntoView()
           }
           else
           {
@@ -299,7 +321,29 @@ export default {
           }
           
         }
+        
     }
+        
+    function preloadGalleryImages()
+    {
+        console.log("preloading images")
+        
+        for (var v in Data.value.data)
+        {
+          var gi = Data.value.data[v].galleryImages
+          if (gi != "null")
+          {
+            // console.log(gi)
+            for (var img in gi)
+            {
+              // console.log(gi[img].image)
+              var tempImage = new Image().src=gi[img].image;
+            }
+          }
+        }
+    }
+
+    preloadGalleryImages()
 
     return {
       //vuex

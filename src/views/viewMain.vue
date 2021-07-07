@@ -3,6 +3,11 @@
     <!-- load all data -->
     <ComponentFetchData />
     
+    <!-- loading screen -->
+    <div id="loadingScreen">
+      <img src="/cmsApp/loadingAnimation.gif" />
+    </div>
+
     <!-- content -->
     <div id="content">
       <div id="flex-container" v-if="Sections && Categories && Data">
@@ -57,7 +62,28 @@ export default {
     //lifecycle hooks
     onMounted(() => {
         console.log("viewMain mounted")
+        
+        displayLoadingScreen()
+        setTimeout(displayContent, 3000)
     })
+
+    function displayLoadingScreen()
+    {
+      var loadingScreen = document.getElementById("loadingScreen")
+      loadingScreen.style.display = "block"
+      document.body.style.overflow = 'hidden' //hide scrollbar
+    }
+
+    function displayContent()
+    {
+      console.log("displayContent")
+      var loadingScreen = document.getElementById("loadingScreen")
+      var content = document.getElementById("content")
+
+      document.body.style.overflow = 'visible' //show scrollbar 
+      loadingScreen.style.display = "none"
+      content.style.display = "block"
+    }
 
     return {
       Sections,
@@ -109,6 +135,7 @@ export default {
 
   #SectionData {
     /* margin-left: 90px; */
+    padding-bottom: 40px;
     width: 100%;
     /* border: 1px solid black; */
   }
@@ -128,6 +155,30 @@ export default {
 
   ::-webkit-scrollbar-thumb:hover {
     background: #555;
+  }
+  
+  #content {
+    display: none;
+    animation: fadeIn 1s;
+  }
+
+  #loadingScreen {
+    display: none;
+    margin: 0px;
+    padding: 0px;
+    padding-top: 27vh;
+    height: 90vh;
+    width: 100vw;
+    background-color: #1a1a1a; /* #1a1a1a */
+  }
+      
+  #loadingScreen img {
+    -webkit-user-drag: none;
+  }
+
+  @keyframes fadeIn {
+    0% {opacity:0;}
+    100% {opacity:1;}
   }
   
   /* mobile styling */
@@ -187,6 +238,10 @@ export default {
 
     #Categories {
       width: 90vw;
+    }
+    
+    #loadingScreen img {
+      max-width: 97vw;
     }
   }
 </style>

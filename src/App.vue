@@ -61,7 +61,6 @@ body {
 #app {
   margin: 0px;
   padding: 0px;
-  padding-bottom: 40px;
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;

@@ -109,8 +109,8 @@ export default {
             var category = null
 
             //debugging
-            console.log("Back/Forward clicked!");
-            console.log("full path: " + urlPath)
+            // console.log("Back/Forward clicked!");
+            // console.log("full path: " + urlPath)
 
             //if no subdomain
             // section = urlPathCleaned
@@ -122,8 +122,12 @@ export default {
             {
                 //if subdomain
                 section = urlPathSplit[2]
+
+                //debugging
+                // console.log("section: " + section)
+
                 loadSectionFromIndex(null, section)
-                console.log("section: " + section)
+
             }
             //load category
             else if (urlPathSlashes == 3) //section and category specified
@@ -132,9 +136,16 @@ export default {
                 section = urlPathSplit[2]
                 category = urlPathSplit[3]
 
+                //clean string
+                section = section.toLowerCase()
                 category = category.replace("%20", " ")
+                category = category.toLowerCase()
+               
+                //debugging
+                // console.log("section: " + section + " category: " + category)
+                
                 loadCategoryFromIndex(section, null, category)
-                console.log("category: " + category)
+                
             }
 
         }
@@ -230,6 +241,8 @@ export default {
             // console.log(sections.sections)
             // console.log(categories.categories)
             // console.log(data.data)
+            // console.log("title: " + title)
+            // console.log("category: " + category)
             
             //variables
             var section = null
@@ -245,7 +258,7 @@ export default {
             //filter sections for selected section
             for (var c in sections.sections)
             {
-                if (title == sections.sections[c].title)
+                if (title.toLowerCase() == sections.sections[c].title)
                 {
                     section = sections.sections[c]
                 }
@@ -254,7 +267,7 @@ export default {
             //filter categories for selected section
             for (var c in categories.categories)
             {
-                if(categories.categories[c].section == section.title)
+                if(categories.categories[c].section.toLowerCase() == section.title)
                 {
                     sectionCategories.push(categories.categories[c])
                 }
@@ -264,7 +277,7 @@ export default {
             var sectionData = []
             for (var d in data.data)
             {
-                if(data.data[d].section == section.title)
+                if(data.data[d].section.toLowerCase() == section.title)
                 {
                     sectionData.push(data.data[d])
                 }
@@ -273,7 +286,7 @@ export default {
             //filter data for selected section category data
             for (var c in sectionData)
             {
-                if (sectionData[c].category == category)
+                if (sectionData[c].category.toLowerCase() == category)
                 {
                     defaultCategoryData.push(sectionData[c])
                 }
