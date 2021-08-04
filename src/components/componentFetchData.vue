@@ -14,6 +14,7 @@ export default {
         var defaultSectionNumber = 0 //0 = index
         var defaultCategoryTitle = "defaultCategoryTitle"
         var defaultCategoryNumber = 0
+        var baseUrl = ""
 
         //vuex
         const store = useStore()
@@ -35,7 +36,7 @@ export default {
         //functions
         async function fetchSections() {
             //variables
-            let url = "https://wq5can.deta.dev/sections"
+            let url = baseUrl + "/sections"
             
             await fetch(url) //(url, {method: 'get'})
             .then((response) => response.json()) //convert response to json object
@@ -99,7 +100,7 @@ export default {
         async function fetchCategories()
         {
             //variables
-            let url = "https://wq5can.deta.dev/categories"
+            let url = baseUrl + "/categories"
 
             await fetch(url) //(url, {method: 'get'})
             .then((response) => response.json()) //convert response to json object
@@ -169,7 +170,7 @@ export default {
         async function fetchData()
         {   
             //variables
-            let url = "https://wq5can.deta.dev/data"
+            let url = baseUrl + "/data"
             
             await fetch(url) //(url, {method: 'get'})
             .then((response) => response.json()) //convert response to json object

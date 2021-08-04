@@ -5,7 +5,7 @@
     
     <!-- loading screen -->
     <div id="loadingScreen">
-      <img src="/cmsApp/loadingAnimation.gif" />
+      <img src="/appName/loadingAnimation.gif" />
     </div>
 
     <!-- content -->
@@ -105,7 +105,7 @@ export default {
     justify-content: center; /* flex-start, center, flex-end */
     /* align-items: ; */
     /* align-content: ; */
-    min-height: 1000px;
+    /* min-height: 1000px; */
   }
 
   .flex-item {

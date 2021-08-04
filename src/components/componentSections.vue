@@ -198,6 +198,7 @@ export default {
     -webkit-user-drag: none;
     -webkit-user-select: none;
     user-select: none;
+    height: 40px;
     width: 40px;
     background-color: transparent;
   }

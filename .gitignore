@@ -2,6 +2,7 @@
 node_modules
 /dist
 unsorted
+beforeBuilding.txt
 
 # local env files
 .env.local
