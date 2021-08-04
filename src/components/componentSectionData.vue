@@ -403,7 +403,7 @@ export default {
     width: 40vw;
     overflow-wrap: break-word;
     text-align: left;
-    background-color: white;
+    background-color: var(--DataBackgroundColor);
     /* border-bottom: 1px solid black;
     border-left: 1px solid  black;
     border-right: 1px solid black; */
@@ -488,7 +488,7 @@ export default {
     user-select: none;
     -webkit-user-select: none;
     vertical-align: top;
-    color: black;
+    color: var(--ImageGalleryArrowsColor);
     /* border: 1px solid black; */
   }
 

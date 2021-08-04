@@ -497,7 +497,7 @@ export default {
       padding-bottom: 7px;
       font-weight: bold;
       color: white;
-      background-color: black; /* #2c3e50 */
+      background-color: var(--SearchHitCountBackgroundColor); /* #2c3e50 */
     }
 
     .searchHit {
@@ -505,7 +505,7 @@ export default {
       margin: auto;
       padding: 8px;
       text-align: left;
-      background-color: var(--SearchHitColor);
+      background-color: var(--SearchHitBackgroundColor);
       border-top: 1px solid black;
     }
 

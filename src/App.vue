@@ -31,11 +31,15 @@ import {useStore} from 'vuex'
 
 <style>
 :root {
-  --activeLinkColor: #1e90ff;
-  --IndexFontColor: #ffffff;
-  --SearchHitColor: #ffffff;
-  --SearchButtonColor: #ffffff;
-  /* var(--SearchButtonColor) */
+  --activeLinkColor: lightblue;
+  --IndexFontColor: white;
+  --DataFontColor: black;
+  --DataBackgroundColor: white;
+  --SearchHitCountBackgroundColor: gray;
+  --SearchHitBackgroundColor: white;
+  --SearchButtonColor: white;
+  --ImageGalleryArrowsColor: white;
+  /* var(--ImageGalleryArrowsColor) */
 }
 
 /* scrollbar styling */
@@ -73,7 +77,7 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: #2c3e50;
+  color: var(--DataFontColor);
 }
 
 /* mobile styling */
