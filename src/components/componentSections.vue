@@ -185,7 +185,7 @@ export default {
 
   .section:active
   {
-    background-color: yellow;
+    background-color: var(--activeLinkColor);
   }
 
   .section-icon-wrapper a {

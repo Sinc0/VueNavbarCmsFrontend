@@ -30,6 +30,14 @@ import {useStore} from 'vuex'
 </script>
 
 <style>
+:root {
+  --activeLinkColor: #1e90ff;
+  --IndexFontColor: #ffffff;
+  --SearchHitColor: #ffffff;
+  --SearchButtonColor: #ffffff;
+  /* var(--SearchButtonColor) */
+}
+
 /* scrollbar styling */
 ::-webkit-scrollbar {
   height: 0px;

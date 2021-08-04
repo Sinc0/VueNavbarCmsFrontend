@@ -497,7 +497,7 @@ export default {
   }
 
   .arrowsImageGallery:active {
-    color: lightgreen;
+    color: var(--activeLinkColor);
   }
 
   #arrowPreviousGalleryImage {
@@ -528,7 +528,7 @@ export default {
   }
 
   .listline-link a:active {
-    color: lightgreen;
+    color: var(--activeLinkColor);
   }
 
   /* mobile styling */
@@ -575,7 +575,7 @@ export default {
     }
 
     .arrowsImageGalleryMobile:active {
-      background-color: lightgreen;
+      background-color: var(--activeLinkColor);
     }
   }
 </style>

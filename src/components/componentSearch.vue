@@ -482,12 +482,12 @@ export default {
     #searchBarSubmitButton {
       width: 16%;
       font-weight: bold;
-      background-color: lightgreen;
+      background-color: var(--SearchButtonColor);
       border-left: 2px solid black;
     }
 
     #searchBarSubmitButton:active {
-      background-color: yellow;
+      background-color: var(--activeLinkColor);
     }
 
     #searchHitCount {
@@ -505,7 +505,7 @@ export default {
       margin: auto;
       padding: 8px;
       text-align: left;
-      background-color: lightgreen;
+      background-color: var(--SearchHitColor);
       border-top: 1px solid black;
     }
 
@@ -515,11 +515,11 @@ export default {
     }
 
     .searchHit:hover {
-      background-color: yellow;
+      background-color: var(--activeLinkColor);
     }
 
     .searchHit:active {
-      background-color: yellow;
+      background-color: var(--activeLinkColor);
     }
 
     /* mobile styling */

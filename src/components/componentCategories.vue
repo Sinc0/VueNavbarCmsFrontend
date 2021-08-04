@@ -134,12 +134,12 @@ export default {
   }
 
   .category:active {
-    color: lightgreen;
+    color: var(--activeLinkColor);
   }
 
   .category a {
     text-decoration: none;
-    color: black;
+    color: var(--IndexFontColor);
   }
 
   #category-1 {

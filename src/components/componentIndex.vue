@@ -338,7 +338,7 @@ export default {
     }
     
     .indexSection:active, .indexCategory:active {
-        color: lightgreen;
+        color: var(--activeLinkColor);
     }
 
     .indexSection {
@@ -346,7 +346,7 @@ export default {
         padding: 0px;
         font-weight: bold;
         text-decoration: none;
-        color: black;
+        color: var(--IndexFontColor);
     }
 
     .indexCategory {
