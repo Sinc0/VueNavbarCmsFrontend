@@ -11,7 +11,7 @@
 
             <!-- section category -->
             <div v-for="category in Categories.categories.sort((a, b) => {return a.pos - b.pos})" v-bind:key="category.id">
-              <router-link class="indexCategory" v-if="category.section == section.title && category.title.toLowerCase() != section.title.toLowerCase()" v-bind:to="'/' + section.title.toLowerCase() + '/' + category.title.toLowerCase()" v-on:click="loadCategoryFromIndex(section.title, section.pos, category.title)">{{category.title}}</router-link>
+              <router-link class="indexCategory" v-if="category.section == section.title && category.title.toLowerCase() != section.title.toLowerCase()" v-bind:to="'/' + section.title.toLowerCase() + '/' + category.title.toLowerCase()" v-on:click="loadCategoryFromIndex(section.title, category.title)">{{category.title}}</router-link>
             </div>
 
           </div>
@@ -144,7 +144,7 @@ export default {
                 //debugging
                 // console.log("section: " + section + " category: " + category)
                 
-                loadCategoryFromIndex(section, null, category)
+                loadCategoryFromIndex(section, category)
                 
             }
 
@@ -235,7 +235,7 @@ export default {
             
         }
         
-        function loadCategoryFromIndex(title, pos, category)
+        function loadCategoryFromIndex(title, category)
         {
             //debugging           
             // console.log(sections.sections)
@@ -286,7 +286,7 @@ export default {
             //filter data for selected section category data
             for (var c in sectionData)
             {
-                if (sectionData[c].category.toLowerCase() == category)
+                if (sectionData[c].category.toLowerCase() == category.toLowerCase())
                 {
                     defaultCategoryData.push(sectionData[c])
                 }
