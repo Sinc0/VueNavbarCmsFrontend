@@ -39,7 +39,9 @@ import {useStore} from 'vuex'
   --SearchHitBackgroundColor: white;
   --SearchButtonColor: white;
   --ImageGalleryArrowsColor: white;
-  /* var(--ImageGalleryArrowsColor) */
+  --ImageGalleryBackgroundColor: gray;
+  --loadingScreenBackgroundColor: black;
+  /* var(--loadingScreenBackgroundColor) */
 }
 
 /* scrollbar styling */

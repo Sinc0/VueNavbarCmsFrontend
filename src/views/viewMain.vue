@@ -169,7 +169,7 @@ export default {
     padding-top: 27vh;
     height: 90vh;
     width: 100vw;
-    background-color: #1a1a1a; /* #1a1a1a */
+    background-color: var(--loadingScreenBackgroundColor); /* #1a1a1a */
   }
       
   #loadingScreen img {

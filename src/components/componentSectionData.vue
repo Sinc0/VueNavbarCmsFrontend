@@ -21,7 +21,7 @@
             <h1 v-if="SelectedSectionCategoryData[0].galleryImages.length > 1" id="arrowNextGalleryImage" class="arrowsImageGallery" v-on:click="showNextGalleryImage()">❯</h1> <!-- arrow next gallery image -->
           
             <!-- mobile arrows -->
-            <div id="mobile-arrows-image-gallery-wrapper" v-if="SelectedSectionCategoryData[0].galleryImages.length > 0">
+            <div id="mobile-arrows-image-gallery-wrapper" v-if="SelectedSectionCategoryData[0].galleryImages.length > 1">
               <h1 id="arrowPreviousGalleryImage" class="arrowsImageGalleryMobile" v-on:click="showPreviousGalleryImage()">❮</h1>
               <h1 id="arrowNextGalleryImage" class="arrowsImageGalleryMobile" v-on:click="showNextGalleryImage()">❯</h1>
             </div>
@@ -65,7 +65,7 @@
                   <div v-else-if="data.multiline == 'False'">
                     <div v-for="o in Object.entries(data)" v-bind:key="o.id">
                       <p class="data-text data-text-singleline" v-bind:id="'data-' + o[0]" v-if="!o.toString().includes('pos') && !o.toString().includes('hidden') && !o.toString().includes('multiline') && !o.toString().includes('listline')">
-                        <b>{{o.toString().split(",")[0]}}:</b> {{o.toString().split(",")[1]}} <!-- messy string -->
+                        <b>{{o.toString().split(",")[0]}}:</b> {{o[1]}} <!-- messy string -->
                       </p>
                     </div>
                   </div>
@@ -75,7 +75,7 @@
                     <div v-for="o in Object.entries(data)" v-bind:key="o.id">
                       <p class="data-text data-text-multiline" v-bind:id="'data-' + o[0]" v-if="!o.toString().includes('pos') && !o.toString().includes('hidden') && !o.toString().includes('multiline') && !o.toString().includes('listline')">
                         <b>{{o.toString().split(",")[0]}}</b>
-                        <br />{{o.toString().split(",")[1]}} <!-- messy string -->
+                        <br />{{o[1]}} <!-- messy string -->
                       </p>
                     </div>
                   </div>
@@ -283,7 +283,20 @@ export default {
         for (var c in sections)
         {
           var sectionButton = document.getElementById("section#" + c)
-          var sectionPos = sectionButton.id.substr(-1)
+          var sectionPos = ""
+          
+          if(c < 10)
+          {
+            sectionPos = sectionButton.id.substr(-1)
+          }
+          else if(c >= 10 && c < 100)
+          {
+            sectionPos = sectionButton.id.substr(-2)
+          }
+          else if(c >= 100 && c < 1000)
+          {
+            sectionPos = sectionButton.id.substr(-3)
+          }
           
           if (sectionPos == selectedSectionPos)
           {
@@ -462,7 +475,7 @@ export default {
     padding-right: 10px;
     width: 40vw;
     height: 20vw;
-    background-color: black;
+    background-color: var(--ImageGalleryBackgroundColor);
     border: 1px solid black;
   }
 
@@ -551,7 +564,7 @@ export default {
       padding: 0px;
       height: 29vh;
       width: 86vw;
-      background-color: black;
+      background-color: var(--ImageGalleryBackgroundColor);
       border: 1px solid transparent;
     }
 
@@ -562,14 +575,13 @@ export default {
     .arrowsImageGalleryMobile {
       display: inline-block;
       margin: 0px;
-      margin-top: 7px;
-      margin-bottom: 11px;
+      margin-bottom: 1px;
       padding: 0px;
       -moz-user-select: none;
       -ms-user-select: none;
       user-select: none;
       -webkit-user-select: none;
-      width: 20vw;
+      width: 47.5%;
       background-color: white;
       border: 1px solid black;
     }
