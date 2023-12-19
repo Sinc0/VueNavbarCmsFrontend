@@ -33,28 +33,27 @@
   </div>
 </template>
 
+
 <script>
 import {useStore} from 'vuex'
 import {computed, onMounted, onUpdated} from 'vue'
 
 export default {
   setup() {
-    //variables
-
-    //vuex
+    //vue
     const store = useStore()
+
+
+    //variables
     const Sections = computed(() => { return store.getters['storage/sections']})
     const Categories = computed(() => { return store.getters['storage/categories']})
     const Data = computed(() => { return store.getters['storage/data']})
             
+
     //lifecycle hooks
-    onMounted(() => {
-        console.log("sections mounted")
-    })
-    
-    onUpdated(() => {
-        console.log("sections updated")
-    })
+    onMounted(() => { console.log("sections mounted") })
+    onUpdated(() => { console.log("sections updated") })
+
 
     //functions
     function loadSection(pos)
@@ -65,17 +64,19 @@ export default {
       // console.log(data)
 
       //variables
-      var categoryTitle = null
-      var categoryData = []
-      var section = null
-      var sections = Sections.value
-      var categories = Categories.value
-      var data = Data.value
-      var defaultCategoryTitle = "defaultCategoryTitle"
-      var defaultCategoryData = []
+      let categoryTitle = null
+      let categoryData = []
+      let section = null
+      let sections = Sections.value
+      let categories = Categories.value
+      let data = Data.value
+      let defaultCategoryTitle = "defaultCategoryTitle"
+      let defaultCategoryData = []
+      let sectionCategories = []
+      let sectionData = []
 
       //filter sections for selected section
-      for (var c in sections.sections)
+      for (let c in sections.sections)
       {
         if (pos == sections.sections[c].pos)
         {
@@ -83,58 +84,40 @@ export default {
         }
       }
 
-      //filter categories for selected section
-      var sectionCategories = []
-      for (var c in categories.categories)
+      //filter categories
+      for (let c in categories.categories)
       {
-        if(categories.categories[c].section == section.title)
-        {
-          sectionCategories.push(categories.categories[c])
-        }
+        if(categories.categories[c].section == section.title) { sectionCategories.push(categories.categories[c]) }
       }
 
-      //filter data for selected section
-      var sectionData = []
+      //filter data
       for (var d in data.data)
       {
-        if(data.data[d].section == section.title)
-        {
-          sectionData.push(data.data[d])
-        }
+        if(data.data[d].section == section.title) { sectionData.push(data.data[d]) }
       }
 
       //filter data for default category title
       for (var c in sectionCategories)
       {
-        if (sectionCategories[c].pos == "1")
-        {
-          defaultCategoryTitle = sectionCategories[c].title
-        }
+        if (sectionCategories[c].pos == "1") { defaultCategoryTitle = sectionCategories[c].title }
       }
 
       //filter data for selected section category data
       for (var c in sectionData)
       {
-        if (sectionData[c].category == defaultCategoryTitle)
-        {
-          defaultCategoryData.push(sectionData[c])
-        }
+        if (sectionData[c].category == defaultCategoryTitle) { defaultCategoryData.push(sectionData[c]) }
       }
 
       //vuex
       store.dispatch('storage/actionSetSelectedSection', section)
       store.dispatch('storage/actionSetSelectedSectionCategories', sectionCategories)
       store.dispatch('storage/actionSetSelectedSectionData', sectionData)
-      if (section.title != "index" || section.title != "search")
-      {
-        store.dispatch('storage/actionSetSelectedSectionCategoryData', defaultCategoryData)
-      }
+      if (section.title != "index" || section.title != "search") { store.dispatch('storage/actionSetSelectedSectionCategoryData', defaultCategoryData) }
     }
+
 
     return {
       //variables
-      
-      //vuex
       Sections,
       Categories,
       Data,
@@ -147,30 +130,24 @@ export default {
 }
 </script>
 
+
 <style scoped>
-  /* scrollbar styling */
-  ::-webkit-scrollbar {
-    width: 0px;
-  }
+  /*** scrollbars ***/
+  ::-webkit-scrollbar { width: 0px; }
+  ::-webkit-scrollbar-track { background: #f1f1f1; }
+  ::-webkit-scrollbar-thumb { background: green; }
+  ::-webkit-scrollbar-thumb:hover { background: #555; }
 
-  ::-webkit-scrollbar-track {
-    background: #f1f1f1;
-  }
 
-  ::-webkit-scrollbar-thumb {
-    background: green;
-  }
+  /*** elements ***/
+  p { padding: 10px; user-select: none; webkit-user-select: none; }
 
-  ::-webkit-scrollbar-thumb:hover {
-    background: #555;
-  }
 
-  #sections {
-    margin: 0px;
-    padding: 3px;
-    width: 70px;
-  }
+  /*** ids ***/
+  #sections { margin: 0px; padding: 3px;  width: 70px; }
 
+
+  /*** classes ***/
   .section {
     margin: 0px;
     margin: auto;
@@ -182,18 +159,8 @@ export default {
     background-color: lightgreen;
     overflow-wrap: break-word;
   }
-
-  .section:active
-  {
-    background-color: var(--activeLinkColor);
-  }
-
-  .section-icon-wrapper a {
-    text-decoration: none;
-    -webkit-user-drag: none;
-    color: black;
-  }
-
+  .section:active { background-color: var(--activeLinkColor); }
+  .section-icon-wrapper a { text-decoration: none; -webkit-user-drag: none; color: black; }
   .sectionIcon {
     -webkit-user-drag: none;
     -webkit-user-select: none;
@@ -203,29 +170,15 @@ export default {
     background-color: transparent;
   }
 
-  .sectionIcon:active {
-    background-color: transparent;
-  }
+  .sectionIcon:active { background-color: transparent; }
+ 
 
-  p {
-    padding: 10px;
-    user-select: none;
-    -webkit-user-select: none;
-  }
-
-  /* mobile styling */
+  /*** mobile ***/
   @media screen and (max-width: 700px) {
-    #sections {
-      width: 97%;
-      overflow-x: scroll;
-      overflow-y: unset;
-    }
+    #sections { width: 97%; overflow-x: scroll; overflow-y: unset; }
 
-    .section, .sectionIcon {
-      margin: 0px;
-      vertical-align: top;
-    }
-
+    .section { margin: 0px; vertical-align: top; }
+    .sectionIcon { margin: 0px; vertical-align: top; }
     .section-icon-wrapper {
       position: relative;
       display: inline-block;
@@ -234,7 +187,6 @@ export default {
       padding: 4px;
       border: 0px solid black;
     }
-
     #sections-wrapper {
       position: relative;
       display: inline-block;

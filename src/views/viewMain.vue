@@ -4,9 +4,7 @@
     <ComponentFetchData />
     
     <!-- loading screen -->
-    <div id="loadingScreen">
-      <img src="/appName/loadingAnimation.gif" />
-    </div>
+    <div id="loadingScreen"><img src="/loadingAnimation.gif" /></div>
 
     <!-- content -->
     <div id="content">
@@ -22,12 +20,12 @@
           <div id="Search" class="flex-item"><ComponentSearch /></div>
           <div id="SectionData" class="flex-item"><ComponentSectionData/></div>
         </div>
+      
       </div>
     </div>
-    
-
   </div>
 </template>
+
 
 <script>
 import ComponentFetchData from '@/components/componentFetchData.vue'
@@ -38,6 +36,7 @@ import ComponentSectionData from '@/components/componentSectionData.vue'
 import ComponentSections from '@/components/componentSections.vue'
 import {computed, onMounted} from 'vue'
 import {useStore} from 'vuex'
+
 
 export default {
   name: 'Home',
@@ -55,47 +54,72 @@ export default {
     //vuex
     const store = useStore()
 
+
+    //variables
     const Sections = computed(() => { return store.getters['storage/sections']})
     const Categories = computed(() => { return store.getters['storage/categories']})
     const Data = computed(() => { return store.getters['storage/data']})
 
+
     //lifecycle hooks
     onMounted(() => {
         console.log("viewMain mounted")
-        
         displayLoadingScreen()
         setTimeout(displayContent, 3000)
     })
 
+
+    //functions
     function displayLoadingScreen()
     {
-      var loadingScreen = document.getElementById("loadingScreen")
+      //elements
+      let loadingScreen = document.getElementById("loadingScreen")
+
+      //update elements
       loadingScreen.style.display = "block"
       document.body.style.overflow = 'hidden' //hide scrollbar
     }
 
+
     function displayContent()
     {
+      //debugging
       console.log("displayContent")
-      var loadingScreen = document.getElementById("loadingScreen")
-      var content = document.getElementById("content")
 
+      //elements
+      let loadingScreen = document.getElementById("loadingScreen")
+      let content = document.getElementById("content")
+
+      //update elements
       document.body.style.overflow = 'visible' //show scrollbar 
       loadingScreen.style.display = "none"
       content.style.display = "block"
     }
+
 
     return {
       Sections,
       Categories,
       Data
     }
+
   }
 }
 </script>
 
+
 <style scoped>
-  #flex-container {
+  /*** scrollbars ***/
+  ::-webkit-scrollbar { width: 0px; }
+  ::-webkit-scrollbar-track { background: #f1f1f1; }
+  ::-webkit-scrollbar-thumb { background: green; }
+  ::-webkit-scrollbar-thumb:hover { background: #555; }
+
+
+  /*** ids ***/
+  #Data { width: 70%; margin: auto; }
+  #flex-container 
+  {
     display: flex;
     margin: 0px;
     margin-left: 60px;
@@ -107,62 +131,12 @@ export default {
     /* align-content: ; */
     /* min-height: 1000px; */
   }
-
-  .flex-item {
-    margin: 0px;
-    padding: 0px;
-  }
-
-  #Categories {
-    margin: 0px;
-    margin: auto;
-    margin-top: 16px;
-    margin-bottom: 10px;
-    padding: 0px;
-    width: 100%;
-    /* border: 1px solid black; */
-  }
-
-  #Sections {
-    left: 0;
-    position: fixed;
-    /* margin-top: 100px; */
-    height: 100vh;
-    /* width is 70px; */
-    overflow-y: scroll;
-    border-right: 2px solid black;
-  }
-
-  #SectionData {
-    /* margin-left: 90px; */
-    padding-bottom: 40px;
-    width: 100%;
-    /* border: 1px solid black; */
-  }
-
-  /* scrollbar styling */
-  ::-webkit-scrollbar {
-    width: 0px;
-  }
-
-  ::-webkit-scrollbar-track {
-    background: #f1f1f1;
-  }
-
-  ::-webkit-scrollbar-thumb {
-    background: green;
-  }
-
-  ::-webkit-scrollbar-thumb:hover {
-    background: #555;
-  }
-  
-  #content {
-    display: none;
-    animation: fadeIn 1s;
-  }
-
-  #loadingScreen {
+  #Categories { margin: 0px; margin: auto; margin-top: 16px; margin-bottom: 10px; padding: 0px; width: 100%; }
+  #Sections { left: 0; position: fixed; height: 100vh; overflow-y: scroll; border-right: 2px solid black; }
+  #SectionData { padding-bottom: 40px; width: 100%; }
+  #content { display: none; animation: fadeIn 1s; }
+  #loadingScreen 
+  {
     display: none;
     margin: 0px;
     padding: 0px;
@@ -171,77 +145,30 @@ export default {
     width: 100vw;
     background-color: var(--loadingScreenBackgroundColor); /* #1a1a1a */
   }
-      
-  #loadingScreen img {
-    -webkit-user-drag: none;
-  }
+  #loadingScreen img { max-width: 97vw; -webkit-user-drag: none; }
 
-  @keyframes fadeIn {
-    0% {opacity:0;}
-    100% {opacity:1;}
-  }
+
+  /*** classes ***/
+  .flex-item { margin: 0px; padding: 0px; }
+
+
+  /*** animations ***/
+  @keyframes fadeIn { 0% {opacity:0;} 100% {opacity:1;} }
   
-  /* mobile styling */
+
+  /*** mobile ***/
   @media screen and (max-width: 700px) {
-    /* scrollbar styling */
-    ::-webkit-scrollbar {
-      width: 0px;
-      height: 0px;
-    }
-
-    ::-webkit-scrollbar-track {
-      background: #f1f1f1;
-    }
-
-    ::-webkit-scrollbar-thumb {
-      background: black;
-    }
-
-    ::-webkit-scrollbar-thumb:hover {
-      background: #555;
-    }
+    ::-webkit-scrollbar { width: 0px; height: 0px; }
+    ::-webkit-scrollbar-track { background: #f1f1f1; }
+    ::-webkit-scrollbar-thumb { background: black; }
+    ::-webkit-scrollbar-thumb:hover { background: #555; }
     
-    #flex-container {
-      display: flex;
-      margin: 0px;
-      padding: 0px;
-      flex-direction: column;
-      flex-wrap: nowrap;
-      justify-content: center; /* flex-start, center, flex-end */
-      /* align-items: ; */
-      /* align-content: ; */
-      min-height: 0px;
-    }
+    #flex-container { display: flex; margin: 0px; padding: 0px; flex-direction: column; flex-wrap: nowrap; justify-content: center; min-height: 0px; }
+    #Sections { position: relative; height: 100%; overflow: unset; border: 0px solid black; border-bottom: 2px solid black; }
+    #Data { margin: auto; width: 90vw; }
+    #Categories { width: 90vw; }
+    #loadingScreen img { max-width: 97vw; }
     
-    .flex-item {
-      margin: 0px;
-      padding: 0px;
-      /* border: 1px solid black; */
-    }
-        
-    #Sections {
-      /* left: 0; */
-      position: relative;
-      /* display: block; */
-      /* margin-top: 100px; */
-      height: 100%;
-      /* width is 70px; */
-      overflow: unset;
-      border: 0px solid black;
-      border-bottom: 2px solid black;
-    }
-
-    #Data {
-      margin: auto;
-      width: 90vw;
-    }
-
-    #Categories {
-      width: 90vw;
-    }
-    
-    #loadingScreen img {
-      max-width: 97vw;
-    }
+    .flex-item { margin: 0px; padding: 0px; }
   }
 </style>

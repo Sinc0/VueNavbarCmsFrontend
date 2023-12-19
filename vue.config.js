@@ -1,7 +1,7 @@
 module.exports = {
-    //if app have subdomain
-    publicPath: process.env.NODE_ENV === 'production' ? '/appName/' : '/',
-    
-    //if app no subdomain
+    //default
     // publicPath: process.env.NODE_ENV === 'production' ? '/' : '/',
+    
+    //subdomain
+    publicPath: process.env.NODE_ENV === 'production' ? '/subdomain/' : '/',
 }

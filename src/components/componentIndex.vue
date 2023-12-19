@@ -1,25 +1,30 @@
 <template>
-    <!-- ### index tree ### -->
     <div v-if="Sections && Categories && SelectedSection">
       
       <div v-if="SelectedSection.title == 'index'">
         <div v-for="section in Sections.sections.sort((a, b) => {return a.pos - b.pos})" v-bind:key="section.pos">
+          
           <div id="indexSectionDiv" v-if="section.title != 'index'">
               
             <!-- section -->
-            <router-link class="indexSection" v-bind:to="'/' + section.title.toLowerCase()" v-on:click="loadSectionFromIndex(section.pos)">{{section.title.substr(0, 1).toUpperCase()}}{{section.title.substr(1, section.title.length - 1)}}</router-link>
+            <router-link class="indexSection" v-bind:to="'/' + section.title.toLowerCase()" v-on:click="loadSectionFromIndex(section.pos)">
+                {{section.title.substr(0, 1).toUpperCase()}}{{section.title.substr(1, section.title.length - 1)}}
+            </router-link>
 
             <!-- section category -->
             <div v-for="category in Categories.categories.sort((a, b) => {return a.pos - b.pos})" v-bind:key="category.id">
-              <router-link class="indexCategory" v-if="category.section == section.title && category.title.toLowerCase() != section.title.toLowerCase()" v-bind:to="'/' + section.title.toLowerCase() + '/' + category.title.toLowerCase()" v-on:click="loadCategoryFromIndex(section.title, category.title)">{{category.title}}</router-link>
+              <router-link class="indexCategory" v-if="category.section == section.title && category.title.toLowerCase() != section.title.toLowerCase()" v-bind:to="'/' + section.title.toLowerCase() + '/' + category.title.toLowerCase()" v-on:click="loadCategoryFromIndex(section.title, category.title)">
+                {{category.title}}
+            </router-link>
             </div>
 
           </div>
+        
         </div>
       </div>
-      
     </div>
 </template>
+
 
 <script>
 import {useStore} from 'vuex'
@@ -27,8 +32,11 @@ import {computed} from 'vue'
 
 export default {
     setup() {
-        //vuex
+        //vue
         const store = useStore()
+        
+        
+        //variables
         const SelectedSection = computed(() => { return store.getters['storage/selectedSection']})
         const SelectedSectionCategories = computed(() => { return store.getters['storage/selectedSectionCategories']})
         const SelectedSectionData = computed(() => { return store.getters['storage/selectedSectionData']})
@@ -38,68 +46,25 @@ export default {
         const Data = computed(() => { return store.getters['storage/data']})
         const SearchResults = computed(() => { return store.getters['storage/searchResults']})
           
+
         //keybinds
         document.addEventListener('keyup', (e) => {
-            var totalSections = Sections.value.sections.length - 1
-            var p = parseInt(SelectedSection.value.pos)
-            
-            //arrow down
-            if (e.code === "ArrowDown" && e.shiftKey === true)
-            {
-                if (p < totalSections)
-                {
-                    p++
-                    var sectionLink = document.getElementById("section-router-link#" + p)
-                    sectionLink.click()
-                    // loadSectionFromIndex(p)
-                    // window.history.pushState(null, null, "/" + SelectedSection.value.title)
-                }
-            }
-            
-            //arrow up
-            if (e.code === "ArrowUp" && e.shiftKey === true)
-            {
-                if (p > 0)
-                {
-                    p--
-                    var sectionLink = document.getElementById("section-router-link#" + p)
-                    sectionLink.click()
-                    // loadSectionFromIndex(p)
-                    // window.history.pushState(null, null, "/" + SelectedSection.value.title)
-                }
-            }
+            //variables
+            let totalSections = Sections.value.sections.length - 1
+            let p = parseInt(SelectedSection.value.pos)
+            let sectionLink = document.getElementById("section-router-link#" + p)
 
-            //w
-            if (e.code === "KeyW" && e.shiftKey === true)
-            {
-                if (p > 0)
-                {
-                    p--
-                    var sectionLink = document.getElementById("section-router-link#" + p)
-                    sectionLink.click()
-                    // loadSectionFromIndex(p)
-                    // window.history.pushState(null, null, "/" + SelectedSection.value.title)
-                }
-            }
-            
-            //s
-            if (e.code === "KeyS" && e.shiftKey === true)
-            {
-                if (p < totalSections)
-                {
-                    p++
-                    var sectionLink = document.getElementById("section-router-link#" + p)
-                    sectionLink.click()
-                    // loadSectionFromIndex(p)
-                    // window.history.pushState(null, null, "/" + SelectedSection.value.title)
-                }
-            }
-        });
+            //check type
+            if (e.code === "ArrowUp" && e.shiftKey === true) { if (p > 0) { p--; sectionLink.click() } } //Arrow Up
+            if (e.code === "ArrowDown" && e.shiftKey === true) { if (p < totalSections) { p++; sectionLink.click() } } //Arrow Down
+            if (e.code === "KeyW" && e.shiftKey === true) { if (p > 0) { p--; sectionLink.click() } } //W
+            if (e.code === "KeyS" && e.shiftKey === true) { if (p < totalSections) { p++; sectionLink.click() } } //S
+        })
+
 
         //history handling
         window.onpopstate = function()
         {
-            
             //variables
             var urlPath = window.location.pathname
             var urlPathSplit = urlPath.split("/")
@@ -111,28 +76,21 @@ export default {
             //debugging
             // console.log("Back/Forward clicked!");
             // console.log("full path: " + urlPath)
+            // console.log("total slashes: " + urlPathSlashes)
 
             //if no subdomain
             // section = urlPathCleaned
             // section = urlPathSplit[1]
             // category = urlPathSplit[2]
             
-            //load section
-            if (urlPathSlashes == 2) //section specified only
+            //section specified only (subdomain)
+            if (urlPathSlashes == 2) 
+            { section = urlPathSplit[2]; loadSectionFromIndex(null, section) }
+            
+            //section and category specified
+            else if (urlPathSlashes == 3) 
             {
-                //if subdomain
-                section = urlPathSplit[2]
-
-                //debugging
-                // console.log("section: " + section)
-
-                loadSectionFromIndex(null, section)
-
-            }
-            //load category
-            else if (urlPathSlashes == 3) //section and category specified
-            {
-                //if subdomain
+                //variables
                 section = urlPathSplit[2]
                 category = urlPathSplit[3]
 
@@ -141,61 +99,51 @@ export default {
                 category = category.replace("%20", " ")
                 category = category.toLowerCase()
                
-                //debugging
-                // console.log("section: " + section + " category: " + category)
-                
+                //load category                
                 loadCategoryFromIndex(section, category)
-                
             }
 
         }
 
+
         //functions  
-        function loadSectionFromIndex(pos, title)
+        function loadSectionFromIndex(pos, t)
         {
             //variables
-            var section = null
-            var sections = Sections.value
-            var categories = Categories.value 
-            var data = Data.value
-            var sectionCategories = []
-            var sectionData = []
-            var defaultCategoryTitle = "defaultCategoryTitle"
-            var defaultCategoryData = []
+            let section = null
+            let sections = Sections.value
+            let title = t
+            let categories = Categories.value 
+            let data = Data.value
+            let sectionCategories = []
+            let sectionData = []
+            let defaultCategoryTitle = "defaultCategoryTitle"
+            let defaultCategoryData = []
 
-            //filter sections for selected section
+            //filter sections
             if (pos != null)
             {
-                for (var c in sections.sections)
+                for (let c in sections.sections)
                 {
-                    if (pos == sections.sections[c].pos)
-                    {
-                        section = sections.sections[c]
-                    }
+                    if (pos == sections.sections[c].pos) { section = sections.sections[c] }
                 }
             }
             else if (title != null)
             {
-                for (var c in sections.sections)
+                for (let c in sections.sections)
                 {
-                    if (title == sections.sections[c].title)
-                    {
-                        section = sections.sections[c]
-                    }
+                    if (title == sections.sections[c].title) { section = sections.sections[c] }
                 }
             }
 
-            //filter categories for selected section
-            for (var c in categories.categories)
+            //filter categories
+            for (let c in categories.categories)
             {
-                if(categories.categories[c].section == section.title)
-                {
-                    sectionCategories.push(categories.categories[c])
-                }
+                if(categories.categories[c].section == section.title) { sectionCategories.push(categories.categories[c]) }
             }
 
-            //filter data for selected section
-            for (var d in data.data)
+            //filter data
+            for (let d in data.data)
             {
                 if(data.data[d].section == section.title)
                 {
@@ -204,7 +152,7 @@ export default {
             }
 
             //filter data for default category title
-            for (var c in sectionCategories)
+            for (let c in sectionCategories)
             {
                 if (sectionCategories[c].pos == "1")
                 {
@@ -213,7 +161,7 @@ export default {
             }
 
             //filter data for selected section category data
-            for (var c in sectionData)
+            for (let c in sectionData)
             {
                 if (sectionData[c].category == defaultCategoryTitle)
                 {
@@ -225,17 +173,16 @@ export default {
             store.dispatch('storage/actionSetSelectedSection', section)
             store.dispatch('storage/actionSetSelectedSectionCategories', sectionCategories)
             store.dispatch('storage/actionSetSelectedSectionData', sectionData)
-            if (section.title != "index" || section.title != "search")
-            {
-                store.dispatch('storage/actionSetSelectedSectionCategoryData', defaultCategoryData)
-            }
+            if (section.title != "index" || section.title != "search") 
+            { store.dispatch('storage/actionSetSelectedSectionCategoryData', defaultCategoryData)}
 
-            //set history test 
+            //debugging
             // window.history.pushState(null, null, "/" + title)
             
         }
         
-        function loadCategoryFromIndex(title, category)
+        
+        function loadCategoryFromIndex(t, c)
         {
             //debugging           
             // console.log(sections.sections)
@@ -245,18 +192,19 @@ export default {
             // console.log("category: " + category)
             
             //variables
-            var section = null
-            var category = category
-            var title = title
-            var sections = Sections.value
-            var categories = Categories.value 
-            var data = Data.value
-            var sectionCategories = []
-            var defaultCategoryTitle = "defaultCategoryTitle"
-            var defaultCategoryData = []
+            let section = null
+            let category = category
+            let title = t
+            let sections = Sections.value
+            let categories = Categories.value 
+            let data = Data.value
+            let sectionCategories = []
+            let defaultCategoryTitle = "defaultCategoryTitle"
+            let defaultCategoryData = []
+            let sectionData = []
 
-            //filter sections for selected section
-            for (var c in sections.sections)
+            //filter sections
+            for (let c in sections.sections)
             {
                 if (title.toLowerCase() == sections.sections[c].title)
                 {
@@ -264,8 +212,8 @@ export default {
                 }
             }
 
-            //filter categories for selected section
-            for (var c in categories.categories)
+            //filter categories
+            for (let c in categories.categories)
             {
                 if(categories.categories[c].section.toLowerCase() == section.title)
                 {
@@ -273,9 +221,8 @@ export default {
                 }
             }
 
-            //filter data for selected section
-            var sectionData = []
-            for (var d in data.data)
+            //filter data
+            for (let d in data.data)
             {
                 if(data.data[d].section.toLowerCase() == section.title)
                 {
@@ -284,7 +231,7 @@ export default {
             }
 
             //filter data for selected section category data
-            for (var c in sectionData)
+            for (let c in sectionData)
             {
                 if (sectionData[c].category.toLowerCase() == category.toLowerCase())
                 {
@@ -296,15 +243,12 @@ export default {
             store.dispatch('storage/actionSetSelectedSection', section)
             store.dispatch('storage/actionSetSelectedSectionCategories', sectionCategories)
             store.dispatch('storage/actionSetSelectedSectionData', sectionData)
-            if (section.title != "index" || section.title != "search")
-            {
-                store.dispatch('storage/actionSetSelectedSectionCategoryData', defaultCategoryData)
-            }
+            if (section.title != "index" || section.title != "search") { store.dispatch('storage/actionSetSelectedSectionCategoryData', defaultCategoryData) }
 
-            //set history test 
+            //debugging
             // window.history.pushState(null, null, "/" + title)
-
         }
+
 
         return {
             //vuex
@@ -325,33 +269,17 @@ export default {
 }
 </script>
 
+
 <style scoped>
-    #indexSectionDiv {
-        margin: 0px;
-        padding: 0px;
-        padding-bottom: 23px;
-    }
+    /*** ids ***/
+    #indexSectionDiv { margin: 0px; padding: 0px; padding-bottom: 23px; }
 
-    .indexSection, .indexCategory {
-        margin: 0px;
-        padding: 0px;
-    }
-    
-    .indexSection:active, .indexCategory:active {
-        color: var(--activeLinkColor);
-    }
 
-    .indexSection {
-        margin: 0px;
-        padding: 0px;
-        font-weight: bold;
-        text-decoration: none;
-        color: var(--IndexFontColor);
-    }
+    /*** classes ***/
+    .indexCategory:active { color: var(--activeLinkColor); }
+    .indexSection:active { color: var(--activeLinkColor); }
 
-    .indexCategory {
-        font-weight: normal;
-        text-decoration: none;
-        color: black;
-    }
+    .indexSection { margin: 0px; padding: 0px; font-weight: bold; text-decoration: none; color: var(--IndexFontColor); }
+
+    .indexCategory { margin: 0px; padding: 0px; font-weight: normal; text-decoration: none; color: black; }
 </style>

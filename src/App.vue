@@ -1,78 +1,53 @@
 <template>
-  <!-- <div id="nav">
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
-    <br />
-    <a href="https://cli.vuejs.org" target="_blank" rel="noopener">external link</a>
-    <br />
-    <router-link to="/about">internal link</router-link>
-  </div> -->
   <router-view />
 </template>
+
 
 <script>
 import {computed, onMounted} from 'vue'
 import {useStore} from 'vuex'
 
-  export default {
-    setup() {
-
+  export default { setup() {
     //lifecycle hooks
-    onMounted(() => {
-        console.log("App mounted")
-    })
+    onMounted(() => { console.log("App mounted") })
 
-      return {
-
-      }
-    }
-  }
+    return {}
+  }}
 </script>
 
+
 <style>
-:root {
-  --activeLinkColor: lightblue;
-  --IndexFontColor: white;
+/*** css variables ***/
+:root 
+{
+  --activeLinkColor: lightgreen;
+  --IndexFontColor: black;
   --DataFontColor: black;
   --DataBackgroundColor: white;
-  --SearchHitCountBackgroundColor: gray;
+  --SearchHitCountBackgroundColor: black;
   --SearchHitBackgroundColor: white;
-  --SearchButtonColor: white;
-  --ImageGalleryArrowsColor: white;
-  --ImageGalleryBackgroundColor: gray;
-  --loadingScreenBackgroundColor: black;
+  --SearchButtonColor: lightgreen;
+  --ImageGalleryArrowsColor: black;
+  --ImageGalleryBackgroundColor: black;
+  --loadingScreenBackgroundColor: #1a1a1a;
   /* var(--loadingScreenBackgroundColor) */
 }
 
-/* scrollbar styling */
-::-webkit-scrollbar {
-  height: 0px;
-  width: 4px;
-}
+/*** scrollbars ***/
+::-webkit-scrollbar { height: 0px; width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: black; }
+::-webkit-scrollbar-thumb:hover { background: #555; }
 
-::-webkit-scrollbar-track {
-  background: transparent;
-}
 
-::-webkit-scrollbar-thumb {
-  background: black;
-}
+/*** elements ***/
+div { margin: 0px; padding: 0px; }
+body { margin: 0px; padding: 0px; }
 
-::-webkit-scrollbar-thumb:hover {
-  background: #555;
-}
 
-div {
-  margin: 0px;
-  padding: 0px;
-}
-
-body {
-  margin: 0px;
-  padding: 0px;
-}
-
-#app {
+/*** ids ***/
+#app 
+{
   margin: 0px;
   padding: 0px;
   font-family: Avenir, Helvetica, Arial, sans-serif;
@@ -82,10 +57,8 @@ body {
   color: var(--DataFontColor);
 }
 
-/* mobile styling */
+/*** mobile ***/
 @media screen and (max-width: 700px) {
-  #app {
-    margin-bottom: 3.5vh;
-  }
+  /* empty */
 }
 </style>

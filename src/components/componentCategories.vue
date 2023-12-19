@@ -1,90 +1,86 @@
 <template>
-    <!-- ### categories ### -->
     <div id="flexContainer">
+      
       <div v-if="SelectedSectionCategories" id="categories">
         <span v-for="category in SelectedSectionCategories.sort((a, b) => {return a.pos - b.pos})" v-bind:key="category.key">
           <h1 v-bind:id="'category-' + category.pos" class="category" v-on:click="loadCategory(category, SelectedSectionData, category.pos)">
-            <router-link v-bind:to="'/' + category.section + '/' + category.title.toLowerCase()">{{category.title}}</router-link> <!-- category.title[0].toUpperCase() + category.title.substring(1) -->
+            <router-link v-bind:to="'/' + category.section + '/' + category.title.toLowerCase()">
+              {{category.title}} <!-- category.title[0].toUpperCase() + category.title.substring(1) -->
+            </router-link> 
           </h1>
         </span>
       </div>
+    
     </div>
 </template>
+
 
 <script>
 import {useStore} from 'vuex'
 import {computed} from 'vue'
 
 export default {
-    setup() {
-        //vuex
-        const store = useStore()
+  setup() {
+    //vue
+    const store = useStore()
 
-        const SelectedSection = computed(() => { return store.getters['storage/selectedSection']})
-        const SelectedSectionCategories = computed(() => { return store.getters['storage/selectedSectionCategories']})
-        const SelectedSectionData = computed(() => { return store.getters['storage/selectedSectionData']})
-        const SelectedSectionCategoryData = computed(() => { return store.getters['storage/selectedSectionCategoryData']})
 
-        const Sections = computed(() => { return store.getters['storage/sections']})
-        const Categories = computed(() => { return store.getters['storage/categories']})
-        const Data = computed(() => { return store.getters['storage/data']})
-        const SearchResults = computed(() => { return store.getters['storage/searchResults']})
+    //variables
+    const SelectedSection = computed(() => { return store.getters['storage/selectedSection']})
+    const SelectedSectionCategories = computed(() => { return store.getters['storage/selectedSectionCategories']})
+    const SelectedSectionData = computed(() => { return store.getters['storage/selectedSectionData']})
+    const SelectedSectionCategoryData = computed(() => { return store.getters['storage/selectedSectionCategoryData']})
+    const Sections = computed(() => { return store.getters['storage/sections']})
+    const Categories = computed(() => { return store.getters['storage/categories']})
+    const Data = computed(() => { return store.getters['storage/data']})
+    const SearchResults = computed(() => { return store.getters['storage/searchResults']})
 
-        function loadCategory(category, data, pos)
+
+    //functions
+    function loadCategory(category, data, pos)
+    {
+        //variables
+        let categoryData = []
+
+        //filter data for selected category
+        for (let i in data)
         {
-            //variables
-            var categoryData = []
-
-            //filter data for selected category
-            for (var d in data)
-            {
-                if(data[d].category == category.title)
-                {
-                  categoryData.push(data[d])
-                }
-            }
-
-            //vuex
-            store.dispatch('storage/actionSetSelectedSectionCategoryData', categoryData)
+            if(data[i].category == category.title) { categoryData.push(data[i]) }
         }
 
-        return {
-            //vuex
-            SelectedSectionCategoryData,
-            SelectedSection,
-            SelectedSectionCategories,
-            SelectedSectionData,
-            Sections,
-            Categories,
-            Data,
-            SearchResults,
-
-            //functions
-            loadCategory
-        }
+        //vuex
+        store.dispatch('storage/actionSetSelectedSectionCategoryData', categoryData)
     }
+
+
+    return {
+        //vuex
+        SelectedSectionCategoryData,
+        SelectedSection,
+        SelectedSectionCategories,
+        SelectedSectionData,
+        Sections,
+        Categories,
+        Data,
+        SearchResults,
+
+        //functions
+        loadCategory
+    }
+  }
 }
 </script>
 
+
 <style scoped>
-  /* scrollbar styling */
-  ::-webkit-scrollbar {
-    height: 4px;
-    width: 0px;
-  }
-
-  ::-webkit-scrollbar-track {
-    background: transparent;
-  }
-
-  ::-webkit-scrollbar-thumb {
-    background: black;
-  }
-
-  ::-webkit-scrollbar-thumb:hover {
-    background: black;
-  }
+  /*** scrollbars ***/
+  ::-webkit-scrollbar { height: 4px; width: 0px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: black; }
+  ::-webkit-scrollbar-thumb:hover { background: black; }
   
+
+  /*** ids ***/
   #flexContainer
   {
     display: inline-flex;
@@ -98,8 +94,8 @@ export default {
     /* align-items: ; */
     /* align-content: ; */
   }
-
-  #categories { 
+  #categories 
+  { 
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
@@ -116,7 +112,9 @@ export default {
     overflow-x: scroll;
     /* border: 1px solid black; */
   }
+  #category-1 { font-weight: bold; }
 
+  /*** classes ***/
   .category {
     margin: 0px;
     margin-left: 8px;
@@ -132,39 +130,16 @@ export default {
     font-weight: normal;
     /* border: 1px solid black; */
   }
+  .category:active { color: var(--activeLinkColor); }
+  .category a { text-decoration: none; color: var(--IndexFontColor); }
 
-  .category:active {
-    color: var(--activeLinkColor);
-  }
 
-  .category a {
-    text-decoration: none;
-    color: var(--IndexFontColor);
-  }
-
-  #category-1 {
-    font-weight: bold;
-  }
-
-  /* mobile styling */
+  /*** mobile ***/
   @media screen and (max-width: 700px) {
-    #categories {
-      margin: 0px;
-      padding: 0px;
-      padding-bottom: 4px;
-      max-width: 90vw;
-    }
+    ::-webkit-scrollbar { height: 0px; width: 0px;}
 
-    .category {
-      margin: 0px;
-      padding: 0px;
-      padding-right: 10px;
-    }
+    #categories { margin: 0px; padding: 0px; padding-bottom: 4px; max-width: 90vw; }
 
-    ::-webkit-scrollbar {
-      height: 0px;
-      width: 0px;
-    }
-
+    .category { margin: 0px; padding: 0px; padding-right: 10px; }
   }
 </style>

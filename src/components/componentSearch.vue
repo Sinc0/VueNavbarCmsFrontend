@@ -1,5 +1,4 @@
 <template>
-    <!-- ### search box ### -->
     <div v-if="Sections && Categories && Data && SelectedSection">
       <div id="searchBox" v-if="SelectedSection.title == 'search'">
 
@@ -22,29 +21,30 @@
     </div>
 </template>
 
+
 <script>
 import {useStore} from 'vuex'
 import {computed} from 'vue'
 
 export default {
     setup() {
-        //vuex
+        //vue
         const store = useStore()
 
+
+        //variables
         const SelectedSection = computed(() => { return store.getters['storage/selectedSection']})
         const SelectedSectionCategories = computed(() => { return store.getters['storage/selectedSectionCategories']})
         const SelectedSectionData = computed(() => { return store.getters['storage/selectedSectionData']})
         const SelectedSectionCategoryData = computed(() => { return store.getters['storage/selectedSectionCategoryData']})
-
         const Sections = computed(() => { return store.getters['storage/sections']})
         const Categories = computed(() => { return store.getters['storage/categories']})
         const Data = computed(() => { return store.getters['storage/data']})
         const SearchResults = computed(() => { return store.getters['storage/searchResults']})
 
-        //variables
 
         //functions
-        function loadSectionFromSearch(pos, title)
+        function loadSectionFromSearch(pos, t)
         {
           //debugging
           // console.log(sections.sections)
@@ -52,88 +52,69 @@ export default {
           // console.log(data.data)
 
           //variables
-          var section = null
-          var sections = Sections.value
-          var categories = Categories.value 
-          var data = Data.value
-          var sectionCategories = []
-          var sectionData = []
-          var defaultCategoryTitle = "defaultCategoryTitle"
-          var defaultCategoryData = []
+          let section = null
+          let sections = Sections.value
+          let categories = Categories.value 
+          let data = Data.value
+          let title = t
+          let sectionCategories = []
+          let sectionData = []
+          let defaultCategoryTitle = "defaultCategoryTitle"
+          let defaultCategoryData = []
 
-          //filter sections for selected section
+          //filter sections
           if (pos != null)
           {
-            for (var c in sections.sections)
+            for (let c in sections.sections)
             {
-              if (pos == sections.sections[c].pos)
-              {
-                section = sections.sections[c]
-              }
+              if (pos == sections.sections[c].pos) { section = sections.sections[c] }
             }
           }
           else if (title != null)
           {
-            for (var c in sections.sections)
+            for (let c in sections.sections)
             {
-              if (title == sections.sections[c].title)
-              {
-                section = sections.sections[c]
-              }
+              if (title == sections.sections[c].title) { section = sections.sections[c] }
             }
           }
 
-          //filter categories for selected section
-          for (var c in categories.categories)
+          //filter categories
+          for (let c in categories.categories)
           {
-            if(categories.categories[c].section == section.title)
-            {
-              sectionCategories.push(categories.categories[c])
-            }
+            if(categories.categories[c].section == section.title) { sectionCategories.push(categories.categories[c]) }
           }
 
-          //filter data for selected section
-          for (var d in data.data)
+          //filter data
+          for (let d in data.data)
           {
-            if(data.data[d].section == section.title)
-            {
-              sectionData.push(data.data[d])
-            }
+            if(data.data[d].section == section.title) { sectionData.push(data.data[d]) }
           }
 
           //filter data for default category title
-          for (var c in sectionCategories)
+          for (let c in sectionCategories)
           {
-            if (sectionCategories[c].pos == "1")
-            {
-              defaultCategoryTitle = sectionCategories[c].title
-            }
+            if (sectionCategories[c].pos == "1") { defaultCategoryTitle = sectionCategories[c].title }
           }
 
           //filter data for selected section category data
-          for (var c in sectionData)
+          for (let c in sectionData)
           {
-            if (sectionData[c].category == defaultCategoryTitle)
-            {
-              defaultCategoryData.push(sectionData[c])
-            }
+            if (sectionData[c].category == defaultCategoryTitle) { defaultCategoryData.push(sectionData[c]) }
           }
         
           //vuex
           store.dispatch('storage/actionSetSelectedSection', section)
           store.dispatch('storage/actionSetSelectedSectionCategories', sectionCategories)
           store.dispatch('storage/actionSetSelectedSectionData', sectionData)
-          if (section.title != "index" || section.title != "search")
-          {
-            store.dispatch('storage/actionSetSelectedSectionCategoryData', defaultCategoryData)
-          }
+          if (section.title != "index" || section.title != "search") { store.dispatch('storage/actionSetSelectedSectionCategoryData', defaultCategoryData) }
 
-          //set history test 
+          //debugging 
           // window.history.pushState(null, null, "/" + title)
 
         }
 
-        function loadCategoryFromSearch(title, pos, category)
+
+        function loadCategoryFromSearch(t, pos, c)
         {
             //debugging
             // console.log(sections.sections)
@@ -141,66 +122,52 @@ export default {
             // console.log(data.data)
 
             //variables
-            var section = null
-            var category = category
-            var title = title
-            var sections = Sections.value
-            var categories = Categories.value 
-            var data = Data.value
-            var sectionCategories = []
-            var defaultCategoryTitle = "defaultCategoryTitle"
-            var defaultCategoryData = []
+            let section = null
+            let category = c
+            let title = t
+            let sections = Sections.value
+            let categories = Categories.value 
+            let data = Data.value
+            let sectionCategories = []
+            let defaultCategoryTitle = "defaultCategoryTitle"
+            let defaultCategoryData = []
+            let sectionData = []
 
-            //filter sections for selected section
-            for (var c in sections.sections)
+            //filter sections
+            for (let c in sections.sections)
             {
-                if (title == sections.sections[c].title)
-                {
-                section = sections.sections[c]
-                }
+                if (title == sections.sections[c].title) { section = sections.sections[c] }
             }
 
-            //filter categories for selected section
-            for (var c in categories.categories)
+            //filter categories
+            for (let c in categories.categories)
             {
-                if(categories.categories[c].section == section.title)
-                {
-                  sectionCategories.push(categories.categories[c])
-                }
+                if(categories.categories[c].section == section.title) { sectionCategories.push(categories.categories[c]) }
             }
 
             //filter data for selected section
-            var sectionData = []
-            for (var d in data.data)
+            for (let d in data.data)
             {
-                if(data.data[d].section == section.title)
-                {
-                  sectionData.push(data.data[d])
-                }
+                if(data.data[d].section == section.title) { sectionData.push(data.data[d]) }
             }
 
             //filter data for selected section category data
-            for (var c in sectionData)
+            for (let c in sectionData)
             {
-                if (sectionData[c].category == category)
-                {
-                  defaultCategoryData.push(sectionData[c])
-                }
+                if (sectionData[c].category == category) { defaultCategoryData.push(sectionData[c]) }
             }
 
             // vuex
             store.dispatch('storage/actionSetSelectedSection', section)
             store.dispatch('storage/actionSetSelectedSectionCategories', sectionCategories)
             store.dispatch('storage/actionSetSelectedSectionData', sectionData)
-            if (section.title != "index" || section.title != "search")
-            {
-                store.dispatch('storage/actionSetSelectedSectionCategoryData', defaultCategoryData)
-            }
+            if (section.title != "index" || section.title != "search") { store.dispatch('storage/actionSetSelectedSectionCategoryData', defaultCategoryData) }
 
-            //set history test 
+            //debugging
             // window.history.pushState(null, null, "/" + title)
 
         }
+
 
         function loadSearch(event)
         {
@@ -208,14 +175,14 @@ export default {
             // console.log(event)
             
             //variables
-            var searchObjects = []
-            var searchString = document.getElementById("searchBarInput")
-            var allDataFromDb = Data.value.data
-            var searchMatchType = ""
-            var searchHitCounter = 0
-            var foundIn = []
-            var searchBar = document.getElementById("searchBarInput")
-            var searchText = searchBar.value
+            let searchObjects = []
+            let searchString = document.getElementById("searchBarInput")
+            let allDataFromDb = Data.value.data
+            let searchMatchType = ""
+            let searchHitCounter = 0
+            let foundIn = []
+            let searchBar = document.getElementById("searchBarInput")
+            let searchText = searchBar.value
             
             //input error handling
             if (searchString.value == "" || searchString.value[0] == " ")
@@ -225,27 +192,27 @@ export default {
             }
 
             //find and set search objects
-            for (var d in allDataFromDb)
+            for (let d in allDataFromDb)
             {
                 //variables
-                var searchObject = ""
-                var x = allDataFromDb[d]
-                var y = Object.entries(x)
+                let searchObject = ""
+                let x = allDataFromDb[d]
+                let y = Object.entries(x)
 
                 //sort data into search objects
-                for (var c in y)
+                for (let c in y)
                 {
                   //variables
-                  var dataType = y[c][0].toString()
+                  let dataType = y[c][0].toString()
 
                   //filter data to find data.section and data.category
                   if (dataType != "backgroundColor" && dataType != "backgroundImage" && dataType != "key" && dataType != "lastEdited" && dataType != "type" && dataType != "obj" && dataType != "galleryImages")
                   {
-                      var cleanStr1 = JSON.stringify(y[c])
-                      var cleanStr2 = cleanStr1.substr(1, (cleanStr1.length - 2))
-                      // var cleanStr3 = cleanStr2.replaceAll("\"", "'")
-                      var cleanStr4 = cleanStr2.replace(",", ":")
-                      // var cleanStr5 = "{" + cleanStr4 + "}"
+                      let cleanStr1 = JSON.stringify(y[c])
+                      let cleanStr2 = cleanStr1.substr(1, (cleanStr1.length - 2))
+                      // let cleanStr3 = cleanStr2.replaceAll("\"", "'")
+                      let cleanStr4 = cleanStr2.replace(",", ":")
+                      // let cleanStr5 = "{" + cleanStr4 + "}"
                       
                       searchObject += cleanStr4 + ","
                   }
@@ -253,11 +220,11 @@ export default {
                   //filter relevant data from data.galleryImages
                   if (dataType == "galleryImages")
                   { 
-                      var imageGallery = y[c][1]
+                      let imageGallery = y[c][1]
                       
                       if (imageGallery != "null")
                       {
-                        for (var c in imageGallery)
+                        for (let c in imageGallery)
                         {
                             if (imageGallery[c].hidden == "False" || imageGallery[c].hidden == "false")
                             {
@@ -272,24 +239,24 @@ export default {
                   //filter relevant data from data.obj
                   if (dataType == "obj")
                   {
-                      var obj = y[c][1]
+                      let obj = y[c][1]
                       if (obj != "null")
                       {
-                        for (var c in obj)
+                        for (let c in obj)
                         {
                             if (obj[c].hidden == "False")
                             {
-                              var k = Object.entries(obj[c])
+                              let k = Object.entries(obj[c])
 
-                              for(var x in k)
+                              for(let x in k)
                               {
                                   if (k[x][0] != "hidden" && k[x][0] != "multiline" && k[x][0] != "pos")
                                   {
-                                    var cleanStr1 = JSON.stringify(k[x])
-                                    var cleanStr2 = cleanStr1.substr(1, (cleanStr1.length - 2))
-                                    // var cleanStr3 = cleanStr2.replaceAll("\"", "'")
-                                    var cleanStr4 = cleanStr2.replace(",", ":")
-                                    // var cleanStr5 = "{" + cleanStr4 + "}"
+                                    let cleanStr1 = JSON.stringify(k[x])
+                                    let cleanStr2 = cleanStr1.substr(1, (cleanStr1.length - 2))
+                                    // let cleanStr3 = cleanStr2.replaceAll("\"", "'")
+                                    let cleanStr4 = cleanStr2.replace(",", ":")
+                                    // let cleanStr5 = "{" + cleanStr4 + "}"
                                     
                                     searchObject += cleanStr4 + ","
                                   }
@@ -307,7 +274,7 @@ export default {
             }
 
             //filter search objects
-            for (var c in searchObjects)
+            for (let c in searchObjects)
             {
                 //debugging
                 // console.log(searchObjects[c])
@@ -315,35 +282,32 @@ export default {
                 // console.log(searchObjects[c].category)
 
                 //variables
-                var t = Object.entries(searchObjects[c])
-                if (c > 1)
-                {
-                  var previousSection = searchObjects[c - 1].section 
-                }
-                var currentSection = searchObjects[c].section
-                var currentCategory = searchObjects[c].category
+                let t = Object.entries(searchObjects[c])
+                if (c > 1) { let previousSection = searchObjects[c - 1].section }
+                let currentSection = searchObjects[c].section
+                let currentCategory = searchObjects[c].category
                 
                 //check if section is not index or search
                 if (currentSection != 'index' && currentSection != 'search')
                 {
-                  for(var x in t)
+                  for(let x in t)
                   { 
-                      var objectKey = t[x][0]
-                      var objectValue = t[x][1]
+                      let objectKey = t[x][0]
+                      let objectValue = t[x][1]
                       
                       //search match found in category
                       if(objectKey == "category")
                       {
                           if(objectValue.includes(searchString.value))
                           {
-                              var categoryName = objectValue
+                              let categoryName = objectValue
 
                               searchHitCounter++
                               searchMatchType = "category"
                               
-                              var formatToJson1 = "\"section\":" + "\"" + currentSection + "\"," + "\"category\":" + "\"" + currentCategory + "\"," + "\"searchMatchType\":" + "\"category\"," + "\"value\":" + "\"" + categoryName + "\""
-                              var formatToJson2 = "{" + formatToJson1 + "}"
-                              var parsedToObject = JSON.parse(formatToJson2)
+                              let formatToJson1 = "\"section\":" + "\"" + currentSection + "\"," + "\"category\":" + "\"" + currentCategory + "\"," + "\"searchMatchType\":" + "\"category\"," + "\"value\":" + "\"" + categoryName + "\""
+                              let formatToJson2 = "{" + formatToJson1 + "}"
+                              let parsedToObject = JSON.parse(formatToJson2)
                               
                               foundIn.push(parsedToObject)
                           }
@@ -357,9 +321,9 @@ export default {
                               searchHitCounter++
                               searchMatchType = "section"
                               
-                              var formatToJson1 = "\"section\":" + "\"" + currentSection + "\"," + "\"searchMatchType\":" + "\"section\""
-                              var formatToJson2 = "{" + formatToJson1 + "}"
-                              var parsedToObject = JSON.parse(formatToJson2)
+                              let formatToJson1 = "\"section\":" + "\"" + currentSection + "\"," + "\"searchMatchType\":" + "\"section\""
+                              let formatToJson2 = "{" + formatToJson1 + "}"
+                              let parsedToObject = JSON.parse(formatToJson2)
                               
                               //section duplicate check
                               if (previousSection != null && currentSection != previousSection)
@@ -372,18 +336,18 @@ export default {
                       //search match found in image description
                       else if(objectKey.substring(0, 5) == "image")
                       {
-                        var imageNumber = objectKey.substring(6, 7)
+                        let imageNumber = objectKey.substring(6, 7)
                         imageNumber++
-                        var imageDescription = objectValue
+                        let imageDescription = objectValue
                         
                         if(objectValue.includes(searchString.value))
                         {
                             searchHitCounter++
                             searchMatchType = "image"
 
-                            var formatToJson1 = "\"section\":" + "\"" + currentSection + "\"," + "\"category\":" + "\"" + currentCategory + "\"," + "\"searchMatchType\":" + "\"image description\"," + "\"key\":" + "\"" + imageNumber + "\"," + "\"value\":" + "\"" + imageDescription + "\""
-                            var formatToJson2 = "{" + formatToJson1 + "}"
-                            var parsedToObject = JSON.parse(formatToJson2)
+                            let formatToJson1 = "\"section\":" + "\"" + currentSection + "\"," + "\"category\":" + "\"" + currentCategory + "\"," + "\"searchMatchType\":" + "\"image description\"," + "\"key\":" + "\"" + imageNumber + "\"," + "\"value\":" + "\"" + imageDescription + "\""
+                            let formatToJson2 = "{" + formatToJson1 + "}"
+                            let parsedToObject = JSON.parse(formatToJson2)
 
                             foundIn.push(parsedToObject)
                         }
@@ -394,15 +358,15 @@ export default {
                       {
                         if(objectValue.includes(searchString.value))
                         {
-                            var dataKey = objectKey
-                            var dataValue = objectValue
+                            let dataKey = objectKey
+                            let dataValue = objectValue
 
                             searchHitCounter++
                             searchMatchType = "data"
 
-                            var formatToJson1 = "\"section\":" + "\"" + currentSection + "\"," + "\"category\":" + "\"" + currentCategory + "\"," + "\"searchMatchType\":" + "\"data\"," + "\"key\":" + "\"" + dataKey + "\"," + "\"value\":" + "\"" + dataValue + "\"" 
-                            var formatToJson2 = "{" + formatToJson1 + "}"
-                            var parsedToObject = JSON.parse(formatToJson2)
+                            let formatToJson1 = "\"section\":" + "\"" + currentSection + "\"," + "\"category\":" + "\"" + currentCategory + "\"," + "\"searchMatchType\":" + "\"data\"," + "\"key\":" + "\"" + dataKey + "\"," + "\"value\":" + "\"" + dataValue + "\"" 
+                            let formatToJson2 = "{" + formatToJson1 + "}"
+                            let parsedToObject = JSON.parse(formatToJson2)
 
                             foundIn.push(parsedToObject)
                         }
@@ -426,6 +390,7 @@ export default {
 
         }
 
+
         return {
             //vuex
             SelectedSectionCategoryData,
@@ -447,85 +412,72 @@ export default {
 }
 </script>
 
+
 <style scoped>
-    #searchBox {
-      margin: 0px;
-      margin: auto;
-      padding: 0px;
-      width: 40vw;
-      background-color: lightgreen;
-      border: 2px solid black;
-    }
+  /*** ids ***/
+  #searchBox 
+  {
+    margin: 0px;
+    margin: auto;
+    padding: 0px;
+    width: 40vw;
+    background-color: lightgreen;
+    border: 2px solid black;
+  }
+  #searchBarInput
+  {
+    margin: 0px;
+    padding: 0px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    border-radius: 0%;
+    border: 0px;
+    border-bottom: 1px solid black;
+  }
+  #searchBarSubmitButton 
+  {
+    margin: 0px;
+    padding: 0px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    border-radius: 0%;
+    border: 0px;
+    border-bottom: 1px solid black;
+  }
+  #searchBarInput { padding-left: 1%; width: 83%; font-weight: bold; outline: none; }
+  #searchBarInput::placeholder { color: black; }
+  #searchBarSubmitButton { width: 16%; font-weight: bold; background-color: var(--SearchButtonColor); border-left: 2px solid black; }
+  #searchBarSubmitButton:active { background-color: var(--activeLinkColor); }
+  #searchHitCount 
+  {
+    margin: 0px;
+    padding: 0px;
+    padding-top: 7px;
+    padding-bottom: 7px;
+    font-weight: bold;
+    color: white;
+    background-color: var(--SearchHitCountBackgroundColor); /* #2c3e50 */
+  }
 
-    #searchBarInput, #searchBarSubmitButton {
-      margin: 0px;
-      padding: 0px;
-      padding-top: 10px;
-      padding-bottom: 10px;
-      border-radius: 0%;
-      border: 0px;
-      border-bottom: 1px solid black;
-    }
 
-    #searchBarInput {
-      padding-left: 1%;
-      width: 83%;
-      font-weight: bold;
-      outline: none;
-    }
+  /*** classes ***/
+  .searchHit 
+  {
+    margin: 0px;
+    margin: auto;
+    padding: 8px;
+    text-align: left;
+    background-color: var(--SearchHitBackgroundColor);
+    border-top: 1px solid black;
+  }
 
-    #searchBarInput::placeholder
-    {
-      color: black;
-    }
+  .searchHit a { text-decoration: none; color: black; }
+  .searchHit:hover { background-color: var(--activeLinkColor); }
+  .searchHit:active { background-color: var(--activeLinkColor);}
 
-    #searchBarSubmitButton {
-      width: 16%;
-      font-weight: bold;
-      background-color: var(--SearchButtonColor);
-      border-left: 2px solid black;
-    }
 
-    #searchBarSubmitButton:active {
-      background-color: var(--activeLinkColor);
-    }
-
-    #searchHitCount {
-      margin: 0px;
-      padding: 0px;
-      padding-top: 7px;
-      padding-bottom: 7px;
-      font-weight: bold;
-      color: white;
-      background-color: var(--SearchHitCountBackgroundColor); /* #2c3e50 */
-    }
-
-    .searchHit {
-      margin: 0px;
-      margin: auto;
-      padding: 8px;
-      text-align: left;
-      background-color: var(--SearchHitBackgroundColor);
-      border-top: 1px solid black;
-    }
-
-    .searchHit a {
-      text-decoration: none;
-      color: black;
-    }
-
-    .searchHit:hover {
-      background-color: var(--activeLinkColor);
-    }
-
-    .searchHit:active {
-      background-color: var(--activeLinkColor);
-    }
-
-    /* mobile styling */
-    @media screen and (max-width: 700px) {
-      #searchBox {
-        width: 88vw;
-      }
-    }
+  /*** mobile ***/
+  @media screen and (max-width: 700px) {
+    #searchBox { width: 88vw; }
+  }
 </style>
