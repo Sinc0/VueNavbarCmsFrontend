@@ -25,6 +25,9 @@ export default createStore({
         selectedSectionCategories: null,
         selectedSectionData: null,
         selectedSectionCategoryData: null,
+        backendSections: null,
+        backendCategories: null,
+        backendData: null,
       },
       
       getters: 
@@ -38,7 +41,10 @@ export default createStore({
         selectedSectionData(state) { return state.selectedSectionData },
         selectedSectionCategoryData(state) { return state.selectedSectionCategoryData },
         searchResults(state) { return state.searchResults },
-        searchString(state) { return state.searchString }
+        searchString(state) { return state.searchString },
+        backendSections(state) { return state.backendSections },
+        backendCategories(state) { return state.backendCategories },
+        backendData(state) { return state.backendData },
       },
 
       mutations: 
@@ -52,7 +58,10 @@ export default createStore({
         mutationSetSelectedSectionData(state, value) { state.selectedSectionData = value },
         mutationSetSelectedSectionCategoryData(state, value) { state.selectedSectionCategoryData = value },
         mutationSetSearchResults(state, value) { state.searchResults = value },
-        mutationSetSearchString(state, value) { state.searchString = value }
+        mutationSetSearchString(state, value) { state.searchString = value },
+        mutationSetBackendSections(state, value) { state.backendSections = value },
+        mutationSetBackendCategories(state, value) { state.backendCategories = value },
+        mutationSetBackendData(state, value) { state.backendData = value },
       },
 
       actions: 
@@ -66,6 +75,9 @@ export default createStore({
         actionSetSelectedSectionData({commit}, value) { commit('mutationSetSelectedSectionData', value) },
         actionSetSelectedSectionCategoryData({commit}, value) { commit('mutationSetSelectedSectionCategoryData', value) },
         actionSetSearchResults({commit}, value) { commit('mutationSetSearchResults', value) },
-        actionSetSearchString({commit}, value) { commit('mutationSetSearchString', value) }
+        actionSetSearchString({commit}, value) { commit('mutationSetSearchString', value) },
+        actionSetBackendSections({commit}, value) { commit('mutationSetBackendSections', value) },
+        actionSetBackendCategories({commit}, value) { commit('mutationSetBackendCategories', value) },
+        actionSetBackendData({commit}, value) { commit('mutationSetBackendData', value) },
       }
 }}})

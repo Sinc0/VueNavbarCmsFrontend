@@ -28,14 +28,14 @@
 
 
 <script>
+import {computed, onMounted} from 'vue'
+import {useStore} from 'vuex'
 import ComponentFetchData from '@/components/componentFetchData.vue'
 import ComponentCategories from '@/components/componentCategories.vue'
 import ComponentIndex from '@/components/componentIndex.vue'
 import ComponentSearch from '@/components/componentSearch.vue'
 import ComponentSectionData from '@/components/componentSectionData.vue'
 import ComponentSections from '@/components/componentSections.vue'
-import {computed, onMounted} from 'vue'
-import {useStore} from 'vuex'
 
 
 export default {

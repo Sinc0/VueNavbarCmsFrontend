@@ -13,9 +13,10 @@
           <span>text</span>
         </div> -->
 
-        <!-- data rows -->
+        <!-- variables -->
         <div hidden>{{sortedRows = sortRowPosition(SelectedSectionCategoryData[0])}}</div>
         
+        <!-- data rows -->
         <div v-for="(item, itemObjKey) in sortedRows">
           <div v-bind:id="'dataRow' + (itemObjKey - 1)" class="dataRow" v-if="item[0] != 'key' && item[0] != 'section' && item[0] != 'category'">
             <!-- debugging -->
@@ -24,8 +25,12 @@
 
             <!-- item data -->
             <div id="" v-if="item.hidden != 'true'">
+              <!-- nr -->
+              <span class="itemNr">{{(itemObjKey + 1)}} (Subcategory)</span>
+
               <!-- title -->
               <span class="itemTitle" v-if="item.title != ''">{{item.title}}</span>
+              <span class="itemTitle" v-else>no title</span>
 
               <!-- gallery images -->
               <div class="itemImageGallery" v-if="item.type == 'galleryImages'">
@@ -377,7 +382,7 @@ export default {
 
   /*** ids ***/
   #sectionData { margin: 0px; padding: 0px; }
-  #data { padding: 0px; user-select: none; border: 1px solid black; }
+  #data { padding: 0px; user-select: none; /* border: 1px solid black; */ }
   #data-div { margin: 0px; padding: 0px; }
   #image-gallery-wrapper { margin: 0px; padding: 0px; }
   #image-gallery {
@@ -475,6 +480,7 @@ export default {
   .itemTitle { display: block; font-weight: bold; font-size: 19px; }
   .linklist-item { text-decoration: none; }
   .timeline-item { width: max-content; margin: auto; padding: 12px 0px 12px 0px; border-left: 3px solid black; }
+  .itemNr { display: block; font-weight: bold; }
 
 
   /*** mobile ***/

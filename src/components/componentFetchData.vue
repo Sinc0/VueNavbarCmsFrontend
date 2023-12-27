@@ -230,6 +230,6 @@ export default {
 </script>
 
 
-<style>
+<style scoped>
     /* empty */
 </style>
