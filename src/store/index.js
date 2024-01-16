@@ -28,6 +28,9 @@ export default createStore({
         backendSections: null,
         backendCategories: null,
         backendData: null,
+        backendCategoriesSelected: null,
+        backendDataSelected: null,
+        backendDataObjModal: null,
       },
       
       getters: 
@@ -45,6 +48,9 @@ export default createStore({
         backendSections(state) { return state.backendSections },
         backendCategories(state) { return state.backendCategories },
         backendData(state) { return state.backendData },
+        backendCategoriesSelected(state) { return state.backendCategoriesSelected },
+        backendDataSelected(state) { return state.backendDataSelected },
+        backendDataObjModal(state) { return state.backendDataObjModal },
       },
 
       mutations: 
@@ -62,6 +68,9 @@ export default createStore({
         mutationSetBackendSections(state, value) { state.backendSections = value },
         mutationSetBackendCategories(state, value) { state.backendCategories = value },
         mutationSetBackendData(state, value) { state.backendData = value },
+        mutationSetBackendCategoriesSelected(state, value) { state.backendCategoriesSelected = value },
+        mutationSetBackendDataSelected(state, value) { state.backendDataSelected = value },
+        mutationSetBackendDataObjModal(state, value) { state.backendDataObjModal = value },
       },
 
       actions: 
@@ -79,5 +88,8 @@ export default createStore({
         actionSetBackendSections({commit}, value) { commit('mutationSetBackendSections', value) },
         actionSetBackendCategories({commit}, value) { commit('mutationSetBackendCategories', value) },
         actionSetBackendData({commit}, value) { commit('mutationSetBackendData', value) },
+        actionSetBackendCategoriesSelected({commit}, value) { commit('mutationSetBackendCategoriesSelected', value) },
+        actionSetBackendDataSelected({commit}, value) { commit('mutationSetBackendDataSelected', value) },
+        actionSetBackendDataObjModal({commit}, value) { commit('mutationSetBackendDataObjModal', value) },
       }
 }}})
