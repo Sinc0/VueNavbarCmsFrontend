@@ -31,6 +31,9 @@ export default createStore({
         backendCategoriesSelected: null,
         backendDataSelected: null,
         backendDataObjModal: null,
+
+        backendCategoryObjModal: null,
+        backendSectionObjModal: null,
       },
       
       getters: 
@@ -51,6 +54,9 @@ export default createStore({
         backendCategoriesSelected(state) { return state.backendCategoriesSelected },
         backendDataSelected(state) { return state.backendDataSelected },
         backendDataObjModal(state) { return state.backendDataObjModal },
+
+        backendCategoryObjModal(state) { return state.backendCategoryObjModal },
+        backendSectionObjModal(state) { return state.backendSectionObjModal },
       },
 
       mutations: 
@@ -71,6 +77,9 @@ export default createStore({
         mutationSetBackendCategoriesSelected(state, value) { state.backendCategoriesSelected = value },
         mutationSetBackendDataSelected(state, value) { state.backendDataSelected = value },
         mutationSetBackendDataObjModal(state, value) { state.backendDataObjModal = value },
+
+        mutationSetBackendCategoryObjModal(state, value) { state.backendCategoryObjModal = value },
+        mutationSetBackendSectionObjModal(state, value) { state.backendSectionObjModal = value },
       },
 
       actions: 
@@ -91,5 +100,8 @@ export default createStore({
         actionSetBackendCategoriesSelected({commit}, value) { commit('mutationSetBackendCategoriesSelected', value) },
         actionSetBackendDataSelected({commit}, value) { commit('mutationSetBackendDataSelected', value) },
         actionSetBackendDataObjModal({commit}, value) { commit('mutationSetBackendDataObjModal', value) },
+
+        actionSetBackendCategoryObjModal({commit}, value) { commit('mutationSetBackendCategoryObjModal', value) },
+        actionSetBackendSectionObjModal({commit}, value) { commit('mutationSetBackendSectionObjModal', value) },
       }
 }}})
