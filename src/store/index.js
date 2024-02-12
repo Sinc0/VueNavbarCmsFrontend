@@ -2,12 +2,6 @@ import { createStore } from 'vuex'
 
 
 export default createStore({
-  //global
-  state: {},
-  getters: {},
-  mutations: {},
-  actions: {},
-
   //modules
   modules: {
     storage: {
@@ -15,30 +9,37 @@ export default createStore({
       
       state: 
       {
+        //standalone
         sections: null,
         categories: null,
         data: null,
         searchResults: null,
         searchString: null,
-        selectedMovie: null,
+
+        // settings: null,
+        
+        //selected
         selectedSection: null,
         selectedSectionCategories: null,
         selectedSectionData: null,
         selectedSectionCategoryData: null,
+
+        //backend
         backendSections: null,
         backendCategories: null,
         backendData: null,
         backendCategoriesSelected: null,
         backendDataSelected: null,
         backendDataObjModal: null,
-
         backendCategoryObjModal: null,
         backendSectionObjModal: null,
+        backendAccountSettings: null,
+        backendAccountCredentials: null,
+        backendAccountLoginInfo: null,
       },
       
       getters: 
       {
-        selectedMovie(state) { return state.selectedMovie },
         sections(state) { return state.sections },
         selectedSection(state) { return state.selectedSection },
         categories(state) { return state.categories },
@@ -54,14 +55,17 @@ export default createStore({
         backendCategoriesSelected(state) { return state.backendCategoriesSelected },
         backendDataSelected(state) { return state.backendDataSelected },
         backendDataObjModal(state) { return state.backendDataObjModal },
-
         backendCategoryObjModal(state) { return state.backendCategoryObjModal },
         backendSectionObjModal(state) { return state.backendSectionObjModal },
+        backendAccountSettings(state) { return state.backendAccountSettings },
+        backendAccountCredentials(state) { return state.backendAccountCredentials },
+        backendAccountLoginInfo(state) { return state.backendAccountLoginInfo },
+        
+        // settings(state) { return state.settings },
       },
 
       mutations: 
       {      
-        mutationSetSelectedMovie (state, value) { state.selectedMovie = value},
         mutationSetSections (state, value) { state.sections = value },
         mutationSetSelectedSection (state, value) { state.selectedSection = value },
         mutationSetCategories (state, value) { state.categories = value },
@@ -77,14 +81,17 @@ export default createStore({
         mutationSetBackendCategoriesSelected(state, value) { state.backendCategoriesSelected = value },
         mutationSetBackendDataSelected(state, value) { state.backendDataSelected = value },
         mutationSetBackendDataObjModal(state, value) { state.backendDataObjModal = value },
-
         mutationSetBackendCategoryObjModal(state, value) { state.backendCategoryObjModal = value },
         mutationSetBackendSectionObjModal(state, value) { state.backendSectionObjModal = value },
+        mutationSetBackendAccountSettings(state, value) { state.backendAccountSettings = value },
+        mutationSetBackendAccountCredentials(state, value) { state.backendAccountCredentials = value },
+        mutationSetBackendAccountLoginInfo(state, value) { state.backendAccountLoginInfo = value },
+        
+        // mutationSetSettings(state, value) { state.settings = value },
       },
 
       actions: 
       {   
-        actionSetSelectedMovie({commit}, value) { commit('mutationSetSelectedMovie', value) },
         actionSetSections({commit}, value) { commit('mutationSetSections', value) },
         actionSetSelectedSection({commit}, value) { commit('mutationSetSelectedSection', value) },
         actionSetCategories({commit}, value) { commit('mutationSetCategories', value) },
@@ -100,8 +107,12 @@ export default createStore({
         actionSetBackendCategoriesSelected({commit}, value) { commit('mutationSetBackendCategoriesSelected', value) },
         actionSetBackendDataSelected({commit}, value) { commit('mutationSetBackendDataSelected', value) },
         actionSetBackendDataObjModal({commit}, value) { commit('mutationSetBackendDataObjModal', value) },
-
         actionSetBackendCategoryObjModal({commit}, value) { commit('mutationSetBackendCategoryObjModal', value) },
         actionSetBackendSectionObjModal({commit}, value) { commit('mutationSetBackendSectionObjModal', value) },
+        actionSetBackendAccountSettings({commit}, value) { commit('mutationSetBackendAccountSettings', value) },
+        actionSetBackendAccountCredentials({commit}, value) { commit('mutationSetBackendAccountCredentials', value) },
+        actionSetBackendAccountLoginInfo({commit}, value) { commit('mutationSetBackendAccountLoginInfo', value) },
+        
+        // actionSetSettings({commit}, value) { commit('mutationSetSettings', value) },
       }
 }}})

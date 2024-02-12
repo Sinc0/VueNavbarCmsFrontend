@@ -237,9 +237,7 @@
         </div>
 
 
-        <!-- modal: account -->
-        <div id="account">
-        </div>
+
 
 
         <!-- modal: underlay -->
@@ -351,10 +349,322 @@
             </div>
         </div>
 
+        <!-- modal: edit account -->
+        <div id="editAccountModal">
+            
+            <!-- account credentials -->
+            <label id="editAccountTitleCredentials" class="editAccountTitle">Credentials</label>
+
+            <div id="editAccountCredentials" class="editAccountSection" v-if="backendAccountCredentials">
+                <!-- variables -->
+                <div hidden>{{accountCredentials = sortAccountCredentials(backendAccountCredentials)}}</div>
+                
+                <!-- inputs -->
+                <input id="editAccountUsername" class="editAccountInputText" type="text" placeholder="Username" v-bind:value="accountCredentials.username" maxlength="20" />
+                <input id="editAccountDomain" class="editAccountInputText" type="text" placeholder="Domain" v-bind:value="accountCredentials.domain" maxlength="20" />
+                <input id="editAccountEmail" class="editAccountInputText" type="text" placeholder="Email" v-bind:value="accountCredentials.email" maxlength="100" />
+                <input id="editAccountName" class="editAccountInputText" type="text" placeholder="Name" v-bind:value="accountCredentials.name" maxlength="20" />
+                <input id="editAccountPhone" class="editAccountInputText" type="text" placeholder="Phone" v-bind:value="accountCredentials.phone" maxlength="20" />
+                <input id="editAccountCountry" class="editAccountInputText" type="text" placeholder="Country" v-bind:value="accountCredentials.country" maxlength="2" />
+                <input id="editAccountPassword" class="editAccountInputText" type="button" value="Change Password" v-on:click="editAccount('password', '', 'true')" maxlength="20" />
+                <div id="editAccountChangePassword">
+                    <input id="editAccountPasswordOld" class="editAccountInputText" type="password" placeholder="Old Password" maxlength="20" />
+                    <img id="editAccountPasswordImgShow" src="/iconShow.png" v-on:click="showPasswordInputs()" />
+                    <img id="editAccountPasswordImgHide" src="/iconHidden.png" v-on:click="hidePasswordInputs()" />
+                    <input id="editAccountPasswordNew" class="editAccountInputText" type="password" placeholder="New Password" maxlength="20" />
+                    <input id="editAccountPasswordNewAgain" class="editAccountInputText" type="password" placeholder="New Password Again" />
+                    <input id="editAccountPasswordConfirm" class="editAccountInputText" type="button" value="Confirm New Password" maxlength="20" />
+                </div>
+                <!-- <input class="editAccountInputText" type="button" value="Update Credentials" /> -->
+            </div>
+            
+            <!-- account settings -->
+            <div id="editAccountSettings" v-if="backendAccountSettings">
+
+                <!-- edit: account colors -->
+                <label class="editAccountTitle">Colors</label>
+                <div id="editAccountColors" class="editAccountSection">
+                    
+                    <!-- color: nav background -->
+                    <div id="editAccountNavBackgroundColor" class="editAccountColors">
+                        <input id="editAccountColorNavBackground" class="editAccountInputColor" type="color" />
+                        <label class="editAccountText"> Nav Background</label>
+                    </div>
+    
+                    <!-- color: nav icons -->
+                    <div id="" class="editAccountColors">
+                        <input id="editAccountColorNavIcons" class="editAccountInputColor" type="color" />
+                        <label class="editAccountText"> Nav Icons</label>
+                    </div>
+    
+                    <!-- color: text -->
+                    <div id="" class="editAccountColors">
+                        <input id="editAccountColorText" class="editAccountInputColor" type="color" />
+                        <label class="editAccountText"> Text</label>
+                    </div>
+    
+                    <!-- color: section background -->
+                    <div id="" class="editAccountColors">
+                        <input id="editAccountColorSectionBackground" class="editAccountInputColor" type="color" />
+                        <label class="editAccountText"> Section Background</label>
+                    </div>
+    
+                    <!-- color: loading screen -->
+                    <div id="" class="editAccountColors">
+                        <input id="editAccountColorLoadingScreen" class="editAccountInputColor" type="color" />
+                        <label class="editAccountText"> Loading Screen</label>
+                    </div>
+                </div>
+
+                <!-- account toggles -->
+                <!-- <label class="editAccountTitle">Options</label> -->
+                
+                <!-- edit: account nav -->
+                <label class="editAccountTitle">Nav</label>
+                <div id="editAccountNav" class="editAccountSection">
+                    
+                    <!-- toggle: nav position -->
+                    <div id="editAccountNavPosition">
+                        <label class="editAccountToggle">Nav Position:</label>
+                        <button id="editAccountNavTop" class="editAccountToggleButton" v-on:click="editAccount('navPosition', 'top', 'true')">Top</button>
+                        <button id="editAccountNavBottom" class="editAccountToggleButton" v-on:click="editAccount('navPosition', 'bottom', 'true')">Bottom</button>
+                        <button id="editAccountNavLeft" class="editAccountToggleButton" v-on:click="editAccount('navPosition', 'left', 'true')">Left</button>
+                        <button id="editAccountNavRight" class="editAccountToggleButton" v-on:click="editAccount('navPosition', 'right', 'true')">Right</button>
+                    </div>
+    
+                    <!-- toggle: nav icon type -->
+                    <div id="editAccountNavIconType">
+                        <label class="editAccountToggle">Nav Type:</label>
+                        <button id="editAccountNavThumbnails" class="editAccountToggleButton" v-on:click="editAccount('navIconType', 'thumbnails', 'true')">Thumbnails</button>
+                        <button id="editAccountNavNumbers" class="editAccountToggleButton" v-on:click="editAccount('navIconType', 'numbers', 'true')">Numbers</button>
+                    </div>
+    
+                    <!-- toggle: nav icon size -->
+                    <div id="editAccountNavIconSize">
+                        <label class="editAccountToggle">Nav Size:</label>
+                        <button id="editAccountNavSmall" class="editAccountToggleButton" v-on:click="editAccount('navIconSize', 'small', 'true')">Small</button>
+                        <button id="editAccountNavMedium" class="editAccountToggleButton" v-on:click="editAccount('navIconSize', 'medium', 'true')">Medium</button>
+                        <button id="editAccountNavLarge" class="editAccountToggleButton" v-on:click="editAccount('navIconSize', 'large', 'true')">Large</button>
+                    </div>
+                </div>
+                
+                <!-- edit: account text -->
+                <label class="editAccountTitle">Text</label>
+                <div id="editAccountText" class="editAccountSection">
+
+                    <!-- toggle: text weight -->
+                    <div id="editAccountTextStyle">
+                        <label class="editAccountToggle">Text Style:</label>
+                        <button id="editAccountTextNormal" class="editAccountToggleButton" v-on:click="editAccount('textStyle', 'normal', 'true')">Normal</button>
+                        <button id="editAccountTextBold" class="editAccountToggleButton" v-on:click="editAccount('textStyle', 'bold', 'true')">Bold</button>
+                    </div>
+    
+                    <!-- toggle: text size -->
+                    <div id="editAccountTextSize">
+                        <label class="editAccountToggle">Text Size:</label>
+                        <button id="editAccountTextSmall" class="editAccountToggleButton" v-on:click="editAccount('textSize', 'small', 'true')">Small</button>
+                        <button id="editAccountTextMedium" class="editAccountToggleButton" v-on:click="editAccount('textSize', 'medium', 'true')">Medium</button>
+                        <button id="editAccountTextLarge" class="editAccountToggleButton" v-on:click="editAccount('textSize', 'large', 'true')">Large</button>
+                    </div>
+                </div>
+
+                <!-- edit: account privacy -->
+                <label class="editAccountTitle">Privacy</label>
+                <div id="editAccountPrivacy" class="editAccountSection">
+
+                    <!-- toggle: access -->
+                    <div id="editAccountSiteAccess">
+                        <label class="editAccountToggle">Site Access:</label>
+                        <button id="editAccountSitePublic" class="editAccountToggleButton" v-on:click="editAccount('siteAccess', 'public', 'true')">Public</button>
+                        <button id="editAccountSitePrivate" class="editAccountToggleButton" v-on:click="editAccount('siteAccess', 'private', 'true')">Private</button>
+                    </div>
+    
+                    <!-- toggle: password protected -->
+                    <div id="editAccountSitePasswordProtected">
+                        <!-- <input id="editAccountPasswordProtectedToggle" class="editAccountRadioButton" type="radio" v-on:click="editAccount('passwordProtected', '', 'true')" /> -->
+                        <!-- <label class="editAccountText">Password Protected</label> -->
+                        <label class="editAccountToggle">Site Password Protected:</label>
+                        <button id="editAccountSitePasswordProtectedYes" class="editAccountToggleButton" v-on:click="editAccount('sitePasswordProtected', 'true', 'true')">Yes</button>
+                        <button id="editAccountSitePasswordProtectedNo" class="editAccountToggleButton" v-on:click="editAccount('sitePasswordProtected', 'false', 'true')">No</button>
+                        <input id="editAccountPasswordProtectedPassword" class="editAccountInputText" type="text" placeholder="Site Password" maxlength="20" />
+                        <!-- <input id="editAccountPasswordProtectedPasswordConfirm" class="editAccountInputText" type="text" placeholder="Password Confirm" /> -->
+                    </div>
+                </div>
+
+                <!-- edit: account pages -->
+                <label class="editAccountTitle">Pages</label>
+                <div id="editAccountPages" class="editAccountSection">
+
+                    <!-- toggle: start page -->
+                    <div id="editAccountStartPage">
+                        <!-- <input id="editAccountStartPageToggle" class="editAccountRadioButton" type="radio" /> -->
+                        <!-- <label class="editAccountText">Start Page</label> -->
+                        <label class="editAccountToggle">Start Page:</label>
+                        <button id="editAccountStartPageYes" class="editAccountToggleButton" v-on:click="editAccount('pageStart', 'true', 'true')">Yes</button>
+                        <button id="editAccountStartPageNo" class="editAccountToggleButton" v-on:click="editAccount('pageStart', 'false', 'true')">No</button>
+                        <input id="editAccountStartPageTitle" class="editAccountInputText" type="text" placeholder="Start Title" maxlength="100" />
+                        <input id="editAccountStartPageText" class="editAccountInputText" type="text" placeholder="Start Text" maxlength="100" />
+                    </div>
+                    
+                    <!-- toggle: end page -->
+                    <div id="editAcountEndPage">
+                        <!-- <input id="editAcountEndPageToggle" class="editAccountRadioButton" type="radio" /> -->
+                        <!-- <label class="editAccountText">End Page</label> -->
+                        <label class="editAccountToggle">End Page:</label>
+                        <button id="editAcountEndPageYes" class="editAccountToggleButton" v-on:click="editAccount('pageEnd', 'true', 'true')">Yes</button>
+                        <button id="editAcountEndPageNo" class="editAccountToggleButton" v-on:click="editAccount('pageEnd', 'false', 'true')">No</button>
+                        <input id="editAccountEndPageTitle" class="editAccountInputText" type="text" placeholder="End Title" maxlength="100" />
+                        <input id="editAccountEndPageText" class="editAccountInputText" type="text" placeholder="End Text" maxlength="100" />
+                    </div>
+                    
+                    <!-- toggle: index page -->
+                    <div id="editAccountIndexPage">
+                        <!-- <input id="editAccountIndexPageToggle" class="editAccountRadioButton" type="radio" /> -->
+                        <!-- <label class="editAccountText">Index Page</label> -->
+                        <label class="editAccountToggle">Index Page:</label>
+                        <button id="editAccountIndexPageYes" class="editAccountToggleButton" v-on:click="editAccount('pageIndex', 'true', 'true')">Yes</button>
+                        <button id="editAccountIndexPageNo" class="editAccountToggleButton" v-on:click="editAccount('pageIndex', 'false', 'true')">No</button>
+                    </div>
+                </div>
+
+                <!-- edit: account buttons -->
+                <label class="editAccountTitle">Buttons</label>
+                <div id="editAccountButtons" class="editAccountSection">
+
+                    <!-- toggle: fullscreen button -->
+                    <div id="editAccountFullscreenButton">
+                        <!-- <input id="editAccountFullscreenButtonToggle" class="editAccountRadioButton" type="radio" /> -->
+                        <!-- <label class="editAccountText">Fullscreen Button</label> -->
+                        <label class="editAccountToggle">Fullscreen Button:</label>
+                        <button id="editAccountFullscreenButtonYes" class="editAccountToggleButton" v-on:click="editAccount('buttonFullscreen', 'true', 'true')">Yes</button>
+                        <button id="editAccountFullscreenButtonNo" class="editAccountToggleButton" v-on:click="editAccount('buttonFullscreen', 'false', 'true')">No</button>
+                    </div>
+    
+                    <!-- toggle: search button -->
+                    <div id="editAccountSearchButton">
+                        <!-- <input id="editAccountSearchButtonToggle" class="editAccountRadioButton" type="radio" /> -->
+                        <!-- <label class="editAccountText">Search Button</label> -->
+                        <label class="editAccountToggle">Search Button:</label>
+                        <button id="editAccountSearchButtonYes" class="editAccountToggleButton" v-on:click="editAccount('buttonSearch', 'true', 'true')">Yes</button>
+                        <button id="editAccountSearchButtonNo" class="editAccountToggleButton" v-on:click="editAccount('buttonSearch', 'false', 'true')">No</button>
+                    </div>
+    
+                    <!-- toggle: contact button -->
+                    <div id="editAccountContactButton">
+                        <!-- <input id="editAccountContactButtonToggle" class="editAccountRadioButton" type="radio" /> -->
+                        <!-- <label class="editAccountText">Contact Button?</label> -->
+                        <label class="editAccountToggle">Contact Button:</label>
+                        <button id="editAccountContactButtonYes" class="editAccountToggleButton" v-on:click="editAccount('buttonContact', 'true', 'true')">Yes</button>
+                        <button id="editAccountContactButtonNo" class="editAccountToggleButton" v-on:click="editAccount('buttonContact', 'false', 'true')">No</button>
+                    </div>
+    
+                    <!-- toggle: about button -->
+                    <div id="editAccountAboutButton">
+                        <!-- <input id="editAccountAboutButtonToggle" class="editAccountRadioButton" type="radio" /> -->
+                        <!-- <label class="editAccountText">About Button?</label> -->
+                        <label class="editAccountToggle">About Button:</label>
+                        <button id="editAccountAboutButtonYes" class="editAccountToggleButton" v-on:click="editAccount('buttonAbout', 'true', 'true')">Yes</button>
+                        <button id="editAccountAboutButtonNo" class="editAccountToggleButton" v-on:click="editAccount('buttonAbout', 'false', 'true')">No</button>
+                        <input id="editAccountAboutText" class="editAccountInputText" type="text" placeholder="About Text" maxlength="100" />
+                    </div>
+                </div>
+
+                <!-- edit: account extras -->
+                <label class="editAccountTitle">Extras</label>
+                <div id="editAccountExtras" class="editAccountSection">
+
+                    <!-- toggle: slideshow mode -->
+                    <div id="editAccountSlideshowMode">
+                        <!-- <input id="editAccountExtrasToggle" class="editAccountRadioButton" type="radio" /> -->
+                        <!-- <label class="editAccountText">Slideshow Mode</label> -->
+                        <label class="editAccountToggle">Slideshow Mode:</label>
+                        <button id="editAccountSlideshowModeYes" class="editAccountToggleButton" v-on:click="editAccount('modeSlideshow', 'true', 'true')">Yes</button>
+                        <button id="editAccountSlideshowModeNo" class="editAccountToggleButton" v-on:click="editAccount('modeSlideshow', 'false', 'true')">No</button>
+                    </div>
+                    
+                    <!-- toggle: section background image -->
+                    <div id="editAccountSectionBackgroundImage">
+                        <!-- <input id="editAccountSectionBackgroundImageToggle" class="editAccountRadioButton" type="radio" /> -->
+                        <!-- <label class="editAccountText">Section Background Image</label> -->
+                        <label class="editAccountToggle">Section Background Image:</label>
+                        <button id="editAccountSectionBackgroundImageYes" class="editAccountToggleButton" v-on:click="editAccount('sectionBackgroundImage', 'true', 'true')">Yes</button>
+                        <button id="editAccountSectionBackgroundImageNo" class="editAccountToggleButton" v-on:click="editAccount('sectionBackgroundImage', 'false', 'true')">No</button>
+                        <input id="editAccountSectionBackgroundImageUrl" class="editAccountInputText" type="text" placeholder="Background Url" maxlength="1000"/>
+                    </div>
+    
+                    <!-- toggle: loading screen -->
+                    <div id="editAccountLoadingScreen">
+                        <!-- <input id="editAccountLoadingScreenToggle" class="editAccountRadioButton" type="radio" /> -->
+                        <!-- <label class="editAccountText">Loading Screen</label> -->
+                        <label class="editAccountToggle">Loading Screen:</label>
+                        <button id="editAccountLoadingScreenYes" class="editAccountToggleButton" v-on:click="editAccount('loadingScreen', 'true', 'true')">Yes</button>
+                        <button id="editAccountLoadingScreenNo" class="editAccountToggleButton" v-on:click="editAccount('loadingScreen', 'false', 'true')">No</button>
+                        <input id="editAccountLoadingScreenUrl" class="editAccountInputText" type="text" placeholder="Gif Url" maxlength="1000"/>
+                    </div>
+                </div>
+            </div>
+
+            <!-- edit account: danger -->
+            <label class="editAccountTitle">Danger</label>
+            <div id="editAccountDanger" class="editAccountSection">
+                <input id="editAccountDangerReset" type="button" class="editAccountInputDanger" value="Reset Account" v-on:click="dangerAccount('display', 'reset')">
+                <input id="editAccountDangerDelete" type="button" class="editAccountInputDanger" value="Delete Account" v-on:click="dangerAccount('display', 'delete')">
+                
+                <div id="editAccountDangerConfirm">
+                    <input id="editAccountDangerConfirmText" class="editAccountInputText" type="text" placeholder="Password" />
+                    <input id="editAccountDangerConfirmResetButton" type="button" class="editAccountInputDanger" value="Confirm Reset" v-on:click="dangerAccount('account', 'reset')">
+                    <input id="editAccountDangerConfirmDeleteButton" type="button" class="editAccountInputDanger" value="Confirm Delete" v-on:click="dangerAccount('account', 'delete')">
+                    <label id="editAccountDangerStatusMessage" type="text" class=""></label>
+                </div>
+            </div>
+
+            <!-- account: info -->
+            <label class="editAccountTitle">Account</label>
+            <div id="editAccountInfo" class="editAccountSection" v-if="backendAccountLoginInfo">
+                <!-- account status -->
+                <label class="accountInfoItem">
+                    <span class="accountInfoTitle">Status: </span> 
+                    <span class="accountInfoText">{{backendAccountLoginInfo.accountStatus}}</span>
+                </label>
+
+                <!-- account last login -->
+                <label class="accountInfoItem">
+                    <span class="accountInfoTitle">Last Login: </span>
+                    <span class="accountInfoText">{{backendAccountLoginInfo.lastLogin.substring(0, 19)}}</span>
+                </label>
+
+                <!-- account created at-->
+                <label id="accountInfoCreatedAt" class="accountInfoItem">
+                    <span class="accountInfoTitle">Created At: </span> 
+                    <span class="accountInfoText">{{backendAccountLoginInfo.createdAt}}</span>
+                </label>
+
+                <!-- <label class="accountInfoItem" v-if="backendSections">Total Sections: {{backendSections.length}}</label> -->
+                <!-- <label class="accountInfoItem" v-if="backendCategories">Total Categories: {{backendCategories.length}}</label> -->
+                <!-- <label class="accountInfoItem">Total Rows: </label> -->
+            </div>
+
+            <p id="updateStatusMessageUpdateSettings"></p>
+
+            <!-- edit account: save checkbox -->
+            <input id="checkboxSaveUpdateSettings" type="checkbox" class="checkbox" v-on:click="confirmCheckboxUpdateSettings()" />
+            <label id="labelSaveUpdateSettings">Save</label>
+
+            <!-- edit account: confirm save button -->
+            <div id="confirmChangesUpdateSettings">
+                <!-- <input class="editAccountInputText" type="text" placeholder="Password" /> -->
+                <button id="buttonSaveUpdateSettings" v-on:click="saveChangesSettings()">Confirm Save</button>
+            </div>
+        </div>
+
 
         <!-- button: edit sections -->
         <div id="" v-if="backendSections">
             <img id="settingsSectionsIcon" src="/iconSettingsSections.png" v-on:click="editSectionsModal(backendSections)"/>
+        </div>
+
+        <!-- button: edit account -->
+        <div id="settingsAccount" v-on:click="editAccountModal(backendAccountSettings, backendAccountCredentials)">
         </div>
     </div>
 </template>
@@ -381,6 +691,9 @@ export default {
     const backendDataObjModal = computed(() => { return store.getters['storage/backendDataObjModal']})
     const backendCategoryObjModal = computed(() => { return store.getters['storage/backendCategoryObjModal']})
     const backendSectionObjModal = computed(() => { return store.getters['storage/backendSectionObjModal']})
+    const backendAccountSettings = computed(() => { return store.getters['storage/backendAccountSettings']})
+    const backendAccountCredentials = computed(() => { return store.getters['storage/backendAccountCredentials']})
+    const backendAccountLoginInfo = computed(() => { return store.getters['storage/backendAccountLoginInfo']})
 
 
     //globals
@@ -428,7 +741,7 @@ export default {
         let token = localStorage.getItem("cms-token")
         let lastLogin = localStorage.getItem("cms-last-login")
         let obj = JSON.stringify({ "username": username, "token": token, "lastLogin": lastLogin })
-
+        
         //fetch specific user data
         await fetch(BACKEND_API + "/specific-user", {method: 'post', body: obj})
         .then((response) => { return response.json() })
@@ -443,10 +756,13 @@ export default {
                 store.dispatch('storage/actionSetBackendSections', data.sections)
                 store.dispatch('storage/actionSetBackendCategories', data.categories)
                 store.dispatch('storage/actionSetBackendData', data.data)
-
-                //save to local storage
-                // localStorage.setItem("cms-backend-user", JSON.stringify(data))
-                // localStorage.setItem("cms-backend-data", JSON.stringify(data.data))
+                store.dispatch('storage/actionSetBackendAccountSettings', data.settings)
+                store.dispatch('storage/actionSetBackendAccountCredentials', data.credentials)
+                store.dispatch('storage/actionSetBackendAccountLoginInfo',{
+                    "createdAt": data.createdAt,
+                    "lastLogin": data.lastLogin,
+                    "accountStatus": data.accountStatus
+                })
             }
 
             //fetch user failed
@@ -667,6 +983,7 @@ export default {
         let addSelectTypeModal = document.getElementById("addSelectTypeModal")
         let editCategoriesModal = document.getElementById("editCategoriesModal")
         let editSectionsModal = document.getElementById("editSectionsModal")
+        let editAccountModal = document.getElementById("editAccountModal")
 
         //update elements
         if(dataObjModal) { dataObjModal.style.display = "none" }
@@ -675,6 +992,7 @@ export default {
         if(addSelectTypeModal) { addSelectTypeModal.style.display = "none" }
         if(editCategoriesModal) { editCategoriesModal.style.display = "none" }
         if(editSectionsModal) { editSectionsModal.style.display = "none" }
+        if(editAccountModal) { editAccountModal.style.display = "none" }
     }
 
 
@@ -1060,7 +1378,6 @@ export default {
             console.log(backendData.value)
 
             //save vuex
-            store.dispatch('storage/actionSetBackendData', backendData.value)
             store.dispatch('storage/actionSetBackendDataSelected', rowsArray)
             
             //update DB
@@ -1265,6 +1582,9 @@ export default {
             //set update successful message
             if(data.status == "update user data successful") 
             { 
+                    //save vuex
+                    store.dispatch('storage/actionSetBackendData', backendData.value)
+
                 if(confirmCheckbox) { confirmCheckbox.style.display = "none" }
                 if(confirmChanges) { confirmChanges.style.display = "none" }
                 if(updateStatusMessage) 
@@ -1305,7 +1625,7 @@ export default {
         let username = localStorage.getItem("cms-account")
         let token = localStorage.getItem("cms-token")
         let lastLogin = localStorage.getItem("cms-last-login")
-        let obj = JSON.stringify([{ "username": username, "token": token, "lastLogin": lastLogin }, newCategories, newData])
+        let obj = JSON.stringify([{ "username": username, "token": token, "lastLogin": lastLogin }, JSON.stringify(newCategories), JSON.stringify(newData)])
 
         //fetch update user catgories
         await fetch(BACKEND_API + "/update-user-categories", {method: 'post', body: obj})
@@ -1317,6 +1637,14 @@ export default {
             //set update successful message
             if(data.status == "update user categories successful") 
             { 
+                    //save vuex
+                    store.dispatch('storage/actionSetBackendData', newData)
+                    store.dispatch('storage/actionSetBackendCategories', newCategories)
+                    store.dispatch('storage/actionSetBackendCategoriesSelected', newCategories)
+
+                    //update local storage
+                    localStorage.setItem("cms-edit-category", JSON.stringify(newCategories))
+
                 for(let item in categoryElements)
                 {
                     let element = document.getElementById(categoryElements[item].id)
@@ -1362,7 +1690,7 @@ export default {
         let username = localStorage.getItem("cms-account")
         let token = localStorage.getItem("cms-token")
         let lastLogin = localStorage.getItem("cms-last-login")
-        let obj = JSON.stringify([{ "username": username, "token": token, "lastLogin": lastLogin }, newSections])
+        let obj = JSON.stringify([{ "username": username, "token": token, "lastLogin": lastLogin }, JSON.stringify(newSections)])
 
         //fetch update user catgories
         await fetch(BACKEND_API + "/update-user-sections", {method: 'post', body: obj})
@@ -1374,6 +1702,12 @@ export default {
             //set update successful message
             if(data.status == "update user sections successful") 
             { 
+                    //save vuex
+                    store.dispatch('storage/actionSetBackendSections', newSections)
+
+                    //update local storage
+                    localStorage.setItem("cms-edit-section", JSON.stringify(newSections))
+
                 for(let item in categoryElements)
                 {
                     let element = document.getElementById(categoryElements[item].id)
@@ -2606,19 +2940,13 @@ export default {
         // console.log(newBackendData)
         // console.log(toRaw(ls))
 
-        //save vuex
-        store.dispatch('storage/actionSetBackendData', newBackendData)
-        store.dispatch('storage/actionSetBackendCategories', ls)
-        store.dispatch('storage/actionSetBackendCategoriesSelected', ls)
 
-        //update local storage
-        localStorage.setItem("cms-edit-category", JSON.stringify(ls))
 
         //reload edit categories modal
         editCategoriesModal(ls)
 
         //update DB
-        updateUserCategories(JSON.stringify(toRaw(ls)), JSON.stringify(toRaw(backendData.value)))
+        updateUserCategories(ls, newBackendData)
     }
 
 
@@ -2706,17 +3034,13 @@ export default {
         // console.log(newBackendSections)
         // console.log(toRaw(ls))
 
-        //save vuex
-        store.dispatch('storage/actionSetBackendSections', newBackendSections)
 
-        //update local storage
-        localStorage.setItem("cms-edit-section", newBackendSections)
 
         //reload edit sections modal
         editSectionsModal(ls)
 
         //update DB
-        updateUserSections(JSON.stringify(toRaw(backendSections.value)))
+        updateUserSections(newBackendSections)
     }
     
     
@@ -2739,6 +3063,967 @@ export default {
         }
     }
 
+    
+    function editAccountModal(settings, credentials)
+    {
+        console.log(credentials)
+        console.log(settings)
+        console.log(settings.navPosition)
+
+        //elements
+        let editAccountModal = document.getElementById("editAccountModal")
+        let underlayModal = document.getElementById("underlayModal")
+        let editAccountUsername = document.getElementById("editAccountUsername")
+        let editAccountDomain = document.getElementById("editAccountDomain")
+        let editAccountEmail = document.getElementById("editAccountEmail")
+        let editAccountName = document.getElementById("editAccountName")
+        let editAccountPhone = document.getElementById("editAccountPhone")
+        let editAccountCountry = document.getElementById("editAccountCountry")
+        let editAccountChangePassword = document.getElementById("editAccountChangePassword")
+        let editAccountPasswordOld = document.getElementById("editAccountPasswordOld")
+        let editAccountPasswordNew = document.getElementById("editAccountPasswordNew")
+        let editAccountPasswordNewAgain = document.getElementById("editAccountPasswordNewAgain")
+        let labelSaveUpdateSettings = document.getElementById("labelSaveUpdateSettings")
+        let checkboxSaveUpdateSettings = document.getElementById("checkboxSaveUpdateSettings")
+        let editAccountDangerReset = document.getElementById("editAccountDangerReset")
+        let editAccountDangerDelete = document.getElementById("editAccountDangerDelete")
+        let editAccountDangerConfirm = document.getElementById("editAccountDangerConfirm")
+        let editAccountDangerConfirmText = document.getElementById("editAccountDangerConfirmText")
+        let editAccountDangerStatusMessage = document.getElementById("editAccountDangerStatusMessage")
+        
+        //set local storage
+        localStorage.setItem("cms-edit-settings", JSON.stringify(settings))
+        // localStorage.setItem("cms-edit-credentials", JSON.stringify(credentials))
+
+        //update elements
+        editAccountModal.style.display = "block"
+        underlayModal.style.display = "block"
+        editAccountChangePassword.style.display = "none"
+        editAccountPasswordOld.value = ""
+        editAccountPasswordNew.value = ""
+        editAccountPasswordNewAgain.value = ""
+        editAccountUsername.style.backgroundColor = "black"
+        editAccountDomain.style.backgroundColor = "black"
+        editAccountEmail.style.backgroundColor = "black"
+        editAccountName.style.backgroundColor = "black"
+        editAccountPhone.style.backgroundColor = "black"
+        editAccountCountry.style.backgroundColor = "black"
+        editAccountPasswordOld.style.backgroundColor = "black"
+        editAccountPasswordNew.style.backgroundColor = "black"
+        editAccountPasswordNewAgain.style.backgroundColor = "black"
+        labelSaveUpdateSettings.style.display = "block"
+        checkboxSaveUpdateSettings.style.display = "block"
+        hidePasswordInputs()
+        editAccountModal.scrollTo(0,0)
+        editAccountDangerReset.style.display = "block"
+        editAccountDangerDelete.style.display = "block"
+        editAccountDangerStatusMessage.style.display = "none"
+        editAccountDangerConfirm.style.display = "none"
+        editAccountDangerConfirmText.value = ""
+        editAccountDangerStatusMessage.value = ""
+        editAccount("navPosition", settings.navPosition, 'false')
+        editAccount("navIconType", settings.navIconType, 'false')
+        editAccount("navIconSize", settings.navIconSize, 'false')
+        editAccount("textStyle", settings.textStyle, 'false')
+        editAccount("textSize", settings.textSize, 'false')
+        editAccount("siteAccess", settings.siteAccess, 'false')
+        editAccount("sitePasswordProtected", settings.sitePasswordProtected, 'false')
+        editAccount("pageStart", settings.pageStart, 'false')
+        editAccount("pageEnd", settings.pageEnd, 'false')
+        editAccount("pageIndex", settings.pageIndex, 'false')
+        editAccount("buttonFullscreen", settings.buttonFullscreen, 'false')
+        editAccount("buttonSearch", settings.buttonSearch, 'false')
+        editAccount("buttonContact", settings.buttonContact, 'false')
+        editAccount("buttonAbout", settings.buttonAbout, 'false')
+        editAccount("modeSlideshow", settings.modeSlideshow, 'false')
+        editAccount("sectionBackgroundImage", settings.modeSlideshow, 'false')
+        editAccount("loadingScreen", settings.modeSlideshow, 'false')
+        editAccount("username", '', 'false')
+        editAccount("domain", '', 'false')
+        editAccount("email", '', 'false')
+        editAccount("name", '', 'false')
+        editAccount("phone", '', 'false')
+        editAccount("country", '', 'false')
+        editAccount("colorNavBackground", settings.colorNavBackground, 'false')
+        editAccount("colorNavIcons", settings.colorNavIcons, 'false')
+        editAccount("colorText", settings.colorText, 'false')
+        editAccount("colorSectionsBackground", settings.colorSectionsBackground, 'false')
+        editAccount("colorLoadingScreen", settings.colorLoadingScreen, 'false')
+    }
+
+    
+    function editAccount(type, value, clicked)
+    {
+        console.log("editAccount: " + type + " = " + value)
+
+        //elements
+        let editAccountModal = document.getElementById("editAccountModal")
+        let editAccountNavTop = document.getElementById("editAccountNavTop")
+        let editAccountNavBottom = document.getElementById("editAccountNavBottom")
+        let editAccountNavLeft = document.getElementById("editAccountNavLeft")
+        let editAccountNavRight = document.getElementById("editAccountNavRight")
+        let editAccountNavThumbnails = document.getElementById("editAccountNavThumbnails")
+        let editAccountNavNumbers = document.getElementById("editAccountNavNumbers")
+        let editAccountNavSmall = document.getElementById("editAccountNavSmall")
+        let editAccountNavMedium = document.getElementById("editAccountNavMedium")
+        let editAccountNavLarge = document.getElementById("editAccountNavLarge")
+        let editAccountTextNormal = document.getElementById("editAccountTextNormal")
+        let editAccountTextBold = document.getElementById("editAccountTextBold")
+        let editAccountTextSmall = document.getElementById("editAccountTextSmall")
+        let editAccountTextMedium = document.getElementById("editAccountTextMedium")
+        let editAccountTextLarge = document.getElementById("editAccountTextLarge")
+        let editAccountSitePublic = document.getElementById("editAccountSitePublic")
+        let editAccountSitePrivate = document.getElementById("editAccountSitePrivate")
+        let editAccountSitePasswordProtectedYes = document.getElementById("editAccountSitePasswordProtectedYes")
+        let editAccountSitePasswordProtectedNo = document.getElementById("editAccountSitePasswordProtectedNo")
+        let editAccountStartPageNo = document.getElementById("editAccountStartPageNo")
+        let editAccountStartPageYes = document.getElementById("editAccountStartPageYes")
+        let editAccountEndPageYes = document.getElementById("editAcountEndPageYes")
+        let editAccountEndPageNo = document.getElementById("editAcountEndPageNo")
+        let editAccountIndexPageYes = document.getElementById("editAccountIndexPageYes")
+        let editAccountIndexPageNo = document.getElementById("editAccountIndexPageNo")
+        let editAccountFullscreenButtonYes = document.getElementById("editAccountFullscreenButtonYes")
+        let editAccountFullscreenButtonNo = document.getElementById("editAccountFullscreenButtonNo")
+        let editAccountSearchButtonYes = document.getElementById("editAccountSearchButtonYes")
+        let editAccountSearchButtonNo = document.getElementById("editAccountSearchButtonNo")
+        let editAccountContactButtonYes = document.getElementById("editAccountContactButtonYes")
+        let editAccountContactButtonNo = document.getElementById("editAccountContactButtonNo")
+        let editAccountAboutButtonYes = document.getElementById("editAccountAboutButtonYes")
+        let editAccountAboutButtonNo = document.getElementById("editAccountAboutButtonNo")
+        let editAccountSlideshowModeYes = document.getElementById("editAccountSlideshowModeYes")
+        let editAccountSlideshowModeNo = document.getElementById("editAccountSlideshowModeNo")
+        let editAccountSectionBackgroundImageYes = document.getElementById("editAccountSectionBackgroundImageYes")
+        let editAccountSectionBackgroundImageNo = document.getElementById("editAccountSectionBackgroundImageNo")
+        let editAccountLoadingScreenYes = document.getElementById("editAccountLoadingScreenYes")
+        let editAccountLoadingScreenNo = document.getElementById("editAccountLoadingScreenNo")
+        let editAccountEndPageTitle = document.getElementById("editAccountEndPageTitle")
+        let editAccountEndPageText = document.getElementById("editAccountEndPageText")
+        let editAccountStartPageTitle = document.getElementById("editAccountStartPageTitle")
+        let editAccountStartPageText = document.getElementById("editAccountStartPageText")
+        let editAccountAboutText = document.getElementById("editAccountAboutText")
+        let editAccountChangePassword = document.getElementById("editAccountChangePassword")
+        let editAccountPasswordOld = document.getElementById("editAccountPasswordOld")
+        let editAccountPasswordNew = document.getElementById("editAccountPasswordNew")
+        let editAccountPasswordNewAgain = document.getElementById("editAccountPasswordNewAgain")
+        let editAccountPasswordImgShow = document.getElementById("editAccountPasswordImgShow")
+        let editAccountPasswordImgHide = document.getElementById("editAccountPasswordImgHide")
+        let editAccountColorNavBackground = document.getElementById("editAccountColorNavBackground")
+        let editAccountColorNavIcons = document.getElementById("editAccountColorNavIcons")
+        let editAccountColorText = document.getElementById("editAccountColorText")
+        let editAccountColorSectionsBackground = document.getElementById("editAccountColorSectionBackground")
+        let editAccountColorLoadingScreen = document.getElementById("editAccountColorLoadingScreen")
+        let editAccountPasswordProtectedPassword = document.getElementById("editAccountPasswordProtectedPassword")
+        // let editAccountPasswordProtectedPasswordConfirm = document.getElementById("editAccountPasswordProtectedPasswordConfirm")
+        let updateStatusMessage = document.getElementById("updateStatusMessageUpdateSettings")
+        let checkboxSaveUpdateSettings = document.getElementById("checkboxSaveUpdateSettings")
+        let confirmChangesUpdateSettings = document.getElementById("confirmChangesUpdateSettings")
+        let labelSaveUpdateSettings = document.getElementById("labelSaveUpdateSettings")
+
+        //variables
+        let settings = JSON.parse(localStorage.getItem("cms-edit-settings"))
+
+        //update elements
+        if(updateStatusMessage) { updateStatusMessage.innerText = ""; updateStatusMessage.color = "black"; updateStatusMessage.style.display = "none" }
+        if(checkboxSaveUpdateSettings) { checkboxSaveUpdateSettings.checked = false; checkboxSaveUpdateSettings.style.display = "inline-block" }
+        if(labelSaveUpdateSettings) { labelSaveUpdateSettings.style.display = "inline-block" }
+        if(confirmChangesUpdateSettings) { confirmChangesUpdateSettings.style.display = "none" }
+        // if(editAccountPasswordOld) { editAccountPasswordOld.value = ""; editAccountPasswordOld.style.backgroundColor = "black" }
+        // if(editAccountPasswordNew) { editAccountPasswordNew.value = ""; editAccountPasswordNew.style.backgroundColor = "black" }
+        // if(editAccountPasswordNewAgain) { editAccountPasswordNewAgain.value = ""; editAccountPasswordNewAgain.style.backgroundColor = "black" }
+        // if(editAccountChangePassword) { editAccountChangePassword.style.display = "none" }
+
+        //credentials
+        if(type == "username") 
+        { 
+            editAccountUsername.value = backendAccountCredentials.value.username
+        }
+        else if(type == "password") 
+        { 
+            if(editAccountChangePassword.style.display == "none" || editAccountChangePassword.style.display == "")
+            {
+                editAccountChangePassword.style.display = "block"
+            }
+            // else if(editAccountChangePassword.style.display == "block")
+            // {
+            //     editAccountChangePassword.style.display = "none"
+            // }
+        }
+        else if(type == "domain") { editAccountDomain.value = backendAccountCredentials.value.domain }
+        else if(type == "name") { editAccountName.value = backendAccountCredentials.value.name }
+        else if(type == "country") { editAccountCountry.value = backendAccountCredentials.value.country }
+        else if(type == "email") { editAccountEmail.value = backendAccountCredentials.value.email }
+        else if(type == "phone") { editAccountPhone.value = backendAccountCredentials.value.phone }
+
+
+        //colors
+        else if(type == "colorNavBackground") { editAccountColorNavBackground.value = value  }
+        else if(type == "colorNavIcons") { editAccountColorNavIcons.value = value }
+        else if(type == "colorText") { editAccountColorText.value = value }
+        else if(type == "colorSectionsBackground") { editAccountColorSectionsBackground.value = value }
+        else if(type == "colorLoadingScreen") { editAccountColorLoadingScreen.value = value }
+
+
+        //settings
+        else if(type == "navPosition") 
+        { 
+            if(clicked == "true")
+            {
+                settings.navPosition = value
+                localStorage.setItem("cms-edit-settings", JSON.stringify(settings))
+            }
+
+            editAccountNavTop.style.color = "white"; editAccountNavTop.style.opacity = "0.1"
+            editAccountNavBottom.style.color = "white"; editAccountNavBottom.style.opacity = "0.1"
+            editAccountNavLeft.style.color = "white"; editAccountNavLeft.style.opacity = "0.1"
+            editAccountNavRight.style.color = "white"; editAccountNavRight.style.opacity = "0.1"
+
+            if(value == "top") { editAccountNavTop.style.color = "#822c8b"; editAccountNavTop.style.opacity = "1" }
+            else if(value == "bottom") { editAccountNavBottom.style.color = "#822c8b"; editAccountNavBottom.style.opacity = "1" }
+            else if(value == "left") { editAccountNavLeft.style.color = "#822c8b"; editAccountNavLeft.style.opacity = "1" }
+            else if(value == "right") { editAccountNavRight.style.color = "#822c8b"; editAccountNavRight.style.opacity = "1" }
+        }
+
+        else if(type == "navIconType") 
+        {
+            if(clicked == "true")
+            {
+                settings.navIconType = value
+                localStorage.setItem("cms-edit-settings", JSON.stringify(settings))
+            }
+
+            editAccountNavThumbnails.style.color = "white"; editAccountNavThumbnails.style.opacity = "0.1"
+            editAccountNavNumbers.style.color = "white"; editAccountNavNumbers.style.opacity = "0.1"
+
+            if(value == "thumbnails") { editAccountNavThumbnails.style.color = "#822c8b"; editAccountNavThumbnails.style.opacity = "1" }
+            else if(value == "numbers") { editAccountNavNumbers.style.color = "#822c8b"; editAccountNavNumbers.style.opacity = "1" }
+        }
+
+        else if(type == "navIconSize") 
+        {
+            if(clicked == "true")
+            {
+                settings.navIconSize = value
+                localStorage.setItem("cms-edit-settings", JSON.stringify(settings))
+            }
+
+            editAccountNavSmall.style.color = "white"; editAccountNavSmall.style.opacity = "0.1"
+            editAccountNavMedium.style.color = "white"; editAccountNavMedium.style.opacity = "0.1"
+            editAccountNavLarge.style.color = "white"; editAccountNavLarge.style.opacity = "0.1"
+
+            if(value == "small") { editAccountNavSmall.style.color = "#822c8b"; editAccountNavSmall.style.opacity = "1" }
+            else if(value == "medium") { editAccountNavMedium.style.color = "#822c8b"; editAccountNavMedium.style.opacity = "1" }
+            else if(value == "large") { editAccountNavLarge.style.color = "#822c8b"; editAccountNavLarge.style.opacity = "1" }
+        }
+
+        else if(type == "textStyle") 
+        {
+            if(clicked == "true")
+            {
+                settings.textStyle = value
+                localStorage.setItem("cms-edit-settings", JSON.stringify(settings))
+            }
+
+            editAccountTextNormal.style.color = "white"; editAccountTextNormal.style.opacity = "0.1"
+            editAccountTextBold.style.color = "white"; editAccountTextBold.style.opacity = "0.1"
+
+            if(value == "normal") { editAccountTextNormal.style.color = "#822c8b"; editAccountTextNormal.style.opacity = "1" }
+            else if(value == "bold") { editAccountTextBold.style.color = "#822c8b"; editAccountTextBold.style.opacity = "1" }
+        }
+
+        else if(type == "textSize") 
+        {
+            if(clicked == "true")
+            {
+                settings.textSize = value
+                localStorage.setItem("cms-edit-settings", JSON.stringify(settings))
+            }
+
+            editAccountTextSmall.style.color = "white"; editAccountTextSmall.style.opacity = "0.1"
+            editAccountTextMedium.style.color = "white"; editAccountTextMedium.style.opacity = "0.1"
+            editAccountTextLarge.style.color = "white"; editAccountTextLarge.style.opacity = "0.1"
+
+            if(value == "small") { editAccountTextSmall.style.color = "#822c8b"; editAccountTextSmall.style.opacity = "1" }
+            else if(value == "medium") { editAccountTextMedium.style.color = "#822c8b"; editAccountTextMedium.style.opacity = "1" }
+            else if(value == "large") { editAccountTextLarge.style.color = "#822c8b"; editAccountTextLarge.style.opacity = "1" }
+        }
+
+        else if(type == "siteAccess") 
+        {
+            if(clicked == "true")
+            {
+                settings.siteAccess = value
+                localStorage.setItem("cms-edit-settings", JSON.stringify(settings))
+            }
+
+            editAccountSitePublic.style.color = "white"; editAccountSitePublic.style.opacity = "0.1"
+            editAccountSitePrivate.style.color = "white"; editAccountSitePrivate.style.opacity = "0.1"
+
+            if(value == "public") { editAccountSitePublic.style.color = "#822c8b"; editAccountSitePublic.style.opacity = "1" }
+            else if(value == "private") { editAccountSitePrivate.style.color = "#822c8b"; editAccountSitePrivate.style.opacity = "1" }
+        }
+
+        else if(type == "sitePasswordProtected") 
+        {
+            if(clicked == "true")
+            {
+                settings.sitePasswordProtected = value
+                localStorage.setItem("cms-edit-settings", JSON.stringify(settings))
+            }
+
+            editAccountSitePasswordProtectedYes.style.color = "white"; editAccountSitePasswordProtectedYes.style.opacity = "0.1"
+            editAccountSitePasswordProtectedNo.style.color = "white"; editAccountSitePasswordProtectedNo.style.opacity = "0.1"
+
+            if(value == "true") 
+            { 
+                editAccountSitePasswordProtectedYes.style.color = "#822c8b"
+                editAccountSitePasswordProtectedYes.style.opacity = "1"
+                editAccountPasswordProtectedPassword.style.display = "block"
+                editAccountPasswordProtectedPassword.value = settings.sitePasswordProtectedPassword
+                // editAccountPasswordProtectedPasswordConfirm.style.display = "block"
+            }
+            else if(value == "false") 
+            { 
+                editAccountSitePasswordProtectedNo.style.color = "#822c8b"
+                editAccountSitePasswordProtectedNo.style.opacity = "1" 
+                editAccountPasswordProtectedPassword.style.display = "none"
+                // editAccountPasswordProtectedPasswordConfirm.style.display = "none"
+            }
+        }
+
+        else if(type == "pageStart") 
+        {
+            if(clicked == "true")
+            {
+                settings.pageStart = value
+                localStorage.setItem("cms-edit-settings", JSON.stringify(settings))
+                settings.pageStartTitle = editAccountStartPageTitle.value
+                settings.pageStartText = editAccountStartPageText.value
+            }
+
+            editAccountStartPageYes.style.color = "white"; editAccountStartPageYes.style.opacity = "0.1"
+            editAccountStartPageNo.style.color = "white"; editAccountStartPageNo.style.opacity = "0.1"
+
+            if(value == "true") 
+            { 
+                editAccountStartPageYes.style.color = "#822c8b"
+                editAccountStartPageYes.style.opacity = "1"
+                editAccountStartPageTitle.style.display = "block"
+                editAccountStartPageText.style.display = "block"
+                editAccountStartPageTitle.value = settings.pageStartTitle
+                editAccountStartPageText.value = settings.pageStartText
+            }
+            else if(value == "false") 
+            { 
+                editAccountStartPageNo.style.color = "#822c8b"
+                editAccountStartPageNo.style.opacity = "1"
+                editAccountStartPageTitle.style.display = "none"
+                editAccountStartPageText.style.display = "none"
+            }
+        }
+
+        else if(type == "pageEnd") 
+        {
+            if(clicked == "true")
+            {
+                settings.pageEnd = value
+                settings.pageEndTitle = editAccountEndPageTitle.value
+                settings.pageEndText = editAccountEndPageText.value
+                localStorage.setItem("cms-edit-settings", JSON.stringify(settings))
+            }
+            
+            editAccountEndPageYes.style.color = "white"; editAccountEndPageYes.style.opacity = "0.1"
+            editAccountEndPageNo.style.color = "white"; editAccountEndPageNo.style.opacity = "0.1"
+
+            if(value == "true") 
+            { 
+                editAccountEndPageYes.style.color = "#822c8b"
+                editAccountEndPageYes.style.opacity = "1"
+                editAccountEndPageTitle.style.display = "block"
+                editAccountEndPageText.style.display = "block"
+                editAccountEndPageTitle.value = settings.pageEndTitle
+                editAccountEndPageText.value = settings.pageEndText
+            }
+            else if(value == "false") 
+            { 
+                editAccountEndPageNo.style.color = "#822c8b"
+                editAccountEndPageNo.style.opacity = "1"
+                editAccountEndPageTitle.style.display = "none"
+                editAccountEndPageText.style.display = "none"
+            }
+        }
+
+        else if(type == "pageIndex") 
+        {
+            if(clicked == "true")
+            {
+                settings.pageIndex = value
+                localStorage.setItem("cms-edit-settings", JSON.stringify(settings))
+            }
+            
+            editAccountIndexPageYes.style.color = "white"; editAccountIndexPageYes.style.opacity = "0.1"
+            editAccountIndexPageNo.style.color = "white"; editAccountIndexPageNo.style.opacity = "0.1"
+
+            if(value == "true") { editAccountIndexPageYes.style.color = "#822c8b"; editAccountIndexPageYes.style.opacity = "1" }
+            else if(value == "false") { editAccountIndexPageNo.style.color = "#822c8b"; editAccountIndexPageNo.style.opacity = "1" }
+        }
+
+        else if(type == "buttonFullscreen") 
+        {
+            if(clicked == "true")
+            {
+                settings.buttonFullscreen = value
+                localStorage.setItem("cms-edit-settings", JSON.stringify(settings))
+            }
+
+            editAccountFullscreenButtonYes.style.color = "white"; editAccountFullscreenButtonYes.style.opacity = "0.1"
+            editAccountFullscreenButtonNo.style.color = "white"; editAccountFullscreenButtonNo.style.opacity = "0.1"
+
+            if(value == "true") { editAccountFullscreenButtonYes.style.color = "#822c8b"; editAccountFullscreenButtonYes.style.opacity = "1" }
+            else if(value == "false") { editAccountFullscreenButtonNo.style.color = "#822c8b"; editAccountFullscreenButtonNo.style.opacity = "1" }
+        }
+
+        else if(type == "buttonSearch") 
+        {
+            if(clicked == "true")
+            {
+                settings.buttonSearch = value
+                localStorage.setItem("cms-edit-settings", JSON.stringify(settings))
+            }
+
+            editAccountSearchButtonYes.style.color = "white"; editAccountSearchButtonYes.style.opacity = "0.1"
+            editAccountSearchButtonNo.style.color = "white"; editAccountSearchButtonNo.style.opacity = "0.1"
+
+            if(value == "true") { editAccountSearchButtonYes.style.color = "#822c8b"; editAccountSearchButtonYes.style.opacity = "1" }
+            else if(value == "false") { editAccountSearchButtonNo.style.color = "#822c8b"; editAccountSearchButtonNo.style.opacity = "1" }
+        }
+
+        else if(type == "buttonContact") 
+        {
+            if(clicked == "true")
+            {
+                settings.buttonContact = value
+                localStorage.setItem("cms-edit-settings", JSON.stringify(settings))
+            }
+
+            editAccountContactButtonYes.style.color = "white"; editAccountContactButtonYes.style.opacity = "0.1"
+            editAccountContactButtonNo.style.color = "white"; editAccountContactButtonNo.style.opacity = "0.1"
+
+            if(value == "true") { editAccountContactButtonYes.style.color = "#822c8b"; editAccountContactButtonYes.style.opacity = "1" }
+            else if(value == "false") { editAccountContactButtonNo.style.color = "#822c8b"; editAccountContactButtonNo.style.opacity = "1" }
+        }
+
+        else if(type == "buttonAbout") 
+        {
+            if(clicked == "true")
+            {
+                settings.buttonAbout = value
+                settings.buttonAboutText = editAccountAboutText.value
+                localStorage.setItem("cms-edit-settings", JSON.stringify(settings))
+            }
+
+            editAccountAboutButtonYes.style.color = "white"; editAccountAboutButtonYes.style.opacity = "0.1"
+            editAccountAboutButtonNo.style.color = "white"; editAccountAboutButtonNo.style.opacity = "0.1"
+
+            if(value == "true") 
+            { 
+                editAccountAboutButtonYes.style.color = "#822c8b"
+                editAccountAboutButtonYes.style.opacity = "1"
+                editAccountAboutText.style.display = "block"
+                editAccountAboutText.value = settings.buttonAboutText
+            }
+            else if(value == "false") 
+            { 
+                editAccountAboutButtonNo.style.color = "#822c8b"
+                editAccountAboutButtonNo.style.opacity = "1"
+                editAccountAboutText.style.display = "none"
+            }
+        }
+
+        else if(type == "modeSlideshow") 
+        {
+            if(clicked == "true")
+            {
+                settings.modeSlideshow = value
+                localStorage.setItem("cms-edit-settings", JSON.stringify(settings))
+            }
+
+            editAccountSlideshowModeYes.style.color = "white"; editAccountSlideshowModeYes.style.opacity = "0.1"
+            editAccountSlideshowModeNo.style.color = "white"; editAccountSlideshowModeNo.style.opacity = "0.1"
+
+            if(value == "true") { editAccountSlideshowModeYes.style.color = "#822c8b"; editAccountSlideshowModeYes.style.opacity = "1" }
+            else if(value == "false") { editAccountSlideshowModeNo.style.color = "#822c8b"; editAccountSlideshowModeNo.style.opacity = "1" }
+        }
+
+        else if(type == "sectionBackgroundImage") 
+        {
+            if(clicked == "true")
+            {
+                settings.sectionBackgroundImage = value
+                settings.sectionBackgroundImageUrl = editAccountSectionBackgroundImageUrl.value
+                localStorage.setItem("cms-edit-settings", JSON.stringify(settings))
+            }
+
+            editAccountSectionBackgroundImageYes.style.color = "white"; editAccountSectionBackgroundImageYes.style.opacity = "0.1"
+            editAccountSectionBackgroundImageNo.style.color = "white"; editAccountSectionBackgroundImageNo.style.opacity = "0.1"
+
+            if(value == "true") 
+            { 
+                editAccountSectionBackgroundImageYes.style.color = "#822c8b"
+                editAccountSectionBackgroundImageYes.style.opacity = "1"
+                editAccountSectionBackgroundImageUrl.style.display = "block"
+                editAccountSectionBackgroundImageUrl.value = settings.sectionBackgroundImageUrl
+            }
+            else if(value == "false") 
+            { 
+                editAccountSectionBackgroundImageNo.style.color = "#822c8b"
+                editAccountSectionBackgroundImageNo.style.opacity = "1"
+                editAccountSectionBackgroundImageUrl.style.display = "none"
+            }
+        }
+
+        else if(type == "loadingScreen") 
+        {
+            if(clicked == "true")
+            {
+                settings.loadingScreen = value
+                settings.loadingScreenUrl = editAccountLoadingScreenUrl.value
+                localStorage.setItem("cms-edit-settings", JSON.stringify(settings))
+            }
+
+            editAccountLoadingScreenYes.style.color = "white"; editAccountLoadingScreenYes.style.opacity = "0.1"
+            editAccountLoadingScreenNo.style.color = "white"; editAccountLoadingScreenNo.style.opacity = "0.1"
+
+            if(value == "true") 
+            { 
+                editAccountLoadingScreenYes.style.color = "#822c8b"
+                editAccountLoadingScreenYes.style.opacity = "1"
+                editAccountLoadingScreenUrl.style.display = "block"
+                editAccountLoadingScreenUrl.value = settings.loadingScreenUrl
+            }
+            else if(value == "false") 
+            { 
+                editAccountLoadingScreenNo.style.color = "#822c8b"
+                editAccountLoadingScreenNo.style.opacity = "1"
+                editAccountLoadingScreenUrl.style.display = "none"
+            }
+        }
+    }
+
+
+    function sortAccountCredentials(data)
+    {
+        return toRaw(data)
+    }
+
+
+    async function saveChangesSettings()
+    {
+        console.log("saveChangesSettings")
+
+        //elements
+        let editAccountUsername = document.getElementById("editAccountUsername")
+        let editAccountDomain = document.getElementById("editAccountDomain")
+        let editAccountEmail = document.getElementById("editAccountEmail")
+        let editAccountName = document.getElementById("editAccountName")
+        let editAccountPhone = document.getElementById("editAccountPhone")
+        let editAccountCountry = document.getElementById("editAccountCountry")
+        let editAccountPasswordOld = document.getElementById("editAccountPasswordOld")
+        let editAccountPasswordNew = document.getElementById("editAccountPasswordNew")
+        let editAccountPasswordNewAgain = document.getElementById("editAccountPasswordNewAgain")
+        let editAccountColorNavBackground = document.getElementById("editAccountColorNavBackground")
+        let editAccountColorNavIcons = document.getElementById("editAccountColorNavIcons")
+        let editAccountColorText = document.getElementById("editAccountColorText")
+        let editAccountColorSectionBackground = document.getElementById("editAccountColorSectionBackground")
+        let editAccountColorLoadingScreen = document.getElementById("editAccountColorLoadingScreen")
+        let updateStatusMessage = document.getElementById("updateStatusMessageUpdateSettings")
+        let checkboxSaveUpdateSettings = document.getElementById("checkboxSaveUpdateSettings")
+        let labelSaveUpdateSettings = document.getElementById("labelSaveUpdateSettings")
+        let editAccountStartPageTitle = document.getElementById("editAccountStartPageTitle")
+        let editAccountStartPageText = document.getElementById("editAccountStartPageText")
+        let editAccountEndPageTitle = document.getElementById("editAccountEndPageTitle")
+        let editAccountEndPageText = document.getElementById("editAccountEndPageText")
+        let editAccountPasswordProtectedPassword = document.getElementById("editAccountPasswordProtectedPassword")
+        let editAccountAboutText = document.getElementById("editAccountAboutText")
+        let editAccountSectionBackgroundImageUrl = document.getElementById("editAccountSectionBackgroundImageUrl")
+        let editAccountLoadingScreenUrl = document.getElementById("editAccountLoadingScreenUrl")
+
+        //variables
+        let credentials = {
+            "usernameNew": '',
+            "domain": '',
+            "email": '',
+            "name": '',
+            "phone": '',
+            "country": '',
+            "passwordNew": '',
+            "passwordOld": ''
+        }
+        let lsSettings = JSON.parse(localStorage.getItem("cms-edit-settings"))
+        let lsAccount = localStorage.getItem("cms-account")
+        let lsLastLogin = localStorage.getItem("cms-last-login")
+        let lsToken = localStorage.getItem("cms-token")
+        let userInfo = {"username": lsAccount, "lastLogin": lsLastLogin, "token": lsToken }
+        let obj = ""
+        let updateUsername = false
+        let updateDomain = false
+        let updateEmail = false
+        let updateName = false
+        let updatePhone = false
+        let updateCountry = false
+
+        //set settings
+        lsSettings.colorNavBackground = editAccountColorNavBackground.value
+        lsSettings.colorNavIcons = editAccountColorNavIcons.value
+        lsSettings.colorText = editAccountColorText.value
+        lsSettings.colorSectionsBackground = editAccountColorSectionBackground.value
+        lsSettings.colorLoadingScreen = editAccountColorLoadingScreen.value
+        lsSettings.pageStartTitle = editAccountStartPageTitle.value
+        lsSettings.pageStartText = editAccountStartPageText.value
+        lsSettings.pageEndTitle = editAccountEndPageTitle.value
+        lsSettings.pageEndText = editAccountEndPageText.value
+        lsSettings.buttonAboutText = editAccountAboutText.value
+        lsSettings.sectionBackgroundImageUrl = editAccountSectionBackgroundImageUrl.value
+        lsSettings.loadingScreenUrl = editAccountLoadingScreenUrl.value
+        lsSettings.sitePasswordProtectedPassword = editAccountPasswordProtectedPassword.value
+
+        //check new username
+        if(editAccountUsername.value != "" && editAccountUsername.value != backendAccountCredentials.value.username) 
+        { credentials.usernameNew = editAccountUsername.value; updateUsername = true }
+        
+        //check new domain
+        if(editAccountDomain.value != backendAccountCredentials.value.domain) 
+        { credentials.domain = editAccountDomain.value; updateDomain = true}
+        
+        //check new email
+        if(editAccountEmail.value != backendAccountCredentials.value.email) 
+        { credentials.email = editAccountEmail.value; updateEmail = true}
+        
+        //check new name
+        if(editAccountName.value != backendAccountCredentials.value.name) 
+        { credentials.name = editAccountName.value; updateName = true}
+        
+        //check new phone
+        if(editAccountPhone.value != backendAccountCredentials.value.phone) 
+        { credentials.phone = editAccountPhone.value; updatePhone = true}
+        
+        //check new country
+        if(editAccountCountry.value != backendAccountCredentials.value.country) 
+        { credentials.country = editAccountCountry.value; updateCountry = true}
+
+        //check new password
+        if(editAccountPasswordNew.value != editAccountPasswordNewAgain.value)
+        {
+            updateStatusMessage.innerText = "new passwords does not match"
+            updateStatusMessage.style.color = "red"
+            updateStatusMessage.style.display = "block"
+            editAccountPasswordNew.style.backgroundColor = "red"
+            editAccountPasswordNewAgain.style.backgroundColor = "red"
+
+            return
+        }
+        else if(editAccountPasswordNew != '' && editAccountPasswordNew.value == editAccountPasswordNewAgain.value)
+        {
+            credentials.passwordNew = editAccountPasswordNew.value
+            credentials.passwordOld = editAccountPasswordOld.value
+        }
+
+        console.log(credentials)
+        console.log(lsSettings)
+
+        //set obj
+        obj = {"userInfo": userInfo, "credentials": credentials, "settings": lsSettings}
+
+        //fetch update user catgories
+        await fetch(BACKEND_API + "/update-user-settings", {method: 'post', body: JSON.stringify(obj)})
+        .then((response) => { return response.json() })
+        .then((data) => {
+            //debugging
+            console.log(data)
+
+            //set update successful message
+            if(data.status == "update user settings successful") 
+            { 
+                //set vuex
+                store.dispatch('storage/actionSetBackendAccountSettings', lsSettings)
+
+                if(updateStatusMessage) 
+                { 
+                    //update elements
+                    checkboxSaveUpdateSettings.style.display = "none"
+                    labelSaveUpdateSettings.style.display = "none"
+                    editAccountChangePassword.style.display = "none"
+                    updateStatusMessage.style.color = "white"
+                    updateStatusMessage.style.display = "block"
+                    updateStatusMessage.style.marginBottom = "0px"
+                    updateStatusMessage.innerText = "Update Successful!"
+                    
+                    //update credentials
+                    if(updateUsername == true) { backendAccountCredentials.value.username = editAccountUsername.value; localStorage.setItem("cms-account", editAccountUsername.value) }
+                    if(updateDomain == true) { backendAccountCredentials.value.domain = editAccountDomain.value }
+                    if(updateEmail == true) { backendAccountCredentials.value.email = editAccountEmail.value }
+                    if(updateName == true) { backendAccountCredentials.value.name = editAccountName.value }
+                    if(updatePhone == true) { backendAccountCredentials.value.phone = editAccountPhone.value }
+                    if(updateCountry == true) { backendAccountCredentials.value.country = editAccountCountry.value }
+                }
+                setTimeout(() => {undisplayModals()}, 1000) 
+            }
+
+            //set update failed messages
+            else if(data.status == "update user settings failed: old password is incorrect")
+            {
+                editAccountPasswordOld.style.backgroundColor = "red"
+                updateStatusMessage.style.color = "red"
+                updateStatusMessage.style.display = "block"
+                updateStatusMessage.innerText = "old password is incorrect"
+            }
+
+            else if(data.status == "update user settings failed: username is unavailable")
+            {
+                editAccountUsername.style.backgroundColor = "red"
+                updateStatusMessage.style.color = "red"
+                updateStatusMessage.style.display = "block"
+                updateStatusMessage.innerText = "username is unavailable"
+            }
+
+            else if(data.status == "update user settings failed: domain is unavailable")
+            {
+                editAccountDomain.style.backgroundColor = "red"
+                updateStatusMessage.style.color = "red"
+                updateStatusMessage.style.display = "block"
+                updateStatusMessage.innerText = "domain is unavailable"
+            }
+
+            else 
+            { 
+                updateStatusMessage.style.display = "block"
+                updateStatusMessage.innerText = "Update Failed!"
+            }
+        })
+    }
+
+
+    function confirmCheckboxUpdateSettings()
+    {
+        let confirmChangesUpdateSettings = document.getElementById("confirmChangesUpdateSettings")
+        let buttonSaveUpdateSettings = document.getElementById("buttonSaveUpdateSettings")
+        let checkboxSaveUpdateSettings = document.getElementById("checkboxSaveUpdateSettings")
+
+        if(checkboxSaveUpdateSettings.checked == true) 
+        { 
+            confirmChangesUpdateSettings.style.display = "block"
+            buttonSaveUpdateSettings.style.display = "block"
+            buttonSaveUpdateSettings.scrollIntoView()
+        }
+        else if(checkboxSaveUpdateSettings.checked == false) 
+        { 
+            confirmChangesUpdateSettings.style.display = "none"
+            buttonSaveUpdateSettings.style.display = "none"
+        }
+    }
+
+
+    async function dangerAccount(action, type)
+    {
+        //debugging
+        console.log("resetAccount")
+
+        //elements
+        let editAccountDangerConfirm = document.getElementById("editAccountDangerConfirm")
+        let editAccountDangerDelete = document.getElementById("editAccountDangerDelete")
+        let editAccountDangerReset = document.getElementById("editAccountDangerReset")
+        let editAccountDangerConfirmText = document.getElementById("editAccountDangerConfirmText")
+        let editAccountDangerConfirmResetButton = document.getElementById("editAccountDangerConfirmResetButton")
+        let editAccountDangerConfirmDeleteButton = document.getElementById("editAccountDangerConfirmDeleteButton")
+        let updateStatusMessage = document.getElementById("editAccountDangerStatusMessage")
+        
+        //variables
+        let lsAccount = localStorage.getItem("cms-account")
+        let lsLastLogin = localStorage.getItem("cms-last-login")
+        let lsToken = localStorage.getItem("cms-token")
+        let userInfo = {"username": lsAccount, "lastLogin": lsLastLogin, "token": lsToken }
+        let obj = {"userInfo": userInfo, "password": editAccountDangerConfirmText.value}
+        let defaultSettings = {
+            "buttonAbout": "false",
+            "buttonAboutText": "",
+            "buttonContact": "false",
+            "buttonFullscreen": "false",
+            "buttonSearch": "false",
+            "colorLoadingScreen": "#000000",
+            "colorNavBackground": "#000000",
+            "colorNavIcons": "#000000",
+            "colorSectionsBackground": "#000000",
+            "colorText": "#000000",
+            "loadingScreen": "false",
+            "loadingScreenUrl": "",
+            "modeSlideshow": "false",
+            "navIconSize": "medium",
+            "navIconType": "numbers",
+            "navPosition": "left",
+            "pageEnd": "false",
+            "pageEndText": "",
+            "pageEndTitle": "",
+            "pageIndex": "false",
+            "pageStart": "false",
+            "pageStartText": "",
+            "pageStartTitle": "",
+            "sectionBackgroundImage": "false",
+            "sectionBackgroundImageUrl": "",
+            "siteAccess": "public",
+            "sitePasswordProtected": "false",
+            "sitePasswordProtectedPassword": "",
+            "textSize": "medium",
+            "textStyle": "normal"
+        }
+        let defaultCredentials = {
+            "country": "",
+            "domain": "",
+            "email": "",
+            "name": "",
+            "phone": "",
+            "username": lsAccount
+        }
+        
+        //update elements
+        editAccountDangerDelete.style.display = "none"
+        editAccountDangerReset.style.display = "none"
+
+        //display reset account
+        if(action == 'display' && type == 'reset')
+        {
+            editAccountDangerConfirm.style.display = "block"
+            editAccountDangerConfirmDeleteButton.style.display = "none"
+            editAccountDangerConfirmResetButton.style.display = "block"
+        }
+
+        //display delete account
+        else if(action == 'display' && type == 'delete')
+        {
+            editAccountDangerConfirm.style.display = "block"
+            editAccountDangerConfirmDeleteButton.style.display = "block"
+            editAccountDangerConfirmResetButton.style.display = "none"
+        }
+
+        //reset account
+        else if(action == 'account' && type == 'reset') 
+        {
+            console.log("password: " + editAccountDangerConfirmText.value)
+
+            //fetch update user catgories
+            await fetch(BACKEND_API + "/reset-user", {method: 'post', body: JSON.stringify(obj)})
+            .then((response) => { return response.json() })
+            .then((data) => {
+                //debugging
+                console.log(data)
+
+                //set update successful message
+                if(data.status == "update user reset successful") 
+                { 
+                    console.log(backendAccountSettings.value)
+                    console.log(backendAccountCredentials.value)
+
+                    //set vuex
+                    store.dispatch('storage/actionSetBackendAccountSettings', defaultSettings)
+                    store.dispatch('storage/actionSetBackendAccountCredentials', defaultCredentials)
+
+                    updateStatusMessage.style.color = "white"
+                    updateStatusMessage.style.display = "block"
+                    updateStatusMessage.innerText = "Account Reset Succesful!"
+
+                    // setTimeout(() => {undisplayModals()}, 1000) 
+                    window.location.reload()
+                }
+
+                //set update failed messages
+                else if(data.status == "update user reset failed: password is incorrect")
+                {
+                    updateStatusMessage.style.color = "red"
+                    updateStatusMessage.style.display = "block"
+                    updateStatusMessage.innerText = "password is incorrect"
+                }
+
+                else 
+                { 
+                    updateStatusMessage.style.color = "red"
+                    updateStatusMessage.style.display = "block"
+                    updateStatusMessage.innerText = "Update Failed!"
+                }
+            })
+        }
+
+        //delete account
+        else if(action == 'account' && type == 'delete') 
+        {
+            console.log("password: " + editAccountDangerConfirmText.value)
+
+            //fetch update user catgories
+            await fetch(BACKEND_API + "/delete-user", {method: 'post', body: JSON.stringify(obj)})
+            .then((response) => { return response.json() })
+            .then((data) => {
+                //debugging
+                console.log(data)
+
+                //set update successful message
+                if(data.status == "delete user successful") 
+                { 
+                    // setTimeout(() => {undisplayModals()}, 1000)
+                    window.localStorage.clear()
+                    router.push("/")
+                }
+
+                //set update failed messages
+                else if(data.status == "delete user failed: password is incorrect")
+                {
+                    updateStatusMessage.style.color = "red"
+                    updateStatusMessage.style.display = "block"
+                    updateStatusMessage.innerText = "password is incorrect"
+                }
+
+                else 
+                { 
+                    updateStatusMessage.style.color = "red"
+                    updateStatusMessage.style.display = "block"
+                    updateStatusMessage.innerText = "Update Failed!"
+                }
+            })
+        }
+    }
+
+
+    function showPasswordInputs()
+    {
+        //elements
+        let editAccountPasswordImgShow = document.getElementById("editAccountPasswordImgShow")
+        let editAccountPasswordImgHide = document.getElementById("editAccountPasswordImgHide")
+        let editAccountPasswordOld = document.getElementById("editAccountPasswordOld")
+        let editAccountPasswordNew = document.getElementById("editAccountPasswordNew")
+        let editAccountPasswordNewAgain = document.getElementById("editAccountPasswordNewAgain")
+
+        //update elements
+        editAccountPasswordImgShow.style.display = "none"
+        editAccountPasswordImgHide.style.display = "inline-block"
+        editAccountPasswordOld.type = "text"
+        editAccountPasswordNew.type = "text"
+        editAccountPasswordNewAgain.type = "text"
+    }
+
+
+    function hidePasswordInputs()
+    {
+        //elements
+        let editAccountPasswordImgShow = document.getElementById("editAccountPasswordImgShow")
+        let editAccountPasswordImgHide = document.getElementById("editAccountPasswordImgHide")
+        let editAccountPasswordOld = document.getElementById("editAccountPasswordOld")
+        let editAccountPasswordNew = document.getElementById("editAccountPasswordNew")
+        let editAccountPasswordNewAgain = document.getElementById("editAccountPasswordNewAgain")
+
+        //update elements
+        editAccountPasswordImgShow.style.display = "inline-block"
+        editAccountPasswordImgHide.style.display = "none"
+        editAccountPasswordOld.type = "password"
+        editAccountPasswordNew.type = "password"
+        editAccountPasswordNewAgain.type = "password"
+    }
+
 
     return {
         //variables
@@ -2750,6 +4035,8 @@ export default {
         backendDataObjModal,
         backendCategoryObjModal,
         backendSectionObjModal,
+        backendAccountSettings,
+        backendAccountCredentials,
 
         //functions
         loadSectionCategories,
@@ -2767,18 +4054,27 @@ export default {
         addNewType,
         editCategoriesModal,
         editSectionsModal,
+        editAccountModal,
         editData,
         editCategory,
         editSection,
+        editAccount,
         sortBackendDataSelected,
         sortBackendCategories,
         sortBackendSections,
+        sortAccountCredentials,
         confirmCheckboxes,
         confirmCheckboxUpdateCategories,
         confirmCheckboxUpdateSections,
+        confirmCheckboxUpdateSettings,
         saveChangesData,
         saveChangesCategories,
-        saveChangesSections
+        saveChangesSections,
+        saveChangesSettings,
+        dangerAccount,
+        showPasswordInputs,
+        hidePasswordInputs,
+        backendAccountLoginInfo
     }
   }
 }
@@ -2791,6 +4087,7 @@ export default {
     #backendData::-webkit-scrollbar { height: 0px; width: 0px; }
     #editCategoriesModal::-webkit-scrollbar { height: 0px; width: 0px; }
     #editSectionsModal::-webkit-scrollbar { height: 0px; width: 0px; }
+    #editAccountModal::-webkit-scrollbar { height: 0px; width: 0px; }
     #backendDataRows::-webkit-scrollbar { height: 0px; width: 0px; }
     #editCategoriesList::-webkit-scrollbar { height: 0px; width: 0px; }
     #editSectionsList::-webkit-scrollbar { height: 0px; width: 0px; }
@@ -2798,10 +4095,14 @@ export default {
     #dataObjModalTimelineRows::-webkit-scrollbar { height: 0px; width: 0px; }
     #dataObjModalLinklistRows::-webkit-scrollbar { height: 0px; width: 0px; }
     #dataObjModalTextlistRows::-webkit-scrollbar { height: 0px; width: 0px; }
-
+    #backendSectionsList::-webkit-scrollbar { height: 0px; width: 0px; }
     #dataObjModalPreviewImages::-webkit-scrollbar { height: 12px; width: 10px; }
     #dataObjModalPreviewImages::-webkit-scrollbar-track { background: black; }
     #dataObjModalPreviewImages::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.1); }
+    
+    /*** elements ***/
+    input[type='radio'] { accent-color:  #822c8b; }
+    input[type='checkbox'] { accent-color:  #822c8b; }
 
     /*** ids ***/
     #componentBackend { height: 100vh; width: 100vw; margin: auto; padding: 0px; color: white; background-color: #1D212E; }
@@ -2815,13 +4116,14 @@ export default {
         top: 0px; 
         /* max-height: 88vh;  */
         margin: 0px;
-        padding: 0px 13px 10vh 13px;
-        overflow-y: scroll;
+        padding: 0px 18px 10vh 16px;
+        /* overflow-y: scroll; */
         user-select: none;
         opacity: 1;
         /* border-right: 1px solid rgba(255, 255, 255, 0.6); */
         background-color: black;
     }
+    #backendSectionsList { display: block; height: 78vh; overflow-y: scroll; }
     #backendCategories 
     { 
         position: fixed; 
@@ -2858,9 +4160,24 @@ export default {
     #confirmChanges { display: none; padding: 60px 0px 0px 0px; }
     #confirmChangesCheckboxUpdateCategories { display: none; padding: 60px 0px 0px 0px; }
     #confirmChangesCheckboxUpdateSections { display: none; padding: 60px 0px 0px 0px; }
+    #confirmChangesUpdateSettings { display: none; padding: 60px 0px 0px 0px; }
     #buttonSave 
     { 
         display: none;
+        width: -webkit-fill-available;
+        margin: auto;
+        padding: 16px 0px 16px 0px; 
+        font-size: 22px; 
+        font-weight: bold; 
+        user-select: none;
+        border-radius: 0%;
+        border: 1px solid #00000099;
+        color: white;
+        background-color: #1acf1a; 
+    }
+    #buttonSaveUpdateSettings 
+    { 
+        display: block;
         width: -webkit-fill-available;
         margin: auto;
         padding: 16px 0px 16px 0px; 
@@ -2914,7 +4231,7 @@ export default {
         color: white; 
         background-color: red; 
     }
-    #account 
+    #settingsAccount 
     { 
         position: fixed; 
         display: block; 
@@ -2926,7 +4243,7 @@ export default {
         border-radius: 90%;
         background-color: #822c8b;
     }
-    #account:hover { opacity: 1; }
+    #settingsAccount:hover { opacity: 1; }
     #dataObjModal 
     { 
         position: fixed; 
@@ -2943,7 +4260,7 @@ export default {
         opacity: 1;
         /* transform: translate(-40%, -50%); */
         background-color: #1D212E; /* #822c8b */ /* #2c9b2c */
-        border: 2px solid #822c8b; 
+        border: 3px solid #822c8b; 
     }
     #underlayModal { position: fixed; display: none; height: 100vh; width: 100vw; opacity: 0.9; z-index: 1; background-color: black; }
     #dataObjModalPreviewImages 
@@ -3031,10 +4348,12 @@ export default {
     #labelSave { font-size: 24px; font-weight: bold; margin: 0px 32px 0px 0px; vertical-align: super; }
     #labelSaveUpdateCategories { font-size: 24px; font-weight: bold; margin: 0px 32px 0px 0px; vertical-align: super; }
     #labelSaveUpdateSections { font-size: 24px; font-weight: bold; margin: 0px 32px 0px 0px; vertical-align: super; }
+    #labelSaveUpdateSettings { display: inline-block; font-size: 24px; font-weight: bold; margin: 70px 32px 0px 0px; vertical-align: super; }
     #labelDelete { font-size: 24px; font-weight: bold; margin: 0px; vertical-align: super; }
     #updateStatusMessage { display: none; margin: 49px 0px 0px 0px; font-size: 24px; font-weight: bold; }
     #updateStatusMessageUpdateCategories { display: none; margin: 49px 0px 0px 0px; font-size: 24px; font-weight: bold; }
     #updateStatusMessageUpdateSections { display: none; margin: 49px 0px 0px 0px; font-size: 24px; font-weight: bold; }
+    #updateStatusMessageUpdateSettings { display: none; margin: 70px 0px 0px 0px; font-size: 24px; font-weight: bold; }
     #confirmCheckbox { display: block; }
     #addDataRowModal 
     { 
@@ -3051,7 +4370,7 @@ export default {
         overflow-y: scroll;
         opacity: 1;
         /* transform: translate(-40%, -50%); */
-        border: 2px solid #822c8b; 
+        border: 3px solid #822c8b; 
         background-color: #1D212E; /* #822c8b */ /* #2c9b2c */
     }
     #addSelectTypeModal
@@ -3069,7 +4388,7 @@ export default {
         overflow-y: scroll;
         opacity: 1;
         /* transform: translate(-40%, -50%); */
-        border: 2px solid #822c8b; 
+        border: 3px solid #822c8b; 
         background-color: #1D212E; /* #822c8b */ /* #2c9b2c */
     }
     #addDataRowTitle { display: block; margin: -9px 0px 40px 0px; font-size: 22px; font-weight: bold; text-shadow: 0px 1px black; color: white; }
@@ -3090,13 +4409,13 @@ export default {
         text-shadow: 0px 1px #1D212E;
         border-radius: 0%;
         color: white;
-        /* border: 2px solid #822c8b; */
+        /* border: 3px solid #822c8b; */
         background-color: transparent; 
     }
     #dataObjNew { display: none; }
     #dataObjNewTitle { display: none; }
     #settingsSectionsIcon 
-    { 
+    {
         position: fixed; 
         display: block; 
         height: 80px; 
@@ -3139,7 +4458,7 @@ export default {
         overflow-y: scroll;
         opacity: 1;
         /* transform: translate(-40%, -50%); */
-        border: 2px solid #822c8b; 
+        border: 3px solid #822c8b; 
         background-color: #1D212E; /* #822c8b */ /* #2c9b2c */
     }
     #editSectionsModal
@@ -3157,7 +4476,25 @@ export default {
         overflow-y: scroll;
         opacity: 1;
         /* transform: translate(-40%, -50%); */
-        border: 2px solid #822c8b; 
+        border: 3px solid #822c8b; 
+        background-color: #1D212E; /* #822c8b */ /* #2c9b2c */
+    }
+    #editAccountModal
+    {
+        position: fixed; 
+        display: none; 
+        max-height: 60vh; 
+        width: 34vw; 
+        left: 33%; 
+        top: 11%; 
+        margin: 0px;
+        padding: 70px;
+        z-index: 2;
+        user-select: none;
+        overflow-y: scroll;
+        opacity: 1;
+        /* transform: translate(-40%, -50%); */
+        border: 3px solid #822c8b; 
         background-color: #1D212E; /* #822c8b */ /* #2c9b2c */
     }
     #editCategoriesInputs { display: flex; padding: 10px; background-color: black; }
@@ -3173,8 +4510,57 @@ export default {
     #inputCategoryHiddenToggleShow { display: none; height: 49px; width: auto; margin: 0px 8px 0px 4px; user-select: none; -webkit-user-drag: none; }
     #inputSectionHiddenToggleHidden { display: none; height: 49px; width: auto; margin: 0px 8px 0px 4px; user-select: none; -webkit-user-drag: none; }
     #inputSectionHiddenToggleShow { display: none; height: 49px; width: auto; margin: 0px 8px 0px 4px; user-select: none; -webkit-user-drag: none; }
+    #editAccountNavIconType { display: block; margin: 0px; padding: 20px 0px 20px 14px; border-bottom: 1px solid #ffffff1f; }
+    #editAccountNavPosition { display: block; margin: 0px; padding: 20px 0px 20px 14px; border-top: 1px solid #ffffff1f; border-bottom: 1px solid #ffffff1f; }
+    #editAccountNavIconSize { display: block; margin: 0px; padding: 20px 0px 20px 14px; border-bottom: 1px solid #ffffff1f; }
+    #editAccountTextStyle { display: block; margin: 0px; padding: 20px 0px 20px 14px;  border-top: 1px solid #ffffff1f; border-bottom: 1px solid #ffffff1f; }
+    #editAccountTextSize { display: block; margin: 0px; padding: 20px 0px 20px 14px; border-bottom: 1px solid #ffffff1f; }
+    #editAccountSiteAccess { display: block; margin: 0px; padding: 20px 0px 20px 14px; border-top: 1px solid #ffffff1f; border-bottom: 1px solid #ffffff1f; }
+    #editAccountLoadingScreen { display: block; margin: 0px; padding: 20px 0px 20px 14px; border-bottom: 1px solid #ffffff1f; }
+    #editAccountSitePasswordProtected { display: block; margin: 0px; padding: 20px 0px 20px 14px; border-bottom: 1px solid #ffffff1f; }
+    #editAccountStartPage { display: block; margin: 0px; padding: 20px 0px 20px 14px; border-top: 1px solid #ffffff1f; border-bottom: 1px solid #ffffff1f; }
+    #editAccountEndPage { display: block; margin: 0px; padding: 20px 0px 20px 14px; border-bottom: 1px solid #ffffff1f; }
+    #editAccountIndexPage { display: block; margin: 0px; padding: 20px 0px 20px 14px; border-bottom: 1px solid #ffffff1f; }
+    #editAccountFullscreenButton { display: block; margin: 0px; padding: 20px 0px 20px 14px; border-top: 1px solid #ffffff1f; border-bottom: 1px solid #ffffff1f; }
+    #editAccountSearchButton { display: block; margin: 0px; padding: 20px 0px 20px 14px; border-bottom: 1px solid #ffffff1f; }
+    #editAccountContactButton { display: block; margin: 0px; padding: 20px 0px 20px 14px; border-bottom: 1px solid #ffffff1f; }
+    #editAccountAboutButton { display: block; margin: 0px; padding: 20px 0px 20px 14px; border-bottom: 1px solid #ffffff1f; }
+    #editAccountSlideshowMode { display: block; margin: 0px; padding: 20px 0px 20px 14px; border-top: 1px solid #ffffff1f; border-bottom: 1px solid #ffffff1f; }
+    #editAccountSectionBackgroundImage { display: block; margin: 0px; padding: 20px 0px 20px 14px; border-bottom: 1px solid #ffffff1f; }
+    #editAcountEndPage { display: block; margin: 0px; padding: 20px 0px 20px 14px; border-bottom: 1px solid #ffffff1f; }
+    #editAccountDangerConfirm { display: none; }
+    #editAccountPasswordProtectedPassword { display: none; }
+    /* #editAccountPasswordProtectedPasswordConfirm { display: none; } */
+    #editAccountStartPageTitle { display: none; }
+    #editAccountStartPageText { display: none; }
+    #editAccountEndPageTitle { display: none; }
+    #editAccountEndPageText { display: none; }
+    #editAccountAboutText { display: none; }
+    #editAccountSectionBackgroundImageUrl { display: none; }
+    #editAccountLoadingScreenUrl { display: none; }
+    #accountInfoCreatedAt { border-top: 1px solid #ffffff1f; }
+    #editAccountTitleCredentials { padding-top: 0px; }
+    #editAccountChangePassword { display: none; }
+    #editAccountPassword { text-align: left; }
+    #editAccountPasswordConfirm { display: none; }
+    #editAccountPasswordImgHide { position: absolute; display: none; height: 49px; width: 49px; margin: 3px 0px 0px -60px; }
+    #editAccountPasswordImgShow { position: absolute; display: inline-block; height: 49px; width: 49px; margin: 3px 0px 0px -60px; }
+    #editAccountPasswordOld { padding-right: 70px; }
+    #editAccountPasswordNew { padding-right: 70px; }
+    #editAccountPasswordNewAgain { padding-right: 70px; }
+    #editAccountNavBackgroundColor { border-top: 1px solid #ffffff1f; }
+    #editAccountDangerStatusMessage 
+    { 
+        display: none; 
+        margin: 20px 0px 0px 0px; 
+        text-align: center; 
+        font-size: 22px; 
+        font-weight: bold;
+        text-shadow: 0px 1px black;
+        color: white; 
+    }
 
-    /* classes */
+    /*** classes ***/
     .section 
     { 
         height: auto;
@@ -3706,5 +5092,79 @@ export default {
         background-color: lightgreen; 
     }
     .editCategoryObj { display: flex; border-bottom: 1px solid white; }
-    .editSectionObj { display: flex; border-bottom: 1px solid white; }
+    .editSectionObj { display: flex; border-bottom: 1px solid white; }  
+    .editAccountTitle { display: block; padding: 84px 0px 20px 0px; font-size: 26px; font-weight: bold; text-shadow: 0px 1px black; }
+    .editAccountSection { display: block; margin: 0px; text-align: left; border: 0px solid white; background-color: #1D212E; }
+    .accountInfoItem 
+    { 
+        display: block; 
+        padding: 16px 18px 16px 18px; 
+        font-size: 20px; 
+        font-weight: bold;
+        text-shadow: 0px 1px black;
+        border-bottom: 1px solid #ffffff1f; 
+        background-color: #1D212E; 
+    }
+    .editAccountColors 
+    { 
+        display: block; 
+        padding: 12px 0px 12px 0px; 
+        font-size: 20px; 
+        font-weight: bold; 
+        border-bottom: 1px solid #ffffff1f; 
+        background-color: #1D212E; 
+    }
+    .editAccountInputText 
+    { 
+        width: -webkit-fill-available; 
+        padding: 14px 18px 14px 18px; 
+        font-size: 22px; 
+        font-weight: bold; 
+        color: white;
+        border: 0px solid white;
+        border-bottom: 1px solid #ffffff1f;
+        background-color: black; 
+    }
+    .editAccountInputDanger 
+    { 
+        width: -webkit-fill-available; 
+        padding: 14px 18px 14px 18px; 
+        font-size: 22px; 
+        font-weight: bold; 
+        color: #1D212E;
+        border: 0px solid white;
+        border-bottom: 1px solid #1D212E;
+        background-color: #910000; 
+    }
+    .editAccountText { margin: 0px 0px 0px 16px; font-size: 22px; font-weight: bold; vertical-align: super; text-shadow: 0px 1px black; }
+    .editAccountInputColor { height: 40px; width: 20%; margin: 0px 0px 1px 0px; padding: 0px; border: 0px solid black; }
+    .editAccountRadioButton { height: 30px; width: 30px; }
+    .editAccountToggle { margin: 0px 10px 0px 0px; font-size: 22px; font-weight: bold; color: white; }
+    .editAccountToggleButton 
+    { 
+        margin: 0px 0px 0px 2px;
+        padding: 8px; 
+        font-size: 24px;
+        font-weight: bold;
+        opacity: 0.1;
+        color: white;
+        text-shadow: 0px 1px black;
+        border: 0px solid white;
+        background-color: #1D212E; 
+    }
+    .editAccountSelectedSetting { color: #822c8b; opacity: 1; }
+    .accountInfoTitle { }
+    .accountInfoText 
+    {     
+        margin: 0px 0px 0px 10px;
+        padding: 0px;
+        font-size: 24px;
+        font-weight: bold;
+        opacity: 0.3;
+        color: white;
+        text-shadow: 0px 1px black;
+        text-transform: capitalize;
+        border: 0px solid white;
+        background-color: #1D212E;
+    }
 </style>

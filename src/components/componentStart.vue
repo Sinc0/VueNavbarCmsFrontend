@@ -121,6 +121,9 @@ export default {
                 localStorage.setItem("cms-account", data.account)
                 localStorage.setItem("cms-token", data.token)
                 localStorage.setItem("cms-last-login", data.lastLogin)
+
+                //set vuex
+                // store.dispatch('storage/actionSetAccountLoginInfo', {"account": data.account, "token": data.token, "lastLogin": data.lastLogin})
                 
                 //update elements
                 loginErrorMessage.style.color = "#00ff00"
@@ -201,28 +204,28 @@ export default {
         registerButton.disabled = true; setTimeout(() => { registerButton.disabled = false }, 1000)
 
         //forbidden character check
-        if(username == "") { isInvalid = true }
-        else if(username.includes(" ")) { isInvalid = true }
-        else if(username.includes(".")) { isInvalid = true }
-        else if(username.includes(",")) { isInvalid = true }
-        else if(username.includes("<")) { isInvalid = true }
-        else if(username.includes(">")) { isInvalid = true }
-        else if(username.includes(";")) { isInvalid = true }
-        else if(username.includes(":")) { isInvalid = true }
-        else if(username.includes("/")) { isInvalid = true }
-        else if(username.includes("\\")) { isInvalid = true }
-        else if(username.includes("!")) { isInvalid = true }
-        else if(username.includes("@")) { isInvalid = true }
-        else if(username.includes("null")) { isInvalid = true }
+        // if(username == "") { isInvalid = true }
+        // else if(username.includes(" ")) { isInvalid = true }
+        // else if(username.includes(".")) { isInvalid = true }
+        // else if(username.includes(",")) { isInvalid = true }
+        // else if(username.includes("<")) { isInvalid = true }
+        // else if(username.includes(">")) { isInvalid = true }
+        // else if(username.includes(";")) { isInvalid = true }
+        // else if(username.includes(":")) { isInvalid = true }
+        // else if(username.includes("/")) { isInvalid = true }
+        // else if(username.includes("\\")) { isInvalid = true }
+        // else if(username.includes("!")) { isInvalid = true }
+        // else if(username.includes("@")) { isInvalid = true }
+        // else if(username.includes("null")) { isInvalid = true }
         
         //username is invalid
-        if(isInvalid == true)
-        {
-            registerErrorMessage.innerText = "username is invalid";
-            registerInfoUsername.style.display = "none"
-            registerInfoPassword.style.display = "none"
-            return
-        }
+        // if(isInvalid == true)
+        // {
+        //     registerErrorMessage.innerText = "username is invalid";
+        //     registerInfoUsername.style.display = "none"
+        //     registerInfoPassword.style.display = "none"
+        //     return
+        // }
 
         //passwords does not match
         if(confirmPassword != password) 
@@ -247,7 +250,7 @@ export default {
             .then((data) => { 
                 
                 //username is taken
-                if(data.data == "username is taken") 
+                if(data.status == "username is taken") 
                 { 
                     registerInfoUsername.style.display = "none"
                     registerInfoPassword.style.display = "none"
@@ -255,12 +258,19 @@ export default {
                 }
 
                 //user added successfully
-                else if(data.data == "user added successfully")
+                else if(data.status == "user added successfully")
                 {
                     displaySelectedMenu("login")
                     loginUsername.value = username
                     loginErrorMessage.style.color = "#00ff00"
                     loginErrorMessage.innerText = "registration successful!"
+                }
+
+                else
+                {
+                    registerInfoUsername.style.display = "none"
+                    registerInfoPassword.style.display = "none"
+                    registerErrorMessage.innerText = data.status
                 }
 
             })
