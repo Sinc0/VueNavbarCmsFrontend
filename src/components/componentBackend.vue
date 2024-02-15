@@ -78,7 +78,7 @@
                 <!-- obj: title -->
                 <div id="" v-else-if="dataType == 'title'">
                     <p class="dataObjModalRowTitle">Title</p>
-                    <input id="dataObjTitle" class="dataObjModalRowInput" maxlength="100" v-bind:value="row.toString().replace('title,', '')" />
+                    <input id="dataObjTitle" class="dataObjModalRowInput" maxlength="100" v-bind:value="row.toString().replace('title,', '')" placeholder="title" />
                 </div>
                 
                 <!-- obj: data -->
@@ -181,7 +181,7 @@
                         <div id="dataObjModalMultilineRows">
                             <div v-bind:id="'dataObjModalMultiline#' + item.pos" class="dataObjModalMultiline" v-for="item in loadDataInputs(row, 'multiline')" v-on:click="editData('multiline','click', item.pos)">
                                 <input v-bind:id="'dataObjModalMultilinePos#' + item.pos" class="inputMultilineSidebarPos" type="button" v-bind:value="item.pos" disabled />
-                                <input v-bind:id="'dataObjModalMultilineText#' + item.pos" class="inputMultilineText" maxlength="100" v-bind:value="item.text" placeholder="textrow" />
+                                <input v-bind:id="'dataObjModalMultilineText#' + item.pos" class="inputMultilineText" maxlength="1000" v-bind:value="item.text" placeholder="textrow" />
                             </div>
                         </div>
 
@@ -714,7 +714,7 @@ export default {
     var newCategoryPos = ""
     var oldSectionPos = ""
     var newSectionPos = ""
-            
+
 
     //lifecycle hooks
     onMounted(() => { console.log("componentBackend mounted"); fetchSpecificUser() })
@@ -759,9 +759,9 @@ export default {
                 store.dispatch('storage/actionSetBackendAccountSettings', data.settings)
                 store.dispatch('storage/actionSetBackendAccountCredentials', data.credentials)
                 store.dispatch('storage/actionSetBackendAccountLoginInfo',{
-                    "createdAt": data.createdAt,
-                    "lastLogin": data.lastLogin,
-                    "accountStatus": data.accountStatus
+                    "createdAt": data.info.createdAt,
+                    "lastLogin": data.info.lastLogin,
+                    "accountStatus": data.info.accountStatus
                 })
             }
 
@@ -879,8 +879,8 @@ export default {
         //set data row text
         else 
         { 
-            if(data.title == "") { data.title = "no title" }
             value = "Row " + data.pos + " · " + "<" + data.type + ">"
+            // if(data.title == "") { data.title = "no title" }
             // value = data.pos + " " + data.title + " " + "<" + data.type + ">" 
             // value = data.pos + " · " + "<" + data.type + ">" 
             // value = "<> · " + data.pos + " · " + "<" + data.type + ">" 
@@ -1874,6 +1874,10 @@ export default {
             dataObjModalText = document.getElementById("dataObjModal" + type + "Text#" + oldPos)
             dataObjModalYear = document.getElementById("dataObjModal" + type + "Year#" + oldPos)
             dataObjModalLink = document.getElementById("dataObjModal" + type + "Link#" + oldPos)
+
+            //check forbidden characters
+            dataObjModalText.value = dataObjModalText.value.replaceAll("'", "´")
+            // dataObjModalText.value = dataObjModalText.value.replaceAll("\"", "´")
             
             //variables
             let newText = ""
