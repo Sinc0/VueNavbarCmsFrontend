@@ -15,7 +15,7 @@
             <div id="frontendSectionsList">
                 <div id="buttonStart" class="section" v-on:click="displayExtraPage('start')">ㅤ</div>
                 <div id="buttonIndex" class="section" v-on:click="displayExtraPage('index')">ㅤ</div>
-                <div id="buttonEnd" class="section" v-on:click="displayExtraPage('end')">ㅤ</div>
+                <div id="buttonEnd" class="section" v-on:click="displayExtraPage('end')">Eㅤ</div>
                 <div id="buttonSelectSections" class="section" v-on:click="loadSectionNavigatorModal()">ㅤ</div>
                 <div id="buttonAbout" class="section" v-on:click="loadAboutModal()">ㅤ</div>
                 <div id="buttonContact" class="section" v-on:click="loadContactModal()">ㅤ</div>
@@ -358,16 +358,16 @@ export default {
         store.dispatch('storage/actionSetFrontendCategoriesSelected', arrayCategories)
 
         //update elements
-        // for(let item in sectionElements)
-        // {
-        //     let element = document.getElementById(sectionElements[item].id)
-        //     if(element) { element.style.opacity = "0.1" }
-        // }
-        // for(let item in categoryElements)
-        // {
-        //     let element = document.getElementById(categoryElements[item].id)
-        //     if(element) { element.style.opacity = "1" }
-        // }
+        for(let item in sectionElements)
+        {
+            let element = document.getElementById(sectionElements[item].id)
+            if(element) { element.style.opacity = "0.1" }
+        }
+        for(let item in categoryElements)
+        {
+            let element = document.getElementById(categoryElements[item].id)
+            if(element) { element.style.opacity = "1" }
+        }
         if(frontendData) { frontendData.style.display = "none" }       
         if(settingsCategoriesIcon) { settingsCategoriesIcon.style.display = "block" }
         if(frontendCategoriesList) { frontendCategoriesList.scrollTo(0,0) }
@@ -955,7 +955,7 @@ export default {
 
                 if(frontendSectionsList) {
                     frontendSectionsList.style.display = "inherit"
-                    frontendSectionsList.style.height = "100vh"
+                    frontendSectionsList.style.height = "96vh"
                     frontendSectionsList.style.display = "flex"
                     frontendSectionsList.style.flexDirection = "column"
                 }
@@ -982,7 +982,7 @@ export default {
 
                 if(frontendSectionsList) {
                     frontendSectionsList.style.display = "inherit"
-                    frontendSectionsList.style.height = "100vh"
+                    frontendSectionsList.style.height = "96vh"
                     frontendSectionsList.style.display = "flex"
                     frontendSectionsList.style.flexDirection = "column"
                 }
@@ -1014,6 +1014,8 @@ export default {
         let pageEnd = document.getElementById("pageEnd")
         let underlayModal = document.getElementById("underlayModal")
         let sectionNavigatorModal = document.getElementById("sectionNavigatorModal")
+        let sectionElements = document.getElementsByClassName("section")
+        let categoryElements = document.getElementsByClassName("category")
 
         //reset elements
         if(pageStart) { pageStart.style.display = "none" }
@@ -1026,6 +1028,20 @@ export default {
         else if(type == "end") { pageEnd.style.display = "block" }
         underlayModal.style.display = "none"
         sectionNavigatorModal.style.display = "none"
+        for(let item in sectionElements)
+        {
+            let element = document.getElementById(sectionElements[item].id)
+            if(element) { element.style.opacity = "0.1" }
+        }
+        for(let item in categoryElements)
+        {
+            let element = document.getElementById(categoryElements[item].id)
+            if(element) { element.style.opacity = "1" }
+        }
+
+        buttonStart.style.opacity = "1"
+        buttonIndex.style.opacity = "1"
+        buttonEnd.style.opacity = "1"
     }
 
 
@@ -1064,6 +1080,15 @@ export default {
         return letter
     }
 
+
+    // function setRoutePath(value)
+    // {
+    //     console.log("setRoutePath: " + value)
+
+    //     router.push(value)
+    // }
+
+
     return {
         //variables
         frontendSections,
@@ -1094,7 +1119,7 @@ export default {
         nextImageGalleryItem,
         fetchProtectedDomain,
         displayExtraPage,
-        indexCategoryAsLetter
+        indexCategoryAsLetter,
     }
   }
 }

@@ -6,9 +6,9 @@
 
 
 <script>
-import {computed, onMounted} from 'vue'
-import {useStore} from 'vuex'
+import {onMounted, onUpdated} from 'vue'
 import ComponentStart from '@/components/componentStart.vue'
+
 
 export default {
   name: 'Home',
@@ -18,28 +18,13 @@ export default {
   },
 
   setup() {
-    //vuex
-    const store = useStore()
-
-    //variables
-    // const Sections = computed(() => { return store.getters['storage/sections']})
-    // const Categories = computed(() => { return store.getters['storage/categories']})
-    // const Data = computed(() => { return store.getters['storage/data']})
-
-
     //lifecycle hooks
-    onMounted(() => {
-        console.log("viewStart mounted")
-    })
-
-
-    //functions
-    
+    onMounted(() => { console.log("viewStart mounted") })
+    onUpdated(() => { console.log("viewStart updated") })
 
     return { 
         
     }
-
   }
 }
 </script>

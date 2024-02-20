@@ -6,8 +6,7 @@
 
 
 <script>
-import {computed, onMounted} from 'vue'
-import {useStore} from 'vuex'
+import {onMounted, onUpdated} from 'vue'
 import componentBackend from '@/components/componentBackend'
 
 export default {
@@ -18,28 +17,13 @@ export default {
   },
 
   setup() {
-    //vuex
-    const store = useStore()
-
-    //variables
-    // const Sections = computed(() => { return store.getters['storage/sections']})
-    // const Categories = computed(() => { return store.getters['storage/categories']})
-    // const Data = computed(() => { return store.getters['storage/data']})
-
-
     //lifecycle hooks
-    onMounted(() => {
-        console.log("viewBackend mounted")
-    })
-
-
-    //functions
-    
+    onMounted(() => { console.log("viewBackend mounted")})
+    onUpdated(() => { console.log("viewBackend updated")})
 
     return { 
         
     }
-
   }
 }
 </script>

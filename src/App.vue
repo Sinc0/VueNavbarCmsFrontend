@@ -4,12 +4,14 @@
 
 
 <script>
-import {computed, onMounted} from 'vue'
-import {useStore} from 'vuex'
+import {onMounted, onUpdated} from 'vue'
 
-  export default { setup() {
+  export default { 
+    setup() {
+    
     //lifecycle hooks
     onMounted(() => { console.log("App mounted") })
+    onUpdated(() => { console.log("App updated") })
 
     return {}
   }}
@@ -17,22 +19,6 @@ import {useStore} from 'vuex'
 
 
 <style>
-/*** css variables ***/
-:root 
-{
-  --activeLinkColor: lightgreen;
-  --IndexFontColor: black;
-  --DataFontColor: black;
-  --DataBackgroundColor: white;
-  --SearchHitCountBackgroundColor: black;
-  --SearchHitBackgroundColor: white;
-  --SearchButtonColor: lightgreen;
-  --ImageGalleryArrowsColor: black;
-  --ImageGalleryBackgroundColor: black;
-  --loadingScreenBackgroundColor: #1a1a1a;
-  /* var(--loadingScreenBackgroundColor) */
-}
-
 /*** scrollbars ***/
 ::-webkit-scrollbar { height: 0px; width: 4px; }
 ::-webkit-scrollbar-track { background: transparent; }
@@ -55,10 +41,5 @@ body { margin: 0px; padding: 0px; }
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: var(--DataFontColor);
-}
-
-/*** mobile ***/
-@media screen and (max-width: 700px) {
-  /* empty */
 }
 </style>

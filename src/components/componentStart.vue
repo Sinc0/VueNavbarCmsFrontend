@@ -33,22 +33,14 @@
 
 
 <script>
-import {useStore} from 'vuex'
-import {computed, onMounted, onUpdated, resolveDirective} from 'vue'
+import {onMounted, onUpdated} from 'vue'
 import router from '../router'
 
 export default {
   setup() {
-    //vue
-    const store = useStore()
-
-
     //variables
-    // const Sections = computed(() => { return store.getters['storage/sections']})
-    // const Categories = computed(() => { return store.getters['storage/categories']})
-    // const Data = computed(() => { return store.getters['storage/data']})
     const BACKEND_API = "http://127.0.0.1:8000"
-            
+
 
     //lifecycle hooks
     onMounted(() => { console.log("componentStart mounted") })
@@ -177,6 +169,7 @@ export default {
 
         // })
     }
+
 
     async function register()
     {   

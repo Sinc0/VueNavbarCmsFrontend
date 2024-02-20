@@ -8,8 +8,7 @@
 
 
 <script>
-import {computed, onMounted} from 'vue'
-import {useStore} from 'vuex'
+import {onMounted, onUpdated} from 'vue'
 import ComponentFrontend from '@/components/componentFrontend.vue'
 
 
@@ -29,39 +28,40 @@ export default {
         displayContent()
     })
 
+    onUpdated(() => { console.log("viewMain updated") })
+
 
     //functions
     function displayLoadingScreen()
     {
-      //elements
-      let loadingScreen = document.getElementById("loadingScreen")
+        //elements
+        let loadingScreen = document.getElementById("loadingScreen")
 
-      //update elements
-      loadingScreen.style.display = "block"
-      document.body.style.overflow = 'hidden' //hide scrollbar
+        //update elements
+        loadingScreen.style.display = "block"
+        document.body.style.overflow = 'hidden' //hide scrollbar
     }
 
 
     function displayContent()
     {
-      //debugging
-      console.log("displayContent")
+        //debugging
+        console.log("displayContent")
 
-      //elements
-      let loadingScreen = document.getElementById("loadingScreen")
-      let content = document.getElementById("content")
+        //elements
+        let loadingScreen = document.getElementById("loadingScreen")
+        let content = document.getElementById("content")
 
-      //update elements
-      document.body.style.overflow = 'visible' //show scrollbar 
-      loadingScreen.style.display = "none"
-    //   content.style.display = "block"
+        //update elements
+        document.body.style.overflow = 'visible' //show scrollbar 
+        loadingScreen.style.display = "none"
+        // content.style.display = "block"
     }
 
 
     return {
 
     }
-
   }
 }
 </script>
@@ -104,7 +104,7 @@ export default {
     height: 90vh;
     width: 100vw;
     z-index: 10;
-    background-color: var(--loadingScreenBackgroundColor); /* #1a1a1a */
+    background-color: #1a1a1a;
   }
   #loadingScreen img { max-width: 97vw; -webkit-user-drag: none; }
 
