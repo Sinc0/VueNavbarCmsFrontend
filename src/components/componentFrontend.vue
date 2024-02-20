@@ -1,24 +1,31 @@
 <template>
     <div id="componentFrontend">
 
+        <!-- modal: password protected -->
+        <div id="sitePasswordProtectedModal">
+            <!-- <p>Site is Password Protected</p> -->
+            <input hidden id="passwordProtectedDomainName" value="" />
+            <input id="passwordProtectedPasswordInput" type="password" placeholder="Enter Password..." @keyup.enter="fetchProtectedDomain()" />
+            <input id="passwordProtectedPasswordButton" type="button" value="Enter" v-on:click="fetchProtectedDomain()" />
+            <p id="passwordProtectedStatusMessage">Status Message</p>
+        </div>
+        
         <!-- sections -->
         <div id="frontendSections">
             <div id="frontendSectionsList">
-                <!-- select section -->
+                <div id="buttonStart" class="section" v-on:click="displayExtraPage('start')">ㅤ</div>
+                <div id="buttonIndex" class="section" v-on:click="displayExtraPage('index')">ㅤ</div>
+                <div id="buttonEnd" class="section" v-on:click="displayExtraPage('end')">ㅤ</div>
+                <div id="buttonSelectSections" class="section" v-on:click="loadSectionNavigatorModal()">ㅤ</div>
+                <div id="buttonAbout" class="section" v-on:click="loadAboutModal()">ㅤ</div>
+                <div id="buttonContact" class="section" v-on:click="loadContactModal()">ㅤ</div>
+                <div id="buttonFullscreen" class="section"></div>
+                <div id="buttonSearch" class="section">ㅤ</div>
                 <div v-bind:id="'section#' + section.pos" class="section" v-for="section in sortFrontendSections(frontendSections)" v-on:click="loadSectionCategories(section)" v-bind:title="section.title">
                     {{section.pos}}
                 </div>
-
             </div>
-            <div id="buttonAbout" class="section"  v-on:click="loadAboutModal()">About</div>
-            <div id="buttonContact" class="section"  v-on:click="loadContactModal()">Contact</div>
-            <div id="buttonFullscreen" class="section">Fullscreen</div>
-            <div id="buttonSearch" class="section">Search</div>
         </div>
-
-
-        <!-- <div id="sectionTitle" v-if="frontendCategoriesSelected">{{frontendCategoriesSelected[0].section}}</div> -->
-
 
         <!-- categories -->
         <div id="frontendCategories" v-if="frontendCategoriesSelected">
@@ -38,7 +45,6 @@
                 />
             </div>  -->
         </div>
-
 
         <!-- data -->
         <div id="frontendData">
@@ -128,12 +134,43 @@
             </div>
         </div>
 
+        <!-- extra page: start -->
+        <div id="pageStart" class="extraPage">
+            <p class="pageTitle">Start</p>
+            <div id="pageStartTitle" v-if="frontendSettings">{{frontendSettings.pageStartTitle}}</div>
+            <div id="pageStartText" v-if="frontendSettings">{{frontendSettings.pageStartText}}</div>
+        </div>
+
+        <!-- extra page: index -->
+        <div id="pageIndex" class="extraPage">
+            <p class="pageTitle">Index</p>
+
+            <div id="pageIndexSections" v-if="frontendSections && frontendCategories">
+                <div class="pageIndexSection" v-for="item in frontendSections">
+                    <p class="indexSection">{{item.pos}}. {{item.title}}</p>
+
+                    <div v-for="c in frontendCategories">
+                        <p class="indexCategory" v-if="item.title == c.section">{{indexCategoryAsLetter(c.pos)}}. {{c.title}}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- extra page: end -->
+        <div id="pageEnd" class="extraPage" v-if="frontendSettings">
+            <p class="pageTitle">End</p>
+            <div id="pageEndTitle">{{frontendSettings.pageEndTitle}}</div>
+            <div id="pageEndText">{{frontendSettings.pageEndText}}</div>            
+        </div>
+
         <!-- modal: underlay -->
         <div id="underlayModal" v-on:click="undisplayModals()">
         </div>
         
-        <!-- modal: category navigator -->
+        <!-- modal: navigator categories -->
         <div id="categoryNavigatorModal">
+            <p class="category">Select Category:</p>
+
             <div id="" class="category" v-for="item in frontendCategoriesSelected" v-on:click="loadCategoryData(item.section, item.title, item.pos)">
                 {{item.title}}
             </div>
@@ -141,19 +178,34 @@
 
         <!-- modal: about -->
         <div id="aboutModal" v-if="frontendSettings">
-            <p id="">About</p>
+            <p id="aboutTitle" class="modalTitle">About</p>
             {{frontendSettings.buttonAboutText}}
         </div>
 
         <!-- modal: contact -->
-        <div id="contactModal" v-if="frontendSettings">
-            <p id="">Contact</p>
-            {{frontendSettings}}
-        </div>
+        <div id="contactModal" v-if="frontendContact">
+            <p id="contactTitle" class="modalTitle">Contact</p>
+            <!-- {{frontendContact}} -->
+            <div id="contactEmail" class="contactCategory" v-if="frontendContact.email">
+                <img src="/iconContactEmail.png" class="contactDetailThumbnail" />
+                <p class="contactDetailText">{{frontendContact.email}}</p>
+            </div>
 
-        <!-- modal: password protected -->
-        <!-- <div id="sitePasswordProtectedModal">
-        </div> -->
+            <div id="contactName" class="contactCategory" v-if="frontendContact.name">
+                <img src="/iconContactName.png" class="contactDetailThumbnail" />
+                <p class="contactDetailText">{{frontendContact.name}}</p>
+            </div>
+            
+            <div id="contactPhone" class="contactCategory" v-if="frontendContact.phone">
+                <img src="/iconContactPhone.png" class="contactDetailThumbnail" />
+                <p class="contactDetailText">{{frontendContact.phone}}</p>
+            </div>
+            
+            <div id="contactCountry" class="contactCategory" v-if="frontendContact.country">
+                <img src="/iconContactCountry.png" class="contactDetailThumbnail" />
+                <p class="contactDetailText">{{frontendContact.country}}</p>
+            </div>
+        </div>
 
         <!-- modal: loading screen -->
         <!-- <div id="loadingScreenModal">
@@ -162,6 +214,21 @@
         <!-- modal: search -->
         <!-- <div id="searchModal">
         </div> -->
+
+        <!-- modal: navigator sections -->
+        <div id="sectionNavigatorModal">
+            <p class="selectSection">Select Section:</p>
+
+            <p class="selectSection" v-on:click="displayExtraPage('start')">Start</p>
+            <p class="selectSection" v-on:click="displayExtraPage('index')">Index</p>
+            
+            <div id="" class="selectSection" v-for="item in sortFrontendSections(frontendSections)" v-on:click="loadSectionCategories(item)">
+                {{item.title}}
+                <!-- {{item.pos}}: {{item.title}} -->
+            </div>
+            
+            <p class="selectSection" v-on:click="displayExtraPage('end')">End</p>
+        </div>
     </div>
 </template>
 
@@ -185,6 +252,7 @@ export default {
     const frontendCategoriesSelected = computed(() => { return store.getters['storage/frontendCategoriesSelected']})
     const frontendDataSelected = computed(() => { return store.getters['storage/frontendDataSelected']})
     const frontendSettings = computed(() => { return store.getters['storage/frontendSettings']})
+    const frontendContact = computed(() => { return store.getters['storage/frontendContact']})
 
 
     //globals
@@ -225,137 +293,26 @@ export default {
         //variables
         let obj = JSON.stringify({ "domain": "testDomainZ" })
         
-        //fetch specific user data
-        await fetch(BACKEND_API + "/specific-domain", {method: 'post', body: obj})
+        //fetch specific domain data
+        await fetch(BACKEND_API + "/domain-specific", {method: 'post', body: obj})
         .then((response) => { return response.json() })
         .then((data) => {
             //debugging
             console.log(data)
 
-            //fetch user successful
-            if(data.status == "fetch specific user successful") 
+            if(data.status == "domain is password protected")
+            {
+                let sitePasswordProtectedModal = document.getElementById("sitePasswordProtectedModal")
+                let passwordProtectedDomainName = document.getElementById("passwordProtectedDomainName")
+                
+                sitePasswordProtectedModal.style.display = "block"
+                passwordProtectedDomainName.value = data.domainName
+            }
+
+            //fetch domain successful
+            else if(data.status == "fetch specific domain successful") 
             { 
-                //save to vuex
-                store.dispatch('storage/actionSetFrontendSections', data.sections)
-                store.dispatch('storage/actionSetFrontendCategories', data.categories)
-                store.dispatch('storage/actionSetFrontendData', data.data)
-                store.dispatch('storage/actionSetFrontendSettings', data.settings)
-
-                let componentFrontend = document.getElementById("componentFrontend")
-                let frontendSectionsElement = document.getElementById("frontendSections")
-                let selectedCategoryTitle = document.getElementById("selectedCategoryTitle")
-                let frontendSections = document.getElementById("frontendSections")
-                let frontendSectionsList = document.getElementById("frontendSectionsList")
-                let frontendDataRows = document.getElementById("frontendDataRows")
-                let sectionButtons = document.getElementsByClassName("section")
-
-                // let firstSection = sortFrontendSections(frontendSections.value)[0]
-                // console.log(firstSection)
-
-                settings = data.settings
-
-                setTimeout(() => {
-                    console.log(settings)
-
-                    //set sections background color
-                    if(componentFrontend) { componentFrontend.style.backgroundColor = settings.colorSectionsBackground }
-
-                    //set nav background color
-                    if(frontendSectionsElement) { frontendSectionsElement.style.backgroundColor = settings.colorNavBackground }
-
-                    //set nav icons color
-                    if(sectionButtons)
-                    {
-                        for(let item in sectionButtons)
-                        {
-                            if(sectionButtons[item].style) 
-                            { 
-                                sectionButtons[item].style.backgroundColor = settings.colorNavIcons
-                                // sectionButtons[item].style.color = data.settings.colorText
-                            }
-                        }
-                    }
-
-                    //set text color
-                    document.documentElement.style.setProperty("--colorText", settings.colorText); // document.documentElement.style.cssText = "--colorText: green"; // document.documentElement.setAttribute("style", "--colorText: green");
-                    console.log("navPosition: " + settings.navPosition)
-                    if(settings.navPosition == "top") 
-                    { 
-                        document.documentElement.style.setProperty("--navTop", "0px");
-                        document.documentElement.style.setProperty("--navBottom", "initial");
-                        document.documentElement.style.setProperty("--navLeft", "initial");
-                        document.documentElement.style.setProperty("--navRight", "initial");
-                        frontendSections.style.height = "auto"
-                        frontendSections.style.width = "100vw"
-                        frontendSections.style.display = "flex"
-                        frontendSections.style.flexDirection = "row"
-                        frontendSections.style.padding = "8px 0px 8px 0px"
-                        frontendSectionsList.style.display = "inherit"
-                        frontendSectionsList.style.height = "auto"
-                        frontendSectionsList.style.display = "flex"
-                        frontendSectionsList.style.flexDirection = "row"
-                        document.documentElement.style.setProperty("--frontendCategoriesTop", "12%");
-                        document.documentElement.style.setProperty("--frontendDataTop", "20%");
-                        frontendDataRows.style.maxHeight = "76vh"
-                    }
-                    else if (settings.navPosition == "bottom") 
-                    {
-                        document.documentElement.style.setProperty("--navTop", "initial");
-                        document.documentElement.style.setProperty("--navBottom", "0px");
-                        document.documentElement.style.setProperty("--navLeft", "initial");
-                        document.documentElement.style.setProperty("--navRight", "initial");
-                        frontendSections.style.height = "auto"
-                        frontendSections.style.width = "100vw"
-                        frontendSections.style.display = "flex"
-                        frontendSections.style.flexDirection = "row"
-                        frontendSections.style.padding = "8px 0px 8px 0px"
-                        frontendSectionsList.style.display = "inherit"
-                        frontendSectionsList.style.height = "auto"
-                        frontendSectionsList.style.display = "flex"
-                        frontendSectionsList.style.flexDirection = "row"
-                        document.documentElement.style.setProperty("--frontendCategoriesTop", "4%");
-                        document.documentElement.style.setProperty("--frontendDataTop", "12%");
-                        frontendDataRows.style.maxHeight = "74vh"
-                    } 
-                    else if (settings.navPosition == "left") 
-                    { 
-                        document.documentElement.style.setProperty("--navTop", "initial");
-                        document.documentElement.style.setProperty("--navBottom", "initial");
-                        document.documentElement.style.setProperty("--navLeft", "0px");
-                        document.documentElement.style.setProperty("--navRight", "initial");
-                        frontendSections.style.height = "100vh"
-                        frontendSections.style.width = "auto"
-                        frontendSections.style.display = "flex"
-                        frontendSections.style.flexDirection = "column"
-                        frontendSections.style.padding = "10px 10px 0px 10px"
-                        frontendSectionsList.style.display = "inherit"
-                        frontendSectionsList.style.height = "68vh"
-                        frontendSectionsList.style.display = "flex"
-                        frontendSectionsList.style.flexDirection = "column"
-                        document.documentElement.style.setProperty("--frontendCategoriesTop", "4%");
-                        document.documentElement.style.setProperty("--frontendDataTop", "12%");
-                        frontendDataRows.style.maxHeight = "68vh"
-                    } 
-                    else if (settings.navPosition == "right") 
-                    {
-                        document.documentElement.style.setProperty("--navTop", "initial");
-                        document.documentElement.style.setProperty("--navBottom", "initial");
-                        document.documentElement.style.setProperty("--navLeft", "initial");
-                        document.documentElement.style.setProperty("--navRight", "0px");
-                        frontendSections.style.height = "100vh"
-                        frontendSections.style.width = "auto"
-                        frontendSections.style.display = "flex"
-                        frontendSections.style.flexDirection = "column"
-                        frontendSections.style.padding = "10px 10px 0px 10px"
-                        frontendSectionsList.style.display = "inherit"
-                        frontendSectionsList.style.height = "78vh"
-                        frontendSectionsList.style.display = "flex"
-                        frontendSectionsList.style.flexDirection = "column"
-                        document.documentElement.style.setProperty("--frontendCategoriesTop", "4%");
-                        document.documentElement.style.setProperty("--frontendDataTop", "12%");
-                        frontendDataRows.style.maxHeight = "76vh"
-                    } 
-                }, 100)
+                setDomainData(data)
 
                 //load first section
                 // loadSectionCategories(firstSection)
@@ -401,16 +358,16 @@ export default {
         store.dispatch('storage/actionSetFrontendCategoriesSelected', arrayCategories)
 
         //update elements
-        for(let item in sectionElements)
-        {
-            let element = document.getElementById(sectionElements[item].id)
-            if(element) { element.style.opacity = "0.1" }
-        }
-        for(let item in categoryElements)
-        {
-            let element = document.getElementById(categoryElements[item].id)
-            if(element) { element.style.opacity = "1" }
-        }
+        // for(let item in sectionElements)
+        // {
+        //     let element = document.getElementById(sectionElements[item].id)
+        //     if(element) { element.style.opacity = "0.1" }
+        // }
+        // for(let item in categoryElements)
+        // {
+        //     let element = document.getElementById(categoryElements[item].id)
+        //     if(element) { element.style.opacity = "1" }
+        // }
         if(frontendData) { frontendData.style.display = "none" }       
         if(settingsCategoriesIcon) { settingsCategoriesIcon.style.display = "block" }
         if(frontendCategoriesList) { frontendCategoriesList.scrollTo(0,0) }
@@ -472,7 +429,7 @@ export default {
         //     if(selectedCategoryTitle) { selectedCategoryTitle.style.color = settings.colorText }
         // }, 100)
     }
-    
+
 
     function loadDataType(data)
     {   
@@ -664,6 +621,29 @@ export default {
     }
 
 
+    function loadSectionNavigatorModal()
+    {
+        //debugging
+        console.log("loadSectionNavigatorModal")
+
+        //elements
+        let sectionNavigatorModal = document.getElementById("sectionNavigatorModal")
+        let underlayModal = document.getElementById("underlayModal")
+        
+        //update elements
+        if(sectionNavigatorModal.style.display == "none" || sectionNavigatorModal.style.display == "")
+        {
+            sectionNavigatorModal.style.display = "block"
+            underlayModal.style.display = "block"
+        }
+        else if(sectionNavigatorModal.style.display == "block")
+        {
+            sectionNavigatorModal.style.display = "none"
+            
+        }
+    }
+
+
     function loadAboutModal()
     {
         //debugging
@@ -714,14 +694,22 @@ export default {
         //elements
         let underlayModal = document.getElementById("underlayModal")
         let categoryNavigatorModal = document.getElementById("categoryNavigatorModal")
+        let sectionNavigatorModal = document.getElementById("sectionNavigatorModal")
         let aboutModal = document.getElementById("aboutModal")
         let contactModal = document.getElementById("contactModal")
+        let pageStart = document.getElementById("pageStart")
+        let pageIndex = document.getElementById("pageIndex")
+        let pageEnd = document.getElementById("pageEnd")
 
         //update elements
         if(underlayModal) { underlayModal.style.display = "none" }
         if(categoryNavigatorModal) { categoryNavigatorModal.style.display = "none" }
         if(aboutModal) { aboutModal.style.display = "none" }
         if(contactModal) { contactModal.style.display = "none" }
+        if(sectionNavigatorModal) { sectionNavigatorModal.style.display = "none" }
+        if(pageStart) { pageStart.style.display = "none" }
+        if(pageIndex) { pageIndex.style.display = "none" }
+        if(pageEnd) { pageEnd.style.display = "none" }
     }
     
 
@@ -788,6 +776,294 @@ export default {
     }
 
 
+    async function fetchProtectedDomain()
+    {
+        console.log("fetchProtectedDomain")
+        
+        //elements
+        let passwordProtectedDomainName = document.getElementById("passwordProtectedDomainName")
+        let passwordProtectedPasswordInput = document.getElementById("passwordProtectedPasswordInput")
+        let sitePasswordProtectedModal = document.getElementById("sitePasswordProtectedModal")
+        let statusMessage = document.getElementById("passwordProtectedStatusMessage")
+
+        //variables
+        let domainName = passwordProtectedDomainName.value
+        let domainPassword = passwordProtectedPasswordInput.value
+        let obj = JSON.stringify({"domainName": domainName, "domainPassword": domainPassword})
+
+        if(domainName != '' && domainPassword != '')
+        {
+            //fetch protected domain data
+            await fetch(BACKEND_API + "/domain-protected", {method: 'post', body: obj})
+            .then((response) => { return response.json() })
+            .then((data) => {
+                //debugging
+                console.log(data)
+
+                if(data.status == "fetch protected domain successful")
+                {   
+                    sitePasswordProtectedModal.style.display = "none"
+                    setDomainData(data)
+                }
+                else 
+                { 
+                    statusMessage.style.color = "red"
+                    statusMessage.style.display = "block"
+                    statusMessage.innerText = "domain password is incorrect"
+                }
+            })
+        }
+    }
+
+
+    function setDomainData(data)
+    {
+        let componentFrontend = document.getElementById("componentFrontend")
+        let frontendSectionsElement = document.getElementById("frontendSections")
+        let selectedCategoryTitle = document.getElementById("selectedCategoryTitle")
+        let frontendSectionsList = document.getElementById("frontendSectionsList")
+        let frontendDataRows = document.getElementById("frontendDataRows")
+        let loadingScreen = document.getElementById("loadingScreen")
+        let buttonSelectSections = document.getElementById("buttonSelectSections")
+        let buttonStartElement = document.getElementById("buttonStart")
+        let buttonIndexElement = document.getElementById("buttonIndex")
+        let buttonEndElement = document.getElementById("buttonEnd")
+        let sectionButtons = document.getElementsByClassName("section")
+        
+        //save to vuex
+        store.dispatch('storage/actionSetFrontendSections', data.sections)
+        store.dispatch('storage/actionSetFrontendCategories', data.categories)
+        store.dispatch('storage/actionSetFrontendData', data.data)
+        store.dispatch('storage/actionSetFrontendSettings', data.settings)
+        
+        //variables
+        let settings = data.settings
+        let firstSection = sortFrontendSections(frontendSections.value)[0]
+
+        if(settings.loadingScreen == "true")
+        { 
+            loadingScreen.style.display = "block"
+            setTimeout(() => { loadingScreen.style.display = "none"}, 1000)
+        }
+
+        //load default section
+        // loadSectionCategories(firstSection)
+        if(settings.pageStart == "true") { displayExtraPage('start') }
+        else if(settings.pageIndex == "true") { displayExtraPage('index') }
+        else { loadSectionCategories(firstSection) }
+
+
+        setTimeout(() => {
+            console.log(settings)
+            
+            //set nav icons color
+            if(sectionButtons)
+            {
+                for(let item in sectionButtons)
+                {
+                    if(sectionButtons[item].style) 
+                    { 
+                        sectionButtons[item].style.backgroundColor = settings.colorNavIcons
+                        // sectionButtons[item].style.color = data.settings.colorText
+                    }
+                }
+            }
+
+            //set buttons
+            if(settings.pageStart == "true") { buttonStartElement.style.display = "block" }
+            if(settings.pageIndex == "true") { buttonIndexElement.style.display = "block" }
+            if(settings.pageEnd == "true") { buttonEndElement.style.display = "block" }
+            buttonSelectSections.style.display = "block"
+
+            //set colors
+            document.documentElement.style.setProperty("--colorLoadingScreen", settings.colorLoadingScreen);
+            document.documentElement.style.setProperty("--colorNavBackground", settings.colorNavBackground);
+            document.documentElement.style.setProperty("--colorNavIcons", settings.colorNavIcons);
+            document.documentElement.style.setProperty("--colorNavIconsText", settings.colorNavIconsText);
+            document.documentElement.style.setProperty("--colorText", settings.colorText); // document.documentElement.style.cssText = "--colorText: green"; // document.documentElement.setAttribute("style", "--colorText: green");
+            document.documentElement.style.setProperty("--colorSectionBackground", settings.colorSectionBackground);
+
+            //set nav position
+            if(settings.navPosition == "top") 
+            { 
+                document.documentElement.style.setProperty("--navTop", "0px");
+                document.documentElement.style.setProperty("--navBottom", "initial");
+                document.documentElement.style.setProperty("--navLeft", "initial");
+                document.documentElement.style.setProperty("--navRight", "initial");
+
+                if(frontendSectionsElement) {
+                    frontendSectionsElement.style.height = "auto"
+                    frontendSectionsElement.style.width = "100vw"
+                    frontendSectionsElement.style.display = "flex"
+                    frontendSectionsElement.style.flexDirection = "row"
+                    frontendSectionsElement.style.padding = "8px 0px 8px 0px"
+                }
+                
+                if(frontendSectionsList) {
+                    frontendSectionsList.style.display = "inherit"
+                    frontendSectionsList.style.height = "auto"
+                    frontendSectionsList.style.display = "flex"
+                    frontendSectionsList.style.flexDirection = "row"
+                }
+
+                document.documentElement.style.setProperty("--frontendCategoriesTop", "12%");
+                document.documentElement.style.setProperty("--frontendDataTop", "20%");
+                
+                if(frontendDataRows) { frontendDataRows.style.maxHeight = "76vh" }
+            }
+            else if(settings.navPosition == "bottom") 
+            {
+                document.documentElement.style.setProperty("--navTop", "initial");
+                document.documentElement.style.setProperty("--navBottom", "0px");
+                document.documentElement.style.setProperty("--navLeft", "initial");
+                document.documentElement.style.setProperty("--navRight", "initial");
+
+                if(frontendSectionsElement) {
+                    frontendSectionsElement.style.height = "auto"
+                    frontendSectionsElement.style.width = "100vw"
+                    frontendSectionsElement.style.display = "flex"
+                    frontendSectionsElement.style.flexDirection = "row"
+                    frontendSectionsElement.style.padding = "8px 0px 8px 0px"
+                }
+
+                if(frontendSectionsList) {
+                    frontendSectionsList.style.display = "inherit"
+                    frontendSectionsList.style.height = "auto"
+                    frontendSectionsList.style.display = "flex"
+                    frontendSectionsList.style.flexDirection = "row"
+                }
+
+                document.documentElement.style.setProperty("--frontendCategoriesTop", "4%");
+                document.documentElement.style.setProperty("--frontendDataTop", "12%");
+
+                if(frontendDataRows) { frontendDataRows.style.maxHeight = "74vh" }
+            } 
+            else if (settings.navPosition == "left") 
+            { 
+                document.documentElement.style.setProperty("--navTop", "initial");
+                document.documentElement.style.setProperty("--navBottom", "initial");
+                document.documentElement.style.setProperty("--navLeft", "0px");
+                document.documentElement.style.setProperty("--navRight", "initial");
+
+                if(frontendSectionsElement) {
+                    frontendSectionsElement.style.height = "100vh"
+                    frontendSectionsElement.style.width = "auto"
+                    frontendSectionsElement.style.display = "flex"
+                    frontendSectionsElement.style.flexDirection = "column"
+                    frontendSectionsElement.style.padding = "10px 10px 0px 10px"
+                }
+
+                if(frontendSectionsList) {
+                    frontendSectionsList.style.display = "inherit"
+                    frontendSectionsList.style.height = "100vh"
+                    frontendSectionsList.style.display = "flex"
+                    frontendSectionsList.style.flexDirection = "column"
+                }
+
+                document.documentElement.style.setProperty("--frontendCategoriesTop", "4%");
+                document.documentElement.style.setProperty("--frontendDataTop", "12%");
+                
+                if(frontendDataRows) { frontendDataRows.style.maxHeight = "76vh" }
+            } 
+            else if (settings.navPosition == "right") 
+            {
+                document.documentElement.style.setProperty("--navTop", "initial");
+                document.documentElement.style.setProperty("--navBottom", "initial");
+                document.documentElement.style.setProperty("--navLeft", "initial");
+                document.documentElement.style.setProperty("--navRight", "0px");
+
+                if(frontendSectionsElement) {
+                    frontendSectionsElement.style.height = "100vh"
+                    frontendSectionsElement.style.width = "auto"
+                    frontendSectionsElement.style.display = "flex"
+                    frontendSectionsElement.style.flexDirection = "column"
+                    frontendSectionsElement.style.padding = "10px 10px 0px 10px"
+                }
+
+                if(frontendSectionsList) {
+                    frontendSectionsList.style.display = "inherit"
+                    frontendSectionsList.style.height = "100vh"
+                    frontendSectionsList.style.display = "flex"
+                    frontendSectionsList.style.flexDirection = "column"
+                }
+
+                document.documentElement.style.setProperty("--frontendCategoriesTop", "4%");
+                document.documentElement.style.setProperty("--frontendDataTop", "12%");
+
+                if(frontendDataRows) { frontendDataRows.style.maxHeight = "76vh" }
+            }
+            
+            //set buttons
+            if(settings.buttonAbout == "true") { buttonAbout.style.display = "block" }
+            if(settings.buttonContact == "true") 
+            { 
+                buttonContact.style.display = "block"
+                store.dispatch('storage/actionSetFrontendContact', data.contact)
+            }
+            if(settings.buttonFullscreen == "true") { buttonFullscreen.style.display = "block" }
+            if(settings.buttonSearch == "true") { buttonSearch.style.display = "block" }
+        }, 100)
+    }
+
+
+    function displayExtraPage(type)
+    {
+        //elements
+        let pageStart = document.getElementById("pageStart")
+        let pageIndex = document.getElementById("pageIndex")
+        let pageEnd = document.getElementById("pageEnd")
+        let underlayModal = document.getElementById("underlayModal")
+        let sectionNavigatorModal = document.getElementById("sectionNavigatorModal")
+
+        //reset elements
+        if(pageStart) { pageStart.style.display = "none" }
+        if(pageIndex) { pageIndex.style.display = "none" }
+        if(pageEnd) { pageEnd.style.display = "none" }
+
+        //update elements
+        if(type == "start") { pageStart.style.display = "block" }
+        else if(type == "index") { pageIndex.style.display = "block" }
+        else if(type == "end") { pageEnd.style.display = "block" }
+        underlayModal.style.display = "none"
+        sectionNavigatorModal.style.display = "none"
+    }
+
+
+    function indexCategoryAsLetter(value)
+    {   
+        let letter = ""
+
+        if(value == '1') { letter = "A" }
+        else if(value == '2') { letter = "B" }
+        else if(value == '3') { letter = "C" }
+        else if(value == '4') { letter = "D" }
+        else if(value == '5') { letter = "E" }
+        else if(value == '6') { letter = "F" }
+        else if(value == '7') { letter = "G" }
+        else if(value == '8') { letter = "H" }
+        else if(value == '9') { letter = "I" }
+        else if(value == '10') { letter = "J" }
+        else if(value == '11') { letter = "K" }
+        else if(value == '12') { letter = "L" }
+        else if(value == '13') { letter = "M" }
+        else if(value == '14') { letter = "N" }
+        else if(value == '15') { letter = "O" }
+        else if(value == '16') { letter = "P" }
+        else if(value == '17') { letter = "Q" }
+        else if(value == '18') { letter = "R" }
+        else if(value == '19') { letter = "S" }
+        else if(value == '20') { letter = "T" }
+        else if(value == '21') { letter = "U" }
+        else if(value == '22') { letter = "V" }
+        else if(value == '23') { letter = "W" }
+        else if(value == '24') { letter = "X" }
+        else if(value == '25') { letter = "Y" }
+        else if(value == '26') { letter = "Z" }
+        else { letter = value }
+
+        return letter
+    }
+
     return {
         //variables
         frontendSections,
@@ -796,6 +1072,7 @@ export default {
         frontendCategoriesSelected,
         frontendDataSelected,
         frontendSettings,
+        frontendContact,
 
         //functions
         loadSectionCategories,
@@ -809,11 +1086,15 @@ export default {
         sortFrontendSections,
         firstLetterToUpperCase,
         loadCategoryNavigatorModal,
+        loadSectionNavigatorModal,
         undisplayModals,
         loadNextCategory,
         loadAboutModal,
         loadContactModal,
         nextImageGalleryItem,
+        fetchProtectedDomain,
+        displayExtraPage,
+        indexCategoryAsLetter
     }
   }
 }
@@ -821,11 +1102,18 @@ export default {
 
 <style>
     :root {
-        --colorText: blue;
+        --colorLoadingScreen: black;
+        --colorNavBackground: black; 
+        --colorNavIcons: black; 
+        --colorNavIconsText: black;
+        --colorSectionBackground: black;
+        --colorText: black;
+
         --navTop: initial;
         --navBottom: initial;
         --navLeft: initial;
         --navRight: initial;
+        
         --frontendCategoriesTop: initial;
         --frontendDataTop: initial;
     }
@@ -842,6 +1130,7 @@ export default {
     #frontendDataRows::-webkit-scrollbar { height: 0px; width: 0px; }
     #frontendSectionsList::-webkit-scrollbar { height: 0px; width: 0px; }
     #categoryNavigatorModal::-webkit-scrollbar { height: 0px; width: 0px; }
+    #sectionNavigatorModal::-webkit-scrollbar { height: 0px; width: 0px; }
     #dataObjModalPreviewImages::-webkit-scrollbar { height: 12px; width: 10px; }
     #dataObjModalPreviewImages::-webkit-scrollbar-track { background: black; }
     #dataObjModalPreviewImages::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.1); }
@@ -851,7 +1140,7 @@ export default {
     input[type='checkbox'] { accent-color:  #822c8b; }
 
     /*** ids ***/
-    #componentFrontend { height: 100vh; width: 100vw; margin: auto; padding: 0px; color: white; background-color: #1D212E; }
+    #componentFrontend { height: 100vh; width: 100vw; margin: auto; padding: 0px; color: white; background-color: var(--colorSectionBackground); }
     #frontendSections 
     { 
         position: fixed; 
@@ -862,15 +1151,15 @@ export default {
         bottom: var(--navBottom); 
         left: var(--navLeft); 
         right: var(--navRight); 
-        
         /* max-height: 88vh;  */
         margin: 0px;
         padding: 0px 18px 10vh 16px;
         /* overflow-y: scroll; */
         user-select: none;
         opacity: 1;
+        z-index: 2;
         /* border-right: 1px solid rgba(255, 255, 255, 0.6); */
-        background-color: transparent;
+        background-color: var(--colorNavBackground);
     }
     #frontendSectionsList { display: block; height: 78vh; overflow: scroll; }
     #frontendCategories 
@@ -945,7 +1234,28 @@ export default {
         /* border: 3px solid #822c8b; */
         /* background-color: #1D212E; */
     }
-    #underlayModal { position: fixed; display: none; height: 100vh; width: 100vw; opacity: 0.9; z-index: 1; background-color: black; }
+    #sectionNavigatorModal 
+    { 
+        position: fixed;
+        display: none;
+        max-height: 60vh;
+        width: 34vw;
+        left: 36%;
+        top: 16%;
+        margin: 0px;
+        padding: 0px;
+        z-index: 2;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+        overflow-y: scroll;
+        opacity: 1;
+        /* transform: translate(-40%, -50%); */
+        /* border: 3px solid #822c8b; */
+        /* background-color: #1D212E; */
+    }
+    #underlayModal { position: fixed; display: none; height: 100vh; width: 100vw; opacity: 0.9; z-index: 2; background-color: black; }
     #selectedCategoryTitle
     {
         margin: 0px; 
@@ -984,8 +1294,8 @@ export default {
         position: fixed;
         display: none;
         max-height: 60vh;
-        width: 34vw;
-        left: 36%;
+        width: 20vw;
+        left: 40%;
         top: 16%;
         margin: 0px;
         padding: 40px;
@@ -1000,26 +1310,75 @@ export default {
         border: 3px solid var(--colorText);
         background-color: #1D212E;
     }
-    #buttonAbout { margin-top: 20px; }
-    #buttonContact { }
-    #buttonFullscreen { }
-    #buttonFullsearch { }
+    #buttonAbout { display: none; background-image: url('/iconInfo.png'); background-size: contain; background-repeat: no-repeat; }
+    #buttonContact {  display: none; background-image: url('/iconContactInfo.png'); background-size: contain; background-repeat: no-repeat; }
+    #buttonFullscreen { display: none; background-image: url('/iconFullscreen.png'); background-size: contain; background-repeat: no-repeat; }
+    #buttonSearch { display: none; background-image: url('/iconSearch.png'); background-size: contain; background-repeat: no-repeat; }
+    #buttonStart { display: none; background-image: url('/iconStart.png'); background-size: contain; background-repeat: no-repeat; }
+    #buttonIndex { display: none; background-image: url('/iconIndex.png'); background-size: contain; background-repeat: no-repeat; }
+    /* #buttonEnd { display: none; } */
+    #buttonSelectSections { display: none; background-image: url('/iconSection.png'); background-size: contain; background-repeat: no-repeat; }
+    #sitePasswordProtectedModal 
+    { 
+        display: none; 
+        position: fixed; 
+        height: 100vh; 
+        width: 100vw;
+        margin: 0px;
+        padding: 20% 0px 0px 0px;
+        z-index: 3; 
+        background-color: #1D212E; 
+    }
+    #passwordProtectedPasswordInput 
+    { 
+        display: block;
+        width: 299px;
+        margin: auto; 
+        padding: 10px; 
+        font-size: 20px; 
+        font-weight: bold;
+        color: white;
+        border: 1px solid white;
+        background-color: black;
+    }
+    #passwordProtectedPasswordButton 
+    { 
+        display: block;
+        width: 321px;
+        margin: auto; 
+        padding: 10px; 
+        font-size: 20px; 
+        font-weight: bold;
+        border: 0px solid white;
+    }
+    #passwordProtectedStatusMessage { display: none; font-weight: bold; font-size: 20px; text-shadow: 0px 1px black; }
+    #pageStart { display: none; position: fixed; height: 100vh; width: 100vw; z-index: 1; background-color: var(--colorSectionBackground); }
+    #pageIndex { display: none; position: fixed; height: 100vh; width: 100vw; z-index: 1; background-color: var(--colorSectionBackground); }
+    #pageEnd { display: none; position: fixed; height: 100vh; width: 100vw; z-index: 1; background-color: var(--colorSectionBackground); }
+    #pageIndexSections { display: block; height: 92vh; margin: 40px 0px 0px 0px; overflow-y: scroll; }
+    #pageStartTitle { margin: 36vh 0px 0px 0px; font-size: 49px; font-weight: bold; }
+    #pageStartText { margin: 20px 0px 0px 0px; font-size: 20px; font-weight: bold; opacity: 0.6; }
+    #pageEndTitle { margin: 36vh 0px 0px 0px; font-size: 49px; font-weight: bold; }
+    #pageEndText { margin: 20px 0px 0px 0px; font-size: 20px; font-weight: bold; opacity: 0.6; }
     /* #data1 { margin-top: calc(-49px - 1px); } */
 
 
     /*** classes ***/
-    .section 
+    .section
     { 
-        height: auto;
-        width: 34px;
+        max-height: 30px;
+        max-width: 30px;
+        min-height: 30px;
+        min-width: 30px;
         margin: auto;
-        margin: 10px;
-        padding: 10px 8px 10px 8px; 
+        margin: 13px;
+        padding: 10px; 
         font-size: 22px; 
         font-weight: bold; 
         text-align: center; 
         text-shadow: 0px 1px #1D212E; 
         user-select: none;
+        /* border-radius: 90%; */
         color: white;
         background-color: #1D212E;
         /* border: 1px solid white;  */
@@ -1032,6 +1391,19 @@ export default {
         text-shadow: 0px 1px #1D212E; 
         font-size: 32px; 
         font-weight: bold;
+        color: var(--colorText); /* #822c8b */
+        /* border: 1px solid white; */
+        /* background-color: #1D212E; */
+    }
+    .selectSection 
+    { 
+        margin: 0px; 
+        padding: 20px; 
+        text-wrap: nowrap; 
+        text-shadow: 0px 1px #1D212E; 
+        font-size: 32px; 
+        font-weight: bold;
+        /* text-transform: uppercase; */
         color: var(--colorText); /* #822c8b */
         /* border: 1px solid white; */
         /* background-color: #1D212E; */
@@ -1182,4 +1554,23 @@ export default {
         border-top: 4px solid rgba(255, 255, 255, 0.02);
         /* background-color: #822c8b; */
     }
+    .modalTitle { margin: 0px; font-size: 28px; font-weight: bold; }
+    .contactCategory { display: flex; margin: 40px 0px 0px 0px; flex-direction: row; justify-content: left; align-items: center; }
+    .contactDetailText 
+    { 
+        display: inline-block; 
+        margin: 0px 0px 0px 22px; 
+        padding: 0px; 
+        font-weight: bold; 
+        font-size: 20px; 
+        user-select: text;
+        white-space: nowrap;
+        overflow-x: scroll;
+    }
+    .contactDetailThumbnail { display: inline-block; margin: 0px 0px 0px 20px; height: 60px; width: auto; user-select: none; -webkit-user-drag: none; }
+    .pageTitle { display: none; font-size: 32px; font-weight: bold; margin-top: 60px; }
+    .extraPage { user-select: none; }
+    .indexSection { display: block; margin: 0px; padding: 0px; font-size: 24px; font-weight: bold; text-shadow: 0px 1px black; }
+    .indexCategory { display: block; margin: 0px; padding: 0px; font-size: 20px; font-weight: bold; text-shadow: 0px 1px black; opacity: 0.4; }
+    .pageIndexSection { display: block; margin: 0px 0px 40px 0px; }
 </style>

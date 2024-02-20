@@ -108,7 +108,7 @@ export default {
         let obj = JSON.stringify({ "username": username, "password": password })
 
         //add user to db
-        await fetch(BACKEND_API + "/sign-in-user", {method: 'post', body: obj})
+        await fetch(BACKEND_API + "/user-sign-in", {method: 'post', body: obj})
         .then((response) => { return response.json() })
         .then((data) => {
             //debugging
@@ -151,7 +151,7 @@ export default {
         // let obj = JSON.stringify({ "username": username, "token": token, "lastLogin": lastLogin })
 
         // //add user to db
-        // await fetch(BACKEND_API + "/sign-out-user", {method: 'post', body: obj})
+        // await fetch(BACKEND_API + "/user-sign-out", {method: 'post', body: obj})
         // .then((response) => { return response.json() })
         // .then((data) => {
         //     //debugging
@@ -245,7 +245,7 @@ export default {
             console.log(obj)
 
             //add user to db
-            await fetch(BACKEND_API + "/add-user", {method: 'post', body: obj})
+            await fetch(BACKEND_API + "/user-add", {method: 'post', body: obj})
             .then((response) => { return response.json() })
             .then((data) => { 
                 

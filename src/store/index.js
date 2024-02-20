@@ -42,6 +42,7 @@ export default createStore({
         frontendCategoriesSelected: null,
         frontendDataSelected: null,
         frontendSettings: null,
+        frontendContact: null,
       },
       
       getters: 
@@ -73,6 +74,7 @@ export default createStore({
         frontendCategoriesSelected(state) { return state.frontendCategoriesSelected },
         frontendDataSelected(state) { return state.frontendDataSelected },
         frontendSettings(state) { return state.frontendSettings },
+        frontendContact(state) { return state.frontendContact },
       },
 
       mutations: 
@@ -104,6 +106,7 @@ export default createStore({
         mutationSetFrontendCategoriesSelected(state, value) { state.frontendCategoriesSelected = value },
         mutationSetFrontendDataSelected(state, value) { state.frontendDataSelected = value },
         mutationSetFrontendSettings(state, value) { state.frontendSettings = value },
+        mutationSetFrontendContact(state, value) { state.frontendContact = value },
       },
 
       actions: 
@@ -135,5 +138,6 @@ export default createStore({
         actionSetFrontendCategoriesSelected({commit}, value) { commit('mutationSetFrontendCategoriesSelected', value) },
         actionSetFrontendDataSelected({commit}, value) { commit('mutationSetFrontendDataSelected', value) },
         actionSetFrontendSettings({commit}, value) { commit('mutationSetFrontendSettings', value) },
+        actionSetFrontendContact({commit}, value) { commit('mutationSetFrontendContact', value) },
       }
 }}})

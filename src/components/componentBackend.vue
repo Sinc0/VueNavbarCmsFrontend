@@ -365,7 +365,7 @@
                 <input id="editAccountEmail" class="editAccountInputText" type="text" placeholder="Email" v-bind:value="accountCredentials.email" maxlength="100" />
                 <input id="editAccountName" class="editAccountInputText" type="text" placeholder="Name" v-bind:value="accountCredentials.name" maxlength="20" />
                 <input id="editAccountPhone" class="editAccountInputText" type="text" placeholder="Phone" v-bind:value="accountCredentials.phone" maxlength="20" />
-                <input id="editAccountCountry" class="editAccountInputText" type="text" placeholder="Country" v-bind:value="accountCredentials.country" maxlength="2" />
+                <input id="editAccountCountry" class="editAccountInputText" type="text" placeholder="Country" v-bind:value="accountCredentials.country" maxlength="20" />
                 <input id="editAccountPassword" class="editAccountInputText" type="button" value="Change Password" v-on:click="editAccount('password', '', 'true')" maxlength="20" />
                 <div id="editAccountChangePassword">
                     <input id="editAccountPasswordOld" class="editAccountInputText" type="password" placeholder="Old Password" maxlength="20" />
@@ -395,6 +395,12 @@
                     <div id="" class="editAccountColors">
                         <input id="editAccountColorNavIcons" class="editAccountInputColor" type="color" />
                         <label class="editAccountText"> Nav Icons</label>
+                    </div>
+
+                    <!-- color: nav icons text -->
+                    <div id="" class="editAccountColors">
+                        <input id="editAccountColorNavIconsText" class="editAccountInputColor" type="color" />
+                        <label class="editAccountText"> Nav Icons Text</label>
                     </div>
     
                     <!-- color: text -->
@@ -743,7 +749,7 @@ export default {
         let obj = JSON.stringify({ "username": username, "token": token, "lastLogin": lastLogin })
         
         //fetch specific user data
-        await fetch(BACKEND_API + "/specific-user", {method: 'post', body: obj})
+        await fetch(BACKEND_API + "/user-specific", {method: 'post', body: obj})
         .then((response) => { return response.json() })
         .then((data) => {
             //debugging
@@ -1572,8 +1578,8 @@ export default {
         let lastLogin = localStorage.getItem("cms-last-login")
         let obj = JSON.stringify([{ "username": username, "token": token, "lastLogin": lastLogin }, newData])
 
-        //fetch update user data
-        await fetch(BACKEND_API + "/update-user-data", {method: 'post', body: obj})
+        //update user data
+        await fetch(BACKEND_API + "/user-update-data", {method: 'post', body: obj})
         .then((response) => { return response.json() })
         .then((data) => {
             //debugging
@@ -1627,8 +1633,8 @@ export default {
         let lastLogin = localStorage.getItem("cms-last-login")
         let obj = JSON.stringify([{ "username": username, "token": token, "lastLogin": lastLogin }, JSON.stringify(newCategories), JSON.stringify(newData)])
 
-        //fetch update user catgories
-        await fetch(BACKEND_API + "/update-user-categories", {method: 'post', body: obj})
+        //update user categories
+        await fetch(BACKEND_API + "/user-update-categories", {method: 'post', body: obj})
         .then((response) => { return response.json() })
         .then((data) => {
             //debugging
@@ -1692,8 +1698,8 @@ export default {
         let lastLogin = localStorage.getItem("cms-last-login")
         let obj = JSON.stringify([{ "username": username, "token": token, "lastLogin": lastLogin }, JSON.stringify(newSections)])
 
-        //fetch update user catgories
-        await fetch(BACKEND_API + "/update-user-sections", {method: 'post', body: obj})
+        //update user sections
+        await fetch(BACKEND_API + "/user-update-sections", {method: 'post', body: obj})
         .then((response) => { return response.json() })
         .then((data) => {
             //debugging
@@ -3150,8 +3156,9 @@ export default {
         editAccount("country", '', 'false')
         editAccount("colorNavBackground", settings.colorNavBackground, 'false')
         editAccount("colorNavIcons", settings.colorNavIcons, 'false')
+        editAccount("colorNavIconsText", settings.colorNavIconsText, 'false')
         editAccount("colorText", settings.colorText, 'false')
-        editAccount("colorSectionsBackground", settings.colorSectionsBackground, 'false')
+        editAccount("colorSectionBackground", settings.colorSectionBackground, 'false')
         editAccount("colorLoadingScreen", settings.colorLoadingScreen, 'false')
     }
 
@@ -3213,8 +3220,9 @@ export default {
         let editAccountPasswordImgHide = document.getElementById("editAccountPasswordImgHide")
         let editAccountColorNavBackground = document.getElementById("editAccountColorNavBackground")
         let editAccountColorNavIcons = document.getElementById("editAccountColorNavIcons")
+        let editAccountColorNavIconsText = document.getElementById("editAccountColorNavIconsText")
         let editAccountColorText = document.getElementById("editAccountColorText")
-        let editAccountColorSectionsBackground = document.getElementById("editAccountColorSectionBackground")
+        let editAccountColorSectionBackground = document.getElementById("editAccountColorSectionBackground")
         let editAccountColorLoadingScreen = document.getElementById("editAccountColorLoadingScreen")
         let editAccountPasswordProtectedPassword = document.getElementById("editAccountPasswordProtectedPassword")
         // let editAccountPasswordProtectedPasswordConfirm = document.getElementById("editAccountPasswordProtectedPasswordConfirm")
@@ -3262,8 +3270,9 @@ export default {
         //colors
         else if(type == "colorNavBackground") { editAccountColorNavBackground.value = value  }
         else if(type == "colorNavIcons") { editAccountColorNavIcons.value = value }
+        else if(type == "colorNavIconsText") { editAccountColorNavIconsText.value = value }
         else if(type == "colorText") { editAccountColorText.value = value }
-        else if(type == "colorSectionsBackground") { editAccountColorSectionsBackground.value = value }
+        else if(type == "colorSectionBackground") { editAccountColorSectionBackground.value = value }
         else if(type == "colorLoadingScreen") { editAccountColorLoadingScreen.value = value }
 
 
@@ -3636,6 +3645,7 @@ export default {
         let editAccountPasswordNewAgain = document.getElementById("editAccountPasswordNewAgain")
         let editAccountColorNavBackground = document.getElementById("editAccountColorNavBackground")
         let editAccountColorNavIcons = document.getElementById("editAccountColorNavIcons")
+        let editAccountColorNavIconsText = document.getElementById("editAccountColorNavIconsText")
         let editAccountColorText = document.getElementById("editAccountColorText")
         let editAccountColorSectionBackground = document.getElementById("editAccountColorSectionBackground")
         let editAccountColorLoadingScreen = document.getElementById("editAccountColorLoadingScreen")
@@ -3655,10 +3665,10 @@ export default {
         let credentials = {
             "usernameNew": '',
             "domain": '',
-            "email": '',
-            "name": '',
-            "phone": '',
-            "country": '',
+            "email": editAccountEmail.value,
+            "name": editAccountName.value,
+            "phone": editAccountPhone.value,
+            "country": editAccountCountry.value,
             "passwordNew": '',
             "passwordOld": ''
         }
@@ -3678,8 +3688,9 @@ export default {
         //set settings
         lsSettings.colorNavBackground = editAccountColorNavBackground.value
         lsSettings.colorNavIcons = editAccountColorNavIcons.value
+        lsSettings.colorNavIconsText = editAccountColorNavIconsText.value
         lsSettings.colorText = editAccountColorText.value
-        lsSettings.colorSectionsBackground = editAccountColorSectionBackground.value
+        lsSettings.colorSectionBackground = editAccountColorSectionBackground.value
         lsSettings.colorLoadingScreen = editAccountColorLoadingScreen.value
         lsSettings.pageStartTitle = editAccountStartPageTitle.value
         lsSettings.pageStartText = editAccountStartPageText.value
@@ -3737,8 +3748,8 @@ export default {
         //set obj
         obj = {"userInfo": userInfo, "credentials": credentials, "settings": lsSettings}
 
-        //fetch update user catgories
-        await fetch(BACKEND_API + "/update-user-settings", {method: 'post', body: JSON.stringify(obj)})
+        //update user settings
+        await fetch(BACKEND_API + "/user-update-settings", {method: 'post', body: JSON.stringify(obj)})
         .then((response) => { return response.json() })
         .then((data) => {
             //debugging
@@ -3855,7 +3866,8 @@ export default {
             "colorLoadingScreen": "#000000",
             "colorNavBackground": "#000000",
             "colorNavIcons": "#000000",
-            "colorSectionsBackground": "#000000",
+            "colorNavIconsText": "#000000",
+            "colorSectionBackground": "#000000",
             "colorText": "#000000",
             "loadingScreen": "false",
             "loadingScreenUrl": "",
@@ -3912,8 +3924,8 @@ export default {
         {
             console.log("password: " + editAccountDangerConfirmText.value)
 
-            //fetch update user catgories
-            await fetch(BACKEND_API + "/reset-user", {method: 'post', body: JSON.stringify(obj)})
+            //update user categories
+            await fetch(BACKEND_API + "/user-reset", {method: 'post', body: JSON.stringify(obj)})
             .then((response) => { return response.json() })
             .then((data) => {
                 //debugging
@@ -3959,8 +3971,8 @@ export default {
         {
             console.log("password: " + editAccountDangerConfirmText.value)
 
-            //fetch update user catgories
-            await fetch(BACKEND_API + "/delete-user", {method: 'post', body: JSON.stringify(obj)})
+            //delete user
+            await fetch(BACKEND_API + "/user-delete", {method: 'post', body: JSON.stringify(obj)})
             .then((response) => { return response.json() })
             .then((data) => {
                 //debugging

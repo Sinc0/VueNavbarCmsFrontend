@@ -97,11 +97,13 @@ export default {
   #loadingScreen 
   {
     display: none;
+    position: fixed;
     margin: 0px;
     padding: 0px;
     padding-top: 27vh;
     height: 90vh;
     width: 100vw;
+    z-index: 10;
     background-color: var(--loadingScreenBackgroundColor); /* #1a1a1a */
   }
   #loadingScreen img { max-width: 97vw; -webkit-user-drag: none; }
