@@ -7,13 +7,16 @@ import viewFrontend from '../views/viewFrontend.vue'
 
 //routes
 const routes = [
-  { path: '/', name: 'start', component: viewStart },
+  { path: '/', name: 'start-1', component: viewStart },
+  { path: '/start', name: 'start-2', component: viewStart },
   { path: '/backend', name: 'backend', component: viewBackend },
   
-  // { path: '/:sectionId', name: 'specifiedWithSectionId', component: viewMain },
-  // { path: '/:sectionId/:sectionCategory', name: 'specifiedWithSectionIdAndSectionCategory', component: viewMain },
+  { path: '/:domain/', name: 'frontend-1', component: viewFrontend },
+  { path: '/:domain/:section', name: 'frontend-2', component: viewFrontend },
+  { path: '/:domain/:section/:category', name: 'frontend-3', component: viewFrontend },
+  // { path: '/frontend', name: 'frontend', component: viewFrontend },
 
-  { path: '/frontend', name: 'frontend', component: viewFrontend },
+  { path :'/:pathMatch(.*)*', name: 'error', component: viewStart }
 ]
 
 
