@@ -1,19 +1,19 @@
 <template>
   <div id="viewBackend">
-    <componentBackend />
+    <ComponentBackend />
   </div>
 </template>
 
 
 <script>
 import {onMounted, onUpdated} from 'vue'
-import componentBackend from '@/components/componentBackend'
+import ComponentBackend from '@/components/componentBackend'
 
 export default {
   name: 'Home',
 
   components: {
-    componentBackend,
+    ComponentBackend,
   },
 
   setup() {

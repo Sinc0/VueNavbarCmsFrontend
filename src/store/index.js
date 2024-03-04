@@ -10,8 +10,6 @@ export default createStore({
         sections: null,
         categories: null,
         data: null,
-        // searchResults: null,
-        // searchString: null,
 
         //selected
         selectedSection: null,
@@ -40,6 +38,8 @@ export default createStore({
         frontendDataSelected: null,
         frontendSettings: null,
         frontendContact: null,
+        frontendSearchResults: null,
+        frontendSearchString: null,
       },
       
       getters: 
@@ -51,8 +51,6 @@ export default createStore({
         data(state) { return state.data },
         selectedSectionData(state) { return state.selectedSectionData },
         selectedSectionCategoryData(state) { return state.selectedSectionCategoryData },
-        // searchResults(state) { return state.searchResults },
-        // searchString(state) { return state.searchString },
         
         backendSections(state) { return state.backendSections },
         backendCategories(state) { return state.backendCategories },
@@ -73,6 +71,8 @@ export default createStore({
         frontendDataSelected(state) { return state.frontendDataSelected },
         frontendSettings(state) { return state.frontendSettings },
         frontendContact(state) { return state.frontendContact },
+        frontendSearchResults(state) { return state.frontendSearchResults },
+        frontendSearchString(state) { return state.frontendSearchString },
       },
 
       mutations: 
@@ -84,8 +84,6 @@ export default createStore({
         mutationSetData (state, value) { state.data = value },
         mutationSetSelectedSectionData(state, value) { state.selectedSectionData = value },
         mutationSetSelectedSectionCategoryData(state, value) { state.selectedSectionCategoryData = value },
-        // mutationSetSearchResults(state, value) { state.searchResults = value },
-        // mutationSetSearchString(state, value) { state.searchString = value },
         
         mutationSetBackendSections(state, value) { state.backendSections = value },
         mutationSetBackendCategories(state, value) { state.backendCategories = value },
@@ -106,6 +104,8 @@ export default createStore({
         mutationSetFrontendDataSelected(state, value) { state.frontendDataSelected = value },
         mutationSetFrontendSettings(state, value) { state.frontendSettings = value },
         mutationSetFrontendContact(state, value) { state.frontendContact = value },
+        mutationSetFrontendSearchResults(state, value) { state.frontendSearchResults = value },
+        mutationSetFrontendSearchString(state, value) { state.frontendSearchString = value },
       },
 
       actions: 
@@ -117,8 +117,6 @@ export default createStore({
         actionSetData({commit}, value) { commit('mutationSetData', value) },
         actionSetSelectedSectionData({commit}, value) { commit('mutationSetSelectedSectionData', value) },
         actionSetSelectedSectionCategoryData({commit}, value) { commit('mutationSetSelectedSectionCategoryData', value) },
-        // actionSetSearchResults({commit}, value) { commit('mutationSetSearchResults', value) },
-        // actionSetSearchString({commit}, value) { commit('mutationSetSearchString', value) },
        
         actionSetBackendSections({commit}, value) { commit('mutationSetBackendSections', value) },
         actionSetBackendCategories({commit}, value) { commit('mutationSetBackendCategories', value) },
@@ -139,5 +137,7 @@ export default createStore({
         actionSetFrontendDataSelected({commit}, value) { commit('mutationSetFrontendDataSelected', value) },
         actionSetFrontendSettings({commit}, value) { commit('mutationSetFrontendSettings', value) },
         actionSetFrontendContact({commit}, value) { commit('mutationSetFrontendContact', value) },
+        actionSetFrontendSearchResults({commit}, value) { commit('mutationSetFrontendSearchResults', value) },
+        actionSetFrontendSearchString({commit}, value) { commit('mutationSetFrontendSearchString', value) },
       }
 }}})

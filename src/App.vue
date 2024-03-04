@@ -28,7 +28,7 @@ import {onMounted, onUpdated} from 'vue'
 
 /*** elements ***/
 div { margin: 0px; padding: 0px; }
-body { margin: 0px; padding: 0px; }
+body { margin: 0px; padding: 0px; background-color: black; }
 
 
 /*** ids ***/

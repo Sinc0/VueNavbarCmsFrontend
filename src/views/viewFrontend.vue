@@ -1,5 +1,7 @@
 <template>
+  <div id="viewFrontend">
     <ComponentFrontend />
+  </div>
 </template>
 
 
@@ -16,8 +18,8 @@ export default {
 
   setup() {
     //lifecycle hooks
-    onMounted(() => { console.log("viewMain mounted") })
-    onUpdated(() => { console.log("viewMain updated") })
+    onMounted(() => { console.log("viewFrontend mounted") })
+    onUpdated(() => { console.log("viewFrontend updated") })
 
     return {
 

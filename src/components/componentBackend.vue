@@ -110,9 +110,6 @@
                             <input id="inputImageDescription" type="text" value="" placeholder="Description"  maxlength="100"/>
                             <input id="buttonEditDescription" class="editItemSave" type="button" value="✓" v-on:click="imageGalleryUpdateImageDescription()" />
                         </div>
-
-                        
-                  
                     </div>
 
                     <!-- data: textlist -->
@@ -239,11 +236,7 @@
                 <button id="buttonSave" v-on:click="saveChangesData('edit')">Confirm Save</button>
                 <button id="buttonDelete" v-on:click="saveChangesData('delete')">Confirm Delete</button>
             </div>
-
         </div>
-
-
-
 
 
         <!-- modal: underlay -->
@@ -357,6 +350,7 @@
             </div>
         </div>
 
+
         <!-- modal: edit account -->
         <div id="editAccountModal">
             
@@ -392,7 +386,25 @@
                 <!-- edit: account colors -->
                 <label class="editAccountTitle">Colors</label>
                 <div id="editAccountColors" class="editAccountSection">
+    
+                    <!-- color: section background -->
+                    <div id="" class="editAccountColors">
+                        <input id="editAccountColorSectionBackground" class="editAccountInputColor" type="text" maxlength="40" placeholder="..." />
+                        <label class="editAccountText"> Background</label>
+                    </div>
                     
+                    <!-- color: text -->
+                    <div id="" class="editAccountColors">
+                        <input id="editAccountColorText" class="editAccountInputColor" type="text" maxlength="40" placeholder="..." />
+                        <label class="editAccountText"> Text</label>
+                    </div>
+    
+                    <!-- color: loading screen -->
+                    <div id="" class="editAccountColors">
+                        <input id="editAccountColorLoadingScreen" class="editAccountInputColor" type="text" maxlength="40" placeholder="..." />
+                        <label class="editAccountText"> Loading Screen</label>
+                    </div>
+
                     <!-- color: nav background -->
                     <div id="editAccountNavBackgroundColor" class="editAccountColors">
                         <input id="editAccountColorNavBackground" class="editAccountInputColor" type="text" maxlength="40" placeholder="..." />
@@ -409,24 +421,6 @@
                     <div id="" class="editAccountColors">
                         <input id="editAccountColorNavIconsText" class="editAccountInputColor" type="text" maxlength="40" placeholder="..." />
                         <label class="editAccountText"> Nav Icons Text</label>
-                    </div>
-    
-                    <!-- color: text -->
-                    <div id="" class="editAccountColors">
-                        <input id="editAccountColorText" class="editAccountInputColor" type="text" maxlength="40" placeholder="..." />
-                        <label class="editAccountText"> Text</label>
-                    </div>
-    
-                    <!-- color: section background -->
-                    <div id="" class="editAccountColors">
-                        <input id="editAccountColorSectionBackground" class="editAccountInputColor" type="text" maxlength="40" placeholder="..." />
-                        <label class="editAccountText"> Section Background</label>
-                    </div>
-    
-                    <!-- color: loading screen -->
-                    <div id="" class="editAccountColors">
-                        <input id="editAccountColorLoadingScreen" class="editAccountInputColor" type="text" maxlength="40" placeholder="..." />
-                        <label class="editAccountText"> Loading Screen</label>
                     </div>
                 </div>
 
@@ -681,6 +675,7 @@
             <img id="settingsSectionsIcon" src="/iconSettingsSections.png" v-on:click="editSectionsModal(backendSections)"/>
         </div>
 
+
         <!-- button: edit account -->
         <div id="settingsAccount" v-on:click="editAccountModal(backendAccountSettings, backendAccountCredentials)">
         </div>
@@ -735,7 +730,7 @@ export default {
 
 
     //lifecycle hooks
-    onMounted(() => { console.log("componentBackend mounted"); fetchSpecificUser() })
+    onMounted(() => { console.log("componentBackend mounted"); fetchSpecificUser(); document.title = "Backend" })
     onUpdated(() => { console.log("componentBackend updated") })
 
 
@@ -1277,6 +1272,7 @@ export default {
         let pos = dataObjPosition.value
         let hidden = dataObjHidden.checked.toString()
         let title = dataObjTitle.value
+        let imageDescription = inputImageDescription.value.replaceAll("'", "’")  //replaceAll("'", "´")
         
         //null check
         if(inputImagePosition.value == '') { return }
@@ -1295,7 +1291,7 @@ export default {
             { 
                 console.log(galleryImages[item])
                 
-                galleryImages[item].description = inputImageDescription.value
+                galleryImages[item].description = imageDescription
             }
         }
 
@@ -1958,7 +1954,7 @@ export default {
             dataObjModalLink = document.getElementById("dataObjModal" + type + "Link#" + oldPos)
 
             //check forbidden characters
-            dataObjModalText.value = dataObjModalText.value.replaceAll("'", "´")
+            dataObjModalText.value = dataObjModalText.value.replaceAll("'", "’") //replaceAll("'", "´")
             // dataObjModalText.value = dataObjModalText.value.replaceAll("\"", "´")
             
             //variables
@@ -2232,8 +2228,13 @@ export default {
 
         sections = sections.sort((a, b) => { return a.pos - b.pos })
 
+        let categories = backendCategories.value.sort((a, b) => { return a.pos - b.pos })
+        let data = backendData.value
+
         //set local storage
         localStorage.setItem("cms-edit-section", JSON.stringify(sections))
+        localStorage.setItem("cms-edit-category", JSON.stringify(categories))
+        localStorage.setItem("cms-edit-data", JSON.stringify(data))
 
         //set vuex
         store.dispatch('storage/actionSetBackendSectionObjModal', sections)
@@ -2266,14 +2267,11 @@ export default {
         let updateStatusMessageUpdateCategories = document.getElementById("updateStatusMessageUpdateCategories")
         let editCategoryObjects = document.getElementsByClassName("editCategoryObj")
         let lsCategories = JSON.parse(localStorage.getItem('cms-edit-category'))
-        let selectedElement = ""
         
         //variables
         let isChanged = false
         let totalItems = 0
         let id = category.pos
-        let selectedElementBackgroundImageUrl = ""
-        let newTitle = ""
 
         //type: CLICK
         if(type == "click") 
@@ -2299,7 +2297,7 @@ export default {
                     { inputCategoryHidden.checked = false; inputCategoryHiddenToggleShow.style.display = "block" }
 
                     //set category background image
-                    if(lsCategories[item].backgroundImage == undefined || lsCategories[item].backgroundImage == null)
+                    if(lsCategories[item].backgroundImage == undefined || lsCategories[item].backgroundImage == null || lsCategories[item].backgroundImage == "")
                     { inputCategorySettingsBackgroundImageUrl.value = "" }
                     else if(lsCategories[item].backgroundImage != "")
                     { inputCategorySettingsBackgroundImageUrl.value = lsCategories[item].backgroundImage }
@@ -2343,12 +2341,12 @@ export default {
             {
                 if(oldCategoryPos == lsCategories[item].pos)
                 {
-                    selectedElement = document.getElementById("buttonCategorySettingsTitle#" + lsCategories[item].pos)
-                    newTitle = selectedElement.value
+                    let selectedElement = document.getElementById("buttonCategorySettingsTitle#" + lsCategories[item].pos)
+                    let newTitle = selectedElement.value
 
                     for(let c in lsCategories)
                     {
-                        if(lsCategories[c].section == selectedSection && newTitle == lsCategories[c].title) 
+                        if(lsCategories[c].section.toLowerCase() == selectedSection.toLowerCase() && newTitle.toLowerCase() == lsCategories[c].title.toLowerCase()) 
                         { 
                             categoryAlreadyExists = "true"
                         }
@@ -2361,11 +2359,23 @@ export default {
             { 
                 if(lsCategories[item].section == selectedSection && oldCategoryPos == lsCategories[item].pos) 
                 { 
-                    //set element
-                    selectedElement = document.getElementById("buttonCategorySettingsTitle#" + lsCategories[item].pos)
-                    newTitle = selectedElement.value
-                    selectedElementBackgroundImageUrl = document.getElementById("inputCategorySettingsBackgroundImageUrl")
+                    let selectedElement = document.getElementById("buttonCategorySettingsTitle#" + lsCategories[item].pos)
+                    let selectedElementBackgroundImageUrl = document.getElementById("inputCategorySettingsBackgroundImageUrl")
+                    let newTitle = selectedElement.value
+                    let fcc = forbiddenCharactersCheck(newTitle)
 
+                    //error: category contains forbidden characters
+                    if(fcc == true) 
+                    {   
+                        //update elements
+                        updateStatusMessageUpdateCategories.style.color = "red"
+                        updateStatusMessageUpdateCategories.innerText = "section " + newTitle.toLowerCase() + " contains forbidden characters"
+                        updateStatusMessageUpdateCategories.style.display = "block"
+
+                        return
+                    }
+
+                    //error: category already exists
                     if(lsCategories[item].title != newTitle)
                     {
                         //set old title
@@ -2376,7 +2386,7 @@ export default {
                         if(categoryAlreadyExists == "true" && lsCategories[item].oldTitle != newTitle)
                         {
                             updateStatusMessageUpdateCategories.style.color = "red"
-                            updateStatusMessageUpdateCategories.innerText = "category " + newTitle + " already exists"
+                            updateStatusMessageUpdateCategories.innerText = "category " + newTitle.toLowerCase() + " already exists"
                             updateStatusMessageUpdateCategories.style.display = "block"
                             return
                         }
@@ -2388,6 +2398,8 @@ export default {
                     //set new background image
                     if(selectedElementBackgroundImageUrl.value != "") 
                     { lsCategories[item].backgroundImage = selectedElementBackgroundImageUrl.value }
+                    else
+                    { lsCategories[item].backgroundImage = "" }
 
                     //reload edit categories data
                     editCategoriesModal(lsCategories)
@@ -2617,8 +2629,9 @@ export default {
         let editSectionObjects = document.getElementsByClassName("editSectionObj")
         let lsSections = JSON.parse(localStorage.getItem('cms-edit-section'))
         let lsCategories = JSON.parse(localStorage.getItem('cms-edit-category'))
+        let lsData = JSON.parse(localStorage.getItem("cms-edit-data"))
         let selectedElement = ""
-        let newTitle = ""
+        // let newTitle = ""
         
         //variables
         let isChanged = false
@@ -2626,6 +2639,7 @@ export default {
         let id = section.pos
         let selectedSection = toRaw(section).title
         let lsCategoriesNew = []
+        let backendDataNew = ""
         // console.log(selectedSection.title)
 
         //type: CLICK
@@ -2662,11 +2676,8 @@ export default {
 
             //add obj to array
             lsSections.push({
-                appBackgroundColor: "white",
                 hidden: 'false', 
-                iconImage: '',
                 pos: totalItems, 
-                sectionBackgroundColor: 'gray', 
                 title: 'section' + totalItems.toString()
             })
 
@@ -2683,20 +2694,34 @@ export default {
         //type: SAVE
         else if(type == "save") 
         {   
+            //check if section already exist
             for(let item in lsSections)
             {
                 if(oldSectionPos == lsSections[item].pos)
                 {
-                    selectedElement = document.getElementById("buttonSectionSettingsTitle#" + lsSections[item].pos)
-                    newTitle = selectedElement.value
+                    let selectedElement = document.getElementById("buttonSectionSettingsTitle#" + lsSections[item].pos)
+                    let newTitle = selectedElement.value
+                    let fcc = forbiddenCharactersCheck(newTitle)
+                    
+                    //error: section contains forbidden characters
+                    if(fcc == true) 
+                    {
+                        //update elements
+                        updateStatusMessageUpdateSections.style.color = "red"
+                        updateStatusMessageUpdateSections.innerText = "section " + newTitle.toLowerCase() + " contains forbidden characters"
+                        updateStatusMessageUpdateSections.style.display = "block"
 
+                        return
+                    }
+
+                    //error: section already exists
                     for(let c in lsSections)
                     {
-                        if(newTitle == lsSections[c].title) 
+                        if(newTitle.toLowerCase() == lsSections[c].title.toLowerCase()) 
                         { 
                             console.log("section " + newTitle + " already exists") 
                             updateStatusMessageUpdateSections.style.color = "red"
-                            updateStatusMessageUpdateSections.innerText = "section " + newTitle + " already exists"
+                            updateStatusMessageUpdateSections.innerText = "section " + newTitle.toLowerCase() + " already exists"
                             updateStatusMessageUpdateSections.style.display = "block"
 
                             return
@@ -2705,21 +2730,56 @@ export default {
                 }
             }
 
+            //set new values
             for(let item in lsSections) 
             { 
                 if(oldSectionPos == lsSections[item].pos) 
                 { 
                     //set element
                     selectedElement = document.getElementById("buttonSectionSettingsTitle#" + lsSections[item].pos)
+                    // lsSections = JSON.parse(localStorage.getItem('cms-edit-section'))
+                    // lsCategories = JSON.parse(localStorage.getItem('cms-edit-category'))
+                    
+                    //set old title
+                    // let oldTitle = lsSections[item].oldTitle
+                    let oldTitle = lsSections[item].title
+                    lsSections[item].oldTitle = oldTitle
+                    // if(oldTitle == null) { lsSections[item].oldTitle = lsSections[item].title; oldTitle = lsSections[item].title }
                     
                     //set new title
-                    lsSections[item].title = selectedElement.value
+                    let newTitle = selectedElement.value
+                    lsSections[item].title = newTitle
+
+                    //set categories new section
+                    for(let item in lsCategories)
+                    {
+                        if(oldTitle == lsCategories[item].section) 
+                        { 
+                            // console.log(lsCategories[item].section)
+                            lsCategories[item].section = newTitle 
+                        }
+
+                        // lsCategoriesNew.push(lsCategories[item])
+                    }
+
+                    //set data new section
+                    for(let item in lsData)
+                    {
+                        if(oldTitle == lsData[item].section)
+                        {
+                            // console.log(lsData[item].section)
+                            lsData[item].section = newTitle
+                        }
+                    }
 
                     //reload edit categories data
                     editSectionsModal(lsSections)
             
                     //select new section
                     editSection({pos: lsSections[item].pos}, "click")
+
+                    //set status
+                    isChanged = true
                 }
             }
         }
@@ -2801,12 +2861,14 @@ export default {
                 }
             }
 
-            //remove section categories            
+            //remove related section categories 
+            let lsCategoriesNew = []           
             for(let item in lsCategories)
             {
                 if(sectionTitle != lsCategories[item].section) { lsCategoriesNew.push(lsCategories[item]) }
             }
 
+            lsCategories = lsCategoriesNew
             // console.log(lsCategories)
             // console.log(lsCategoriesNew)
 
@@ -2938,7 +3000,8 @@ export default {
         else if(isChanged == true) 
         { 
             localStorage.setItem("cms-edit-section", JSON.stringify(lsSections))
-            localStorage.setItem("cms-edit-category", JSON.stringify(lsCategoriesNew))
+            localStorage.setItem("cms-edit-category", JSON.stringify(lsCategories))
+            localStorage.setItem("cms-edit-data", JSON.stringify(lsData))
         }
 
     }
@@ -3094,29 +3157,30 @@ export default {
         console.log("saveChangesSections")
 
         //variables
-        let ls = JSON.parse(localStorage.getItem("cms-edit-section"))
+        let lsSections = JSON.parse(localStorage.getItem("cms-edit-section"))
+        let lsCategories = JSON.parse(localStorage.getItem("cms-edit-category"))
+        let lsData = JSON.parse(localStorage.getItem("cms-edit-data"))
         let newBackendSections = []
         
         //add sections to new array
-        for(let item in ls)
+        for(let item in lsSections)
         {
-            newBackendSections.push(ls[item])
+            newBackendSections.push(lsSections[item])
             // newBackendSections.push({
-            //     category: ls[item].title, 
-            //     oldTitle: ls[item].oldTitle, 
+            //     category: lsSections[item].title, 
+            //     oldTitle: lsSections[item].oldTitle, 
             //     rows: '', 
-            //     section: ls[item].section
+            //     section: lsSections[item].section
             // })
         }
-        console.log(newBackendSections)
+        // console.log(newBackendSections)
 
         //reload edit sections modal
-        editSectionsModal(ls)
+        editSectionsModal(lsSections)
 
         //update DB
+        updateUserCategories(lsCategories, lsData)
         updateUserSections(newBackendSections)
-        // let ls = JSON.parse(localStorage.getItem("cms-edit-category"))
-        // updateUserCategories(ls, newBackendData)
     }
     
     
@@ -4129,6 +4193,47 @@ export default {
     }
 
 
+    function removeForbiddenCharacters(value)
+    {
+        value = value.replaceAll("'","’")  
+        value = value.replaceAll("\\", "")
+        value = value.replaceAll("/", "")
+        // value = value.replaceAll("'", "´")
+        // value = value.replaceAll("'", "\"")
+
+        return value
+    }
+
+
+    function forbiddenCharactersCheck(value)
+    {   
+        //debugging
+        console.log("forbiddenCharactersCheck: " + value)
+        
+        //variables
+        let allowedCharacters = [
+            "a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z",
+            "0","1","2","3","4","5","6","7","8","9","-"," "
+        ]
+        let valueString = value.toString().toLowerCase()
+        let totalForbiddenCharacters = value.length
+
+        //count forbidden characters
+        for(let item in valueString)
+        {
+            for(let c in allowedCharacters)
+            {
+                if(valueString[item] == allowedCharacters[c]) { totalForbiddenCharacters-- ; break }
+            }
+        }
+        // console.log("totalForbiddenCharacters: " + totalForbiddenCharacters)
+
+        //return value
+        if(totalForbiddenCharacters == 0) { return false }
+        else if(totalForbiddenCharacters != 0) { return true }
+    }
+
+
     return {
         //variables
         backendSections,
@@ -4385,6 +4490,8 @@ export default {
         display: flex;
         flex-direction: row; 
         justify-content: left; 
+        white-space: nowrap;
+        overflow-x: scroll;
         border: 0px solid black;
         background-color: black; 
     }
