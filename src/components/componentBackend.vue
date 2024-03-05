@@ -3186,16 +3186,20 @@ export default {
     
     function confirmCheckboxUpdateSections()
     {
+        //elements
         let confirmChangesCheckboxUpdateSections = document.getElementById("confirmChangesCheckboxUpdateSections")
         let buttonSaveUpdateSections = document.getElementById("buttonSaveUpdateSections")
         let checkboxSaveUpdateSections = document.getElementById("checkboxSaveUpdateSections")
 
+        //show update button
         if(checkboxSaveUpdateSections.checked == true) 
         { 
             confirmChangesCheckboxUpdateSections.style.display = "block"
             buttonSaveUpdateSections.style.display = "block"
             buttonSaveUpdateSections.scrollIntoView()
         }
+
+        //hide update button
         else if(checkboxSaveUpdateSections.checked == false) 
         { 
             confirmChangesCheckboxUpdateSections.style.display = "none"
@@ -3206,10 +3210,6 @@ export default {
     
     function editAccountModal(settings, credentials)
     {
-        console.log(credentials)
-        console.log(settings)
-        console.log(settings.navPosition)
-
         //elements
         let editAccountModal = document.getElementById("editAccountModal")
         let underlayModal = document.getElementById("underlayModal")
@@ -3276,8 +3276,8 @@ export default {
         editAccount("buttonContact", settings.buttonContact, 'false')
         editAccount("buttonAbout", settings.buttonAbout, 'false')
         editAccount("modeSlideshow", settings.modeSlideshow, 'false')
-        editAccount("sectionBackgroundImage", settings.modeSlideshow, 'false')
-        editAccount("loadingScreen", settings.modeSlideshow, 'false')
+        editAccount("sectionBackgroundImage", settings.sectionBackgroundImage, 'false')
+        editAccount("loadingScreen", settings.loadingScreen, 'false')
         editAccount("username", '', 'false')
         editAccount("domain", '', 'false')
         editAccount("email", '', 'false')
@@ -3295,8 +3295,6 @@ export default {
     
     function editAccount(type, value, clicked)
     {
-        console.log("editAccount: " + type + " = " + value)
-
         //elements
         let editAccountModal = document.getElementById("editAccountModal")
         let editAccountNavTop = document.getElementById("editAccountNavTop")
@@ -3389,10 +3387,6 @@ export default {
             {
                 editAccountChangePassword.style.display = "block"
             }
-            // else if(editAccountChangePassword.style.display == "block")
-            // {
-            //     editAccountChangePassword.style.display = "none"
-            // }
         }
         else if(type == "domain") { editAccountDomain.value = backendAccountCredentials.value.domain }
         else if(type == "name") { editAccountName.value = backendAccountCredentials.value.name }
@@ -3777,8 +3771,6 @@ export default {
 
     async function saveChangesSettings()
     {
-        console.log("saveChangesSettings")
-
         //elements
         let editAccountUsername = document.getElementById("editAccountUsername")
         let editAccountDomain = document.getElementById("editAccountDomain")
@@ -3969,16 +3961,20 @@ export default {
 
     function confirmCheckboxUpdateSettings()
     {
+        //elements
         let confirmChangesUpdateSettings = document.getElementById("confirmChangesUpdateSettings")
         let buttonSaveUpdateSettings = document.getElementById("buttonSaveUpdateSettings")
         let checkboxSaveUpdateSettings = document.getElementById("checkboxSaveUpdateSettings")
 
+        //show update button
         if(checkboxSaveUpdateSettings.checked == true) 
         { 
             confirmChangesUpdateSettings.style.display = "block"
             buttonSaveUpdateSettings.style.display = "block"
             buttonSaveUpdateSettings.scrollIntoView()
         }
+
+        //hide update button
         else if(checkboxSaveUpdateSettings.checked == false) 
         { 
             confirmChangesUpdateSettings.style.display = "none"
@@ -4195,12 +4191,13 @@ export default {
 
     function removeForbiddenCharacters(value)
     {
+        //format value
         value = value.replaceAll("'","’")  
         value = value.replaceAll("\\", "")
         value = value.replaceAll("/", "")
         // value = value.replaceAll("'", "´")
         // value = value.replaceAll("'", "\"")
-
+        
         return value
     }
 
@@ -4310,9 +4307,11 @@ export default {
     #dataObjModalPreviewImages::-webkit-scrollbar-track { background: black; }
     #dataObjModalPreviewImages::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.1); }
     
+
     /*** elements ***/
     input[type='radio'] { accent-color:  #822c8b; }
     input[type='checkbox'] { accent-color:  #822c8b; }
+
 
     /*** ids ***/
     #componentBackend { height: 100vh; width: 100vw; margin: auto; padding: 0px; color: white; background-color: #1D212E; }
@@ -4803,6 +4802,7 @@ export default {
         background-color: black; /* #822c8b */
         border: 0px solid white;
     }
+
 
     /*** classes ***/
     .section 

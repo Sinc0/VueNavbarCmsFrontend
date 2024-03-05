@@ -4,66 +4,51 @@
         <div hidden id="routerCurrentPathElement" v-if="router">{{router.currentRoute.value.fullPath}}</div>
         
 
-        <!-- background image underlay -->
-        <div id="backgroundImageUnderlay" v-on:click="backgroundImageUnderlaySetOpacity('0.6')"></div>
+        <!-- category underlay -->
+        <div id="categoryUnderlay" v-on:click="categoryUnderlaySetOpacity('0.6')"></div>
 
 
-        <!-- sections -->
+        <!-- sections nav bar -->
         <div id="frontendSections">
             <div id="frontendSectionsList">
                 <div id="buttonStart" class="section" v-on:click="setRoutePath('start')">ㅤ</div>
                 <div id="buttonSelectSections" class="section" v-on:click="loadSectionNavigatorModal()">ㅤ</div>
                 <div id="buttonAbout" class="section" v-on:click="loadAboutModal()">ㅤ</div>
-                <div id="buttonContact" class="section" v-on:click="loadContactModal()">ㅤ</div>
                 <div id="buttonFullscreen" class="section" v-on:click="fullscreen()"></div>
                 <div id="buttonSearch" class="section" v-on:click="loadSearchModal()">ㅤ</div>
+                <!-- <div id="buttonContact" class="section" v-on:click="loadContactModal()">ㅤ</div> -->
                 <!-- <div id="buttonIndex" class="section" v-on:click="setRoutePath('index')">ㅤ</div> -->
                 <!-- <div id="buttonEnd" class="section" v-on:click="setRoutePath('end')">Eㅤ</div> -->
-
-                <!-- <div v-bind:id="'section#' + section.pos" class="section" v-for="section in sortFrontendSections(frontendSections)" v-on:click="loadSectionCategories(section, '', '')" v-bind:title="section.title">
-                    {{section.pos}}
-                </div> -->
             </div>
         </div>
 
 
-        <!-- categories -->
+        <!-- selected category -->
         <div id="frontendCategories" v-if="frontendCategories">
-            <!-- variables -->
-            <!-- <div hidden>{{firstCategory = sortFrontendCategories(frontendCategoriesSelected)[0]}}</div> -->
-            
-            <!-- select category -->
             <div id="selectedCategoryTitle" v-on:click.left="loadCategoryNavigatorModal()" v-on:click.middle="loadNextCategory()">
-                <!-- {{firstCategory.title}} -->
             </div>
-
-            <!-- <div id="frontendCategoriesList">
-                <input type="button" v-bind:id="'category#' + category.pos" class="category" 
-                    v-for="category in sortFrontendCategories(frontendCategoriesSelected)" 
-                    v-on:click="loadCategoryData(category.section , category.title, category.pos)" 
-                    v-bind:value="category.title" 
-                />
-            </div>  -->
         </div>
 
 
         <!-- data -->
         <div id="frontendData">
+
             <!-- select data row -->
             <div id="frontendDataRows">
                 <div v-bind:id="'data' + data.pos" v-for="data in sortFrontendDataSelected(frontendDataSelected)">
-                    <!-- type: multiline -->
+                    
+                    <!-- multiline -->
                     <div class="dataMultiline" v-if="data.type == 'multiline' && data.hidden == 'false'">
                         <!-- title -->
                         <div id="frontendDataTitleMultiline" class="frontendDataTitle">{{data.title}}</div>
-                        
+
+                        <!-- data -->
                         <div class="frontendDataData" v-for="item in loadDataData(data)">
-                            <!-- <div class="">{{item}}</div> -->
                             <div class="multiline">{{item.text}}</div>
                         </div>
                     </div>
                     
-                    <!-- type: singleline -->
+                    <!-- singleline -->
                     <div class="dataSingleline" v-else-if="data.type == 'singleline' && data.hidden == 'false'">
                         <!-- variables -->
                         <div hidden>{{singlelineData = loadDataData(data)}}</div>
@@ -75,7 +60,7 @@
                         <div class="singleline frontendDataData" v-if="singlelineData != ''">{{singlelineData}}</div>
                     </div>
 
-                    <!-- type: timeline -->
+                    <!-- timeline -->
                     <div class="dataTimeline" v-else-if="data.type == 'timeline' && data.hidden == 'false'">
                         <!-- variables -->
                         <div hidden>{{timelineData = loadDataData(data)}}</div>
@@ -92,19 +77,18 @@
                         </div>
                     </div>
 
-                    <!-- type: linklist -->
+                    <!-- linklist -->
                     <div class="dataLinklist" v-else-if="data.type == 'linklist' && data.hidden == 'false'">
                         <!-- title -->
                         <div id="frontendDataTitleLinklist" class="frontendDataTitle">{{data.title}}</div>
 
+                        <!-- data -->
                         <div class="frontendDataData" v-for="item in loadDataData(data)">
-                            <!-- <div class="">{{item}}</div> -->
-                            <!-- <span class="dot">• </span> -->
                             <a class="linklist" v-bind:href="item.link">⮩⠀{{item.text}}</a>
                         </div>
                     </div>
 
-                    <!-- type: textlist -->
+                    <!-- textlist -->
                     <div class="dataTextlist" v-else-if="data.type == 'textlist' && data.hidden == 'false'">
                         <!-- title -->
                         <div id="frontendDataTitleTextlist" class="frontendDataTitle">{{data.title}}</div>
@@ -115,8 +99,9 @@
                         </div>
                     </div>
 
-                    <!-- type: galleryImages -->
+                    <!-- galleryImages -->
                     <div class="imageGallery" v-else-if="data.type == 'galleryImages' && data.hidden == 'false'">
+                        <!-- variables -->
                         <div hidden>{{galleryData = loadDataData(data)}}</div>
                         <div hidden>{{firstGalleryImage = loadDataData(data)[0]}}</div>
                         <div hidden>{{totalImgs = galleryData.length}}</div>
@@ -125,8 +110,6 @@
                         <div id="frontendDataTitleImageGallery" class="frontendDataTitle" v-if="data.title != ''">{{data.title}}</div>
 
                         <div class="frontendDataData">
-                            <!-- <div class="">{{firstGalleryImage}}</div> -->
-
                             <!-- first gallery image -->
                             <p v-bind:id="'galleryImagePos#' + data.pos" class="galleryImagePos">{{firstGalleryImage.pos}}/{{totalImgs}}</p>
                             <img v-bind:id="'imageGallery#' + data.pos" class="galleryImageSource" v-bind:src='firstGalleryImage.image' v-bind:alt='(firstGalleryImage.pos - 1)' v-on:click.left="nextImageGalleryItem(data.pos, data.data)" v-on:click.right="previousImageGalleryItem(data.pos, data.data)" />
@@ -140,7 +123,7 @@
 
         <!-- extra page: start -->
         <div id="pageStart" class="extraPage">
-            <p class="pageTitle">Start</p>
+            <!-- title -->
             <div id="pageStartTitle" v-if="frontendSettings">{{frontendSettings.pageStartTitle}}</div>
             <div id="pageStartText" v-if="frontendSettings">{{frontendSettings.pageStartText}}</div>
         </div>
@@ -148,7 +131,7 @@
 
         <!-- extra page: index -->
         <div id="pageIndex" class="extraPage">
-            <p class="pageTitle">Index</p>
+            <!-- <p class="pageTitle">Index</p> -->
 
             <div id="pageIndexSections" v-if="frontendSections && frontendCategories">
                 <div class="pageIndexSection" v-for="item in frontendSections">
@@ -168,7 +151,6 @@
 
         <!-- extra page: end -->
         <div id="pageEnd" class="extraPage">
-            <p class="pageTitle">End</p>
             <div id="pageEndTitle" v-if="frontendSettings">{{frontendSettings.pageEndTitle}}</div>
             <div id="pageEndText" v-if="frontendSettings">{{frontendSettings.pageEndText}}</div>            
         </div>
@@ -201,8 +183,6 @@
 
         <!-- modal: navigator categories -->
         <div id="categoryNavigatorModal" v-if="frontendCategories">
-            <!-- <div hidden>{{currentSection = frontendCategoriesSelected[0].section}}</div> -->
-            
             <p class="navigatorModalTitle">Categories</p> <!-- Categories · {{currentSection}} -->
             <!-- <p class="navigatorModalTitle">Categories · {{frontendCategoriesSelected.length}}</p> -->
 
@@ -217,15 +197,49 @@
 
         <!-- modal: about -->
         <div id="aboutModal" v-if="frontendSettings">
+        
+            <!-- about -->
             <p id="aboutTitle" class="modalTitle">About</p>
-            <p id="aboutText">{{frontendSettings.buttonAboutText}}</p>
+            <div id="infoAboutText">
+                <p id="aboutText">{{frontendSettings.buttonAboutText}}</p>
+            </div>
+            
+            <!-- contact -->
+            <p id="aboutTitle" class="modalTitle">Contact</p>
+            <div id="infoContactDetails" v-if="frontendContact">
+                <div id="contactEmail" class="contactCategory" v-if="frontendContact.email">
+                    <img src="/iconContactEmail.png" class="contactDetailThumbnail" />
+                    <p class="contactDetailText">{{frontendContact.email}}</p>
+                </div>
+
+                <div id="contactName" class="contactCategory" v-if="frontendContact.name">
+                    <img src="/iconContactName.png" class="contactDetailThumbnail" />
+                    <p class="contactDetailText">{{frontendContact.name}}</p>
+                </div>
+                
+                <div id="contactPhone" class="contactCategory" v-if="frontendContact.phone">
+                    <img src="/iconContactPhone.png" class="contactDetailThumbnail" />
+                    <p class="contactDetailText">{{frontendContact.phone}}</p>
+                </div>
+                
+                <div id="contactCountry" class="contactCategory" v-if="frontendContact.country">
+                    <img src="/iconContactCountry.png" class="contactDetailThumbnail" />
+                    <p class="contactDetailText">{{frontendContact.country}}</p>
+                </div>
+            </div>
+            
+            <!-- keybinds -->
+            <p id="aboutTitle" class="modalTitle">Keybinds</p>
+            
+            <!-- privacy policy -->
+            <p id="aboutTitle" class="modalTitle">Privacy Policy</p>
         </div>
 
 
         <!-- modal: contact -->
         <div id="contactModal" v-if="frontendContact">
             <p id="contactTitle" class="modalTitle">Contact</p>
-            <!-- {{frontendContact}} -->
+            
             <div id="contactEmail" class="contactCategory" v-if="frontendContact.email">
                 <img src="/iconContactEmail.png" class="contactDetailThumbnail" />
                 <p class="contactDetailText">{{frontendContact.email}}</p>
@@ -264,51 +278,47 @@
 
         <!-- modal: search -->
         <div id="searchModal">
-            <div id="searchModalHitsCategories" v-if="frontendSearchResults">
-                <!-- <div class="searchHitCategory">{{frontendSearchResults.length}} Hits</div> -->
-                <!-- <div class="dotSearchCategory"> · </div> -->
 
+            <!-- search result categories -->
+            <div id="searchModalHitsCategories" v-if="frontendSearchResults">
+                
                 <!-- search results: all -->
-                <div id="searchHitCategoryAll" class="searchHitCategory" v-on:click="selectSearchHitsCategory('all', frontendSearchResults)">
+                <div id="searchHitCategoryAll" class="searchHitCategory" v-on:click="selectSearchHitsCategory('all')">
                     All ({{frontendSearchResults.length}})
                 </div>
                 <div class="dotSearchCategory"> · </div>
 
                 <!-- search results: images -->
-                <div id="searchHitCategoryImages" class="searchHitCategory" v-on:click="selectSearchHitsCategory('images', frontendSearchResults)">
+                <div id="searchHitCategoryImages" class="searchHitCategory" v-on:click="selectSearchHitsCategory('images')">
                     Images ({{filterSearchResults('images', frontendSearchResults).length}})
                 </div>
                 <div class="dotSearchCategory"> · </div>
 
                 <!-- search results: texts -->
-                <div id="searchHitCategoryTexts" class="searchHitCategory" v-on:click="selectSearchHitsCategory('texts', frontendSearchResults)">
+                <div id="searchHitCategoryTexts" class="searchHitCategory" v-on:click="selectSearchHitsCategory('texts')">
                     Others ({{filterSearchResults('texts', frontendSearchResults).length}})
                 </div>
                 <div class="dotSearchCategory"> · </div>
 
                 <!-- search results: sections -->
-                <div id="searchHitCategorySections" class="searchHitCategory" v-on:click="selectSearchHitsCategory('sections', frontendSearchResults)">
+                <div id="searchHitCategorySections" class="searchHitCategory" v-on:click="selectSearchHitsCategory('sections')">
                     Sections ({{filterSearchResults('sections', frontendSearchResults).length}})
                 </div>
                 <div class="dotSearchCategory"> · </div>
 
                 <!-- search results: categories -->
-                <div id="searchHitCategoryCategories" class="searchHitCategory" v-on:click="selectSearchHitsCategory('categories', frontendSearchResults)">
+                <div id="searchHitCategoryCategories" class="searchHitCategory" v-on:click="selectSearchHitsCategory('categories')">
                     Categories ({{filterSearchResults('categories', frontendSearchResults).length}})
                 </div>
-
-                <!-- <div class="dotSearchCategory"> · </div> -->
-                <!-- <div class="searchHitCategory">Lists</div> -->
-                <!-- <div class="dotSearchCategory"> · </div> -->
-                <!-- <div class="searchHitCategory">Timelines</div> -->
             </div>
-            <!-- <div id="searchModalTotalHits" v-if="frontendSearchResults">{{frontendSearchResults.length}} Hits</div> -->
+
+            <!-- search input -->
             <input id="searchModalInput" type="text" placholder="..." @keyup.enter="setSearchPath()" maxlength="40" />
 
+            <!-- search result items -->
             <div id="searchModalResults" v-if="frontendSearchResults">
-                <!-- <div id="" class="searchResultItem">Sections: {{frontendSearchResults.length}} Categories: {{frontendSearchResults.length}} Data: {{frontendSearchResults.length}}</div> -->
-                
                 <div v-bind:id="'searchResultItem#' + (index + 1)" class="" v-for="(item, index) in frontendSearchResults">
+                    
                     <!-- section -->
                     <div class="searchResultSection searchResultItem" v-if="item.searchResultType == 'section'" v-on:click="setRoutePath(item.title)">
                         <span class="searchResultDataType">section</span>
@@ -332,7 +342,6 @@
                             <span class="searchResultDataType" v-else-if="item.dataType == 'timeline'">timeline</span>
                             <span class="searchResultDataType" v-else-if="item.dataType == 'singleline'">text</span>
                             <span class="searchResultDataType" v-else-if="item.dataType == 'multiline'">text</span>
-                            <!-- <span class="searchResultDataType" v-else>{{item.dataType}}</span> -->
                             <span class="dotSearchItem">·</span> 
                             <span>{{item.text}}</span>
                         </div>
@@ -343,34 +352,31 @@
                         <img class="searchResultDataImage" v-bind:src="item.image" />
                         <div class="searchResultDataDescription">{{item.description}}</div>
                     </div>
-
-                    <!-- <div v-else class="searchResultItem">{{item}}</div> -->
                 </div>
             </div>
         </div>
 
 
         <!-- mobile -->
-        <div id="mobileNavigatorButton" v-on:click="displayMobileNavigator()"></div>
-        <div id="mobileNavigatorModal">
+        <!-- <div id="mobileNavigatorButton" v-on:click="displayMobileNavigator()"></div> -->
+        <!-- <div id="mobileNavigatorModal"> -->
             <!-- <p class="selectSection">Select Section:</p> -->
 
-            <p class="selectSection" v-on:click="loadAboutModal()">About</p>
-            <p class="selectSection" v-on:click="">Info</p>
-            <p class="selectSection" v-on:click="">Contact</p>
-            <p class="selectSection" v-on:click="">Search</p>
-            <p class="selectSection" v-on:click="">---</p>
+            <!-- <p class="selectSection" v-on:click="loadAboutModal()">About</p> -->
+            <!-- <p class="selectSection" v-on:click="">Info</p> -->
+            <!-- <p class="selectSection" v-on:click="">Contact</p> -->
+            <!-- <p class="selectSection" v-on:click="">Search</p> -->
+            <!-- <p class="selectSection" v-on:click="">---</p> -->
             <!-- <p class="selectSection" v-on:click="setRoutePath('index')">Index</p> -->
             
-            <p class="selectSection" v-on:click="setRoutePath('start')">Start</p>
-            <div id="" class="selectSection" v-for="item in sortFrontendSections(frontendSections)" v-on:click="loadSectionCategories(item, '', '')">
-                {{item.title}}
+            <!-- <p class="selectSection" v-on:click="setRoutePath('start')">Start</p> -->
+            <!-- <div id="" class="selectSection" v-for="item in sortFrontendSections(frontendSections)" v-on:click="loadSectionCategories(item, '', '')"> -->
+                <!-- {{item.title}} -->
                 <!-- {{item.pos}}: {{item.title}} -->
-            </div>
+            <!-- </div> -->
             
-            <p class="selectSection" v-on:click="setRoutePath('end')">End</p>
-        </div>
-
+            <!-- <p class="selectSection" v-on:click="setRoutePath('end')">End</p> -->
+        <!-- </div> -->
     </div>
 </template>
 
@@ -397,7 +403,6 @@ export default {
     const frontendContact = computed(() => { return store.getters['storage/frontendContact']})
     const frontendSearchResults = computed(() => { return store.getters['storage/frontendSearchResults']})
     const frontendSearchString = computed(() => { return store.getters['storage/frontendSearchString']})
-    // const frontendCategoriesSelected = computed(() => { return store.getters['storage/frontendCategoriesSelected']})
 
 
     //globals
@@ -405,43 +410,44 @@ export default {
     var selectedSection = ""
     var selectedCategoryPos = ""
     var settings = ""
+    var selectedElement = ""
 
 
-    //lifecycle hooks
-    onMounted(() => { 
-        console.log("componentFrontend mounted") 
-        fetchDomain()
-    })
+    //lifecycle hook: on mounted
+    onMounted(() => { console.log("componentFrontend mounted"); fetchDomain() })
     
+
+    //lifecycle hook: on updated
     onUpdated(() => {
         console.log("componentFrontend updated")
-
+        
+        //variables
         let routerCurrentPathElement = document.getElementById("routerCurrentPathElement").innerText
         let routeParams = router.currentRoute.value.params
         let routeCurrentPath = router.currentRoute.value.fullPath
         let routePreviousPath = router.options.history.state.back
-        // let currentRouteString = router.currentRoute.value.fullPath
+        let currentRouteString = router.currentRoute.value.fullPath
 
-        // console.log("previous path: " + routePreviousPath)
-        // console.log("current path: " + routeCurrentPath)
-        // console.log("current path element: " + routerCurrentPathElement.innerText)
-        // console.log(routerCurrentPathElement + "/" + routeCurrentPath)
-        console.log(routeParams)
-        console.log(routePreviousPath)
-        console.log(routeCurrentPath)
-        console.log(routerCurrentPathElement)
+        //debugging
+        // console.log(routeParams)
+        // console.log(routePreviousPath)
+        // console.log(routeCurrentPath)
+        // console.log(routerCurrentPathElement)
         
+        //load route
         if(routeCurrentPath != routePreviousPath) { handleRouting(routeParams) }
-        // if("/" + routeParams.domain + "/" + routeParams.section == routeCurrentPath) { handleRouting(routeParams) }
-        // if(routerCurrentPathElement != routeCurrentPath) { handleRouting(routeParams) }
     })
 
 
-    //event listeners
+    //event listener: keyboard
     document.addEventListener('keyup', function(e) 
     { 
         //debugging
-        // console.log(e) 
+        // console.log(e)
+
+        //null check
+        if(selectedElement == 'searchModal' && e.code == "Escape") { undisplayModals(); selectedElement = "" }
+        else if(selectedElement == 'searchModal' && e.code != "Escape") { return }
 
         //single key
         if(e.code == "Escape") { undisplayModals() }
@@ -454,30 +460,34 @@ export default {
         
         //shift + key
         else if(e.shiftKey && e.code == "KeyF") { fullscreen() }
+        else if(e.shiftKey && e.code == "KeyS") { loadSectionNavigatorModal() }
+        else if(e.shiftKey && e.code == "KeyC") { loadCategoryNavigatorModal() }
         // else if(e.shiftKey && e.code == "ArrowRight") { }
         // else if(e.shiftKey && e.code == "ArrowLeft") { }
+
+        //ctrl + key
+        // else if(e.ctrlKey && e.code == "KeyF") { selectedElement = "" }
+        // else if(e.shiftKey && e.code == "KeyS") { selectedElement = "" }
     })
     
+
+    //event listener: default browser context menu
     document.addEventListener('contextmenu', function(e)
     {
         //prevent default browser right click window
         e.preventDefault()
     })
+    
 
+    //event listener: mouse scroll wheel
     document.addEventListener('wheel', function(e) {
         //elements 
         let searchModalHitsCategories = document.getElementById("searchModalHitsCategories")
-        // let dataObjModalPreviewImages = document.getElementById("dataObjModalPreviewImages")
-
+        
         //categories horizontal scroll
         if (e.deltaY > 0) { if(searchModalHitsCategories != null) { searchModalHitsCategories.scrollLeft += 60; } }
         else { if(searchModalHitsCategories != null) { searchModalHitsCategories.scrollLeft -= 60; } }
     })
-
-    // document.addEventListener('wheel', function(e) {
-    //     if(e.ctrlKey) { console.log(e) }
-    //     if(e.shiftKey) { console.log(e) }
-    // })
     
 
     //functions
@@ -486,7 +496,6 @@ export default {
         //debugging
         // console.log(router.currentRoute.value)
         // console.log(router.currentRoute.value.fullPath)
-        // return
 
         //variables
         let route = router.currentRoute.value.params
@@ -522,8 +531,6 @@ export default {
 
     function loadSectionCategories(data, routeSection, routeCategory)
     {   
-        // console.log("loadSectionCategories")
-        
         //elements
         let settingsCategoriesIcon = document.getElementById("settingsCategoriesIcon")
         let frontendData = document.getElementById("frontendData")
@@ -548,14 +555,15 @@ export default {
             if(frontendCategories.value[c].section == data.title) { arrayCategories.push(frontendCategories.value[c]) }
         }
 
+        //set first category
         firstCategory = arrayCategories[0]
 
-        // console.log(arrayCategories)
-
+        //null check
         if(firstCategory == undefined) { return }
         else if(firstCategory == null) { return }
         else if(firstCategory == "") { return }
         
+        //update elements
         if(frontendData) { frontendData.style.display = "none" }       
         if(settingsCategoriesIcon) { settingsCategoriesIcon.style.display = "block" }
         if(frontendCategoriesList) { frontendCategoriesList.scrollTo(0,0) }
@@ -564,7 +572,7 @@ export default {
         if(pageEnd) { pageEnd.style.display = "none" }
         // if(pageIndex) { pageIndex.style.display = "none" }
 
-        //load first category
+        //load categories
         if(routeSection != '' && routeCategory != '') loadCategoryData(routeSection, routeCategory, '')
         else { loadCategoryData(firstCategory.section , firstCategory.title, firstCategory.pos) }
         
@@ -573,12 +581,6 @@ export default {
 
     function loadCategoryData(section, category, position)
     {   
-        //debugging
-        // console.log(category)
-        // console.log("Section: " + section)
-        // console.log("Category: " + category)
-        // console.log(frontendData.value)
-
         //elements
         let selectCategoryElement = document.getElementById("category#" + position)
         let frontendDataElement = document.getElementById("frontendData")
@@ -586,67 +588,61 @@ export default {
         let selectedCategoryTitle = document.getElementById("selectedCategoryTitle")
         let frontendDataRows = document.getElementById("frontendDataRows")
         let componentFrontend = document.getElementById("componentFrontend")
-        let backgroundImageUnderlay = document.getElementById("backgroundImageUnderlay")
+        let categoryUnderlay = document.getElementById("categoryUnderlay")
         let categories = document.getElementsByClassName("category")
         
         //variables
         let arrayData = ""
-        let selectedCategoryBackgroundImage = ""
+        let selectedCategoryUnderlaySrc = ""
         let categoryTitleOriginal = ""
         let categoryExists = false
 
         //set globals
         selectedSection = section.toString().toLowerCase().replaceAll("-", " ")
         selectedCategory = category.toString().toLowerCase().replaceAll("-", " ")
-        // selectedCategoryPos = position
 
-        //check if section + category exists
+        //check if category exists
         for(let item in frontendCategories.value)
         {
             let categoryTitle = frontendCategories.value[item].title.toString().toLowerCase()
             let categorySection = frontendCategories.value[item].section.toString().toLowerCase()
 
-            if(selectedSection == categorySection && selectedCategory == categoryTitle)
-            {
-                // console.log("categoryTitle: " + categoryTitle)
-                // console.log("categorySection: " + categorySection)
-
-                categoryExists = true
-            }
+            if(selectedSection == categorySection && selectedCategory == categoryTitle) { categoryExists = true }
         }
 
         //null check
         if(categoryExists == false) { return }
 
-        //set category background image
+        //set category values
         for(let item in frontendCategories.value)
         {
             let categoryTitle = frontendCategories.value[item].title.toString().toLowerCase()
             let categorySection = frontendCategories.value[item].section.toString().toLowerCase()
 
             if(selectedSection == categorySection && selectedCategory == categoryTitle)
-            { 
-                // console.log(frontendCategories.value[item].title)
-
+            {   
+                //set category pos
                 selectedCategoryPos = frontendCategories.value[item].pos
+
+                //set category title
                 categoryTitleOriginal = frontendCategories.value[item].title
-                selectedCategoryBackgroundImage = frontendCategories.value[item].backgroundImage
+
+                //set category underlay src
+                selectedCategoryUnderlaySrc = frontendCategories.value[item].backgroundImage
                 
-                if(selectedCategoryBackgroundImage == undefined) { backgroundImageUnderlay.style.backgroundImage = "none" }
-                else if(selectedCategoryBackgroundImage != undefined) { backgroundImageUnderlay.style.backgroundImage = "url(" + selectedCategoryBackgroundImage + ")" }
+                //update elements
+                if(selectedCategoryUnderlaySrc == undefined) { categoryUnderlay.style.backgroundImage = "none" }
+                else if(selectedCategoryUnderlaySrc != undefined) { categoryUnderlay.style.backgroundImage = "url(" + selectedCategoryUnderlaySrc + ")" }
             }
         }
 
-        //set array data
+        //set category data
         for(let c in frontendData.value)
         {   
             let categorySection = frontendData.value[c].section.toString().toLowerCase()
             let categoryTitle = frontendData.value[c].category.toString().toLowerCase()
 
-            if(selectedSection == categorySection && categoryTitle == selectedCategory) 
-            { 
-                arrayData = frontendData.value[c].rows
-            } 
+            if(selectedSection == categorySection && categoryTitle == selectedCategory) { arrayData = frontendData.value[c].rows } 
         }
         
         //update vuex
@@ -654,49 +650,33 @@ export default {
 
         //update elements
         setTimeout(() => {
+            selectedCategoryTitle = document.getElementById("selectedCategoryTitle")
             if(frontendDataElement) { frontendDataElement.style.display = "block" }
             if(addNewDataRow) { addNewDataRow.style.display = "block" }
-            selectedCategoryTitle = document.getElementById("selectedCategoryTitle")
             if(selectedCategoryTitle) { selectedCategoryTitle.innerText = category.replaceAll("-", " ") }
-            // if(selectedCategoryTitle) { selectedCategoryTitle.innerText = section + " · " + category.replaceAll("-", " ") }
-            frontendDataRows.scrollTo(0,0)
-            backgroundImageUnderlay.style.opacity = "0.6"
+            if(frontendDataRows) { frontendDataRows.scrollTo(0,0) }
+            if(categoryUnderlay) { categoryUnderlay.style.opacity = "0.6" }
             undisplayModals()
         }, 20)
     }
 
 
-    function loadDataType(data)
-    {   
-        //variables
-        let value = ""
+    // function loadDataType(data)
+    // {   
+    //     //variables
+    //     let value = ""
 
-        //parse json
-        try { data = JSON.parse(data) } 
-        catch (error) { }
+    //     //parse json
+    //     try { data = JSON.parse(data) } 
+    //     catch (error) { }
         
-        //null check
-        if(data.type == undefined) { value = "null" }
+    //     //set data type
+    //     if(data.type == undefined) { value = "null" }
+    //     else { value = data.title }
 
-        //set data row text
-        else 
-        { 
-            value = data.title
-            // if(data.title == "") { data.title = "no title" }
-            // value = data.pos + " · " + data.title
-            // value = "Row " + data.pos + " · " + "<" + data.type + ">"
-            // value = data.pos + " " + data.title + " " + "<" + data.type + ">" 
-            // value = data.pos + " · " + "<" + data.type + ">" 
-            // value = "<> · " + data.pos + " · " + "<" + data.type + ">" 
-            // value = data.pos + " · " + "<" + data.type + ">" 
-            // value = "Row " + data.pos + " · " + "<" + data.type + ">" 
-            // value = "Row " + data.pos + " · " + data.title + " · " + "<" + data.type + ">" 
-            // value = data.title + " · " + "(" + data.type.toUpperCase() + ")" 
-        }
-
-        //return value
-        return value
-    }
+    //     //return value
+    //     return value
+    // }
 
 
     function loadDataData(data)
@@ -712,67 +692,48 @@ export default {
         if(data.type == undefined) { value = "null" }
 
         //set data row text
-        // else 
         { 
             value = data.data
             value = value.replaceAll("'", "\"")
+            
             if(data.type == "multiline") { value = JSON.parse(value) }
             else if(data.type == "timeline") { value = JSON.parse(value) }
             else if(data.type == "linklist") { value = JSON.parse(value) }
             else if(data.type == "textlist") { value = JSON.parse(value) }
             else if(data.type == "galleryImages") { value = JSON.parse(value) }
-            // value = JSON.parse(value)
-            // if(data.title == "") { data.title = "no title" }
-            // value = "Row " + data.pos + " · " + "<" + data.type + ">"
-            // value = data.pos + " " + data.title + " " + "<" + data.type + ">" 
-            // value = data.pos + " · " + "<" + data.type + ">" 
-            // value = "<> · " + data.pos + " · " + "<" + data.type + ">" 
-            // value = data.pos + " · " + "<" + data.type + ">" 
-            // value = "Row " + data.pos + " · " + "<" + data.type + ">" 
-            // value = "Row " + data.pos + " · " + data.title + " · " + "<" + data.type + ">" 
-            // value = data.title + " · " + "(" + data.type.toUpperCase() + ")" 
         }
 
         //debuggin
         // console.log(value)
         
-        //return value
         return value
     }   
 
 
-    function loadDataInputs(data, type)
-    {   
-        //debugging
-        // console.log(data)
+    // function loadDataInputs(data, type)
+    // {   
+    //     //variables
+    //     let arrayData = []
 
-        //variables
-        let arrayData = []
-
-        //set data
-        data = data.toString()
-        data = data.replace("data,", "")
-        data = data.replaceAll("'", "\"")
-        data = JSON.parse(data)
+    //     //set data
+    //     data = data.toString()
+    //     data = data.replace("data,", "")
+    //     data = data.replaceAll("'", "\"")
+    //     data = JSON.parse(data)
         
-        //type: gallery images
-        if(type == "galleryImages")
-        {
-            for(let item in data) { arrayData.push(data[item]) }
+    //     //type: gallery images
+    //     if(type == "galleryImages")
+    //     {
+    //         for(let item in data) { arrayData.push(data[item]) }
 
-            arrayData = arrayData.sort((a, b) => { return a.pos - b.pos })
+    //         arrayData = arrayData.sort((a, b) => { return a.pos - b.pos })
 
-            return arrayData
-        }
+    //         return arrayData
+    //     }
 
-        //type: others
-        else { return data }
-        // else if(type == "multiline") { return data }
-        // else if(type == "timeline") { return data }
-        // else if(type == "singleline") { return data }
-        // else if(type == "linklist") { return data }
-        // else if(type == "textlist") { return data }
-    }
+    //     //type: others
+    //     else { return data }
+    // }
 
 
     function sortFrontendDataSelected(data)
@@ -793,10 +754,6 @@ export default {
 
     function sortFrontendCategories(data)
     {
-        // console.log("sortFrontendCategories")
-        // console.log("selectedSection: " + selectedSection)
-        // console.log(data)
-
         //variables
         let categories = []
 
@@ -857,7 +814,7 @@ export default {
         else if(categoryNavigatorModal.style.display == "block")
         {
             categoryNavigatorModal.style.display = "none"
-            
+            underlayModal.style.display = "none"
         }
     }
 
@@ -881,7 +838,6 @@ export default {
         {
             sectionNavigatorModal.style.display = "none"
             underlayModal.style.display = "none"
-            
         }
     }
 
@@ -904,32 +860,32 @@ export default {
         else if(aboutModal.style.display == "block")
         {
             aboutModal.style.display = "none"
-            
+            underlayModal.style.display = "none"
         }
     }
 
 
-    function loadContactModal()
-    {
-        //debugging
-        console.log("loadContactModal")
+    // function loadContactModal()
+    // {
+    //     //debugging
+    //     console.log("loadContactModal")
 
-        //elements
-        let contactModal = document.getElementById("contactModal")
-        let underlayModal = document.getElementById("underlayModal")
+    //     //elements
+    //     let contactModal = document.getElementById("contactModal")
+    //     let underlayModal = document.getElementById("underlayModal")
         
-        //update elements
-        if(contactModal.style.display == "none" || contactModal.style.display == "")
-        {
-            contactModal.style.display = "block"
-            underlayModal.style.display = "block"
-        }
-        else if(contactModal.style.display == "block")
-        {
-            contactModal.style.display = "none"
+    //     //update elements
+    //     if(contactModal.style.display == "none" || contactModal.style.display == "")
+    //     {
+    //         contactModal.style.display = "block"
+    //         underlayModal.style.display = "block"
+    //     }
+    //     else if(contactModal.style.display == "block")
+    //     {
+    //         contactModal.style.display = "none"
             
-        }
-    }
+    //     }
+    // }
 
 
     function undisplayModals()
@@ -942,9 +898,6 @@ export default {
         let contactModal = document.getElementById("contactModal")
         let mobileNavigatorModal = document.getElementById("mobileNavigatorModal")
         let searchModal = document.getElementById("searchModal")
-        // let pageStart = document.getElementById("pageStart")
-        // let pageIndex = document.getElementById("pageIndex")
-        // let pageEnd = document.getElementById("pageEnd")
 
         //update elements
         if(underlayModal) { underlayModal.style.display = "none" }
@@ -954,20 +907,20 @@ export default {
         if(sectionNavigatorModal) { sectionNavigatorModal.style.display = "none" }
         if(mobileNavigatorModal) { mobileNavigatorModal.style.display = "none" }
         if(searchModal) { searchModal.style.display = "none" }
-        // if(pageStart) { pageStart.style.display = "none" }
-        // if(pageIndex) { pageIndex.style.display = "none" }
-        // if(pageEnd) { pageEnd.style.display = "none" }
+
+        selectedElement = ""
     }
     
 
     function loadNextCategory()
-    {
+    {   
+        //debugging
+        console.log("loadNextCategory")
+        
+        //null check
         if(frontendCategories.value == null) { return }
         if(router.currentRoute.value.params.section == "start") { return }
         else if(router.currentRoute.value.params.section == "end") { return }
-
-        //debugging
-        console.log("loadNextCategory")
         
         //variables
         let selectedSectionCategories = sortFrontendCategories(frontendCategories.value)
@@ -976,6 +929,7 @@ export default {
         let nextCategoryItem = ""
         let currentCategoryPos = ""
 
+        //set next category data
         for(let item in selectedSectionCategories)
         {
             if(selectedSection == selectedSectionCategories[item].section && selectedSectionCategories[item].pos == selectedCategoryPos)
@@ -1001,12 +955,13 @@ export default {
 
     function loadPreviousCategory()
     {
+        //debugging
+        console.log("loadNextCategory")
+
+        //null check
         if(frontendCategories.value == null) { return }
         if(router.currentRoute.value.params.section == "start") { return }
         else if(router.currentRoute.value.params.section == "end") { return }
-
-        //debugging
-        console.log("loadNextCategory")
         
         //variables
         let selectedSectionCategories = sortFrontendCategories(frontendCategories.value)
@@ -1015,6 +970,7 @@ export default {
         let previousCategoryItem = ""
         let currentCategoryPos = ""
 
+        //set previous category data
         for(let item in selectedSectionCategories)
         {
             if(selectedSection == selectedSectionCategories[item].section && selectedSectionCategories[item].pos == selectedCategoryPos)
@@ -1022,7 +978,6 @@ export default {
                 //set variables
                 currentCategoryPos = selectedSectionCategories[item].pos
                 previousCategoryPos = parseInt(selectedCategoryPos) - 2
-                // previousCategoryPos = previousCategoryPos - 2
 
                 //check if first category
                 if(previousCategoryPos == -1 ) { previousCategoryPos = totalCategories }
@@ -1046,35 +1001,34 @@ export default {
         // console.log("currentImage: " + currentImagePos)
 
         //elements
-        let imageGallery = document.getElementById("imageGallery#" + imageGalleryId)
+        let nextImage = document.getElementById("imageGallery#" + imageGalleryId)
         let galleryImagePos = document.getElementById("galleryImagePos#" + imageGalleryId)
-        let backgroundImageUnderlay = document.getElementById("backgroundImageUnderlay")
+        let categoryUnderlay = document.getElementById("categoryUnderlay")
         let galleryImageDescription = document.getElementById("galleryImageDescription#" + imageGalleryId)
-        let galleryImageSource = document.getElementById("galleryImageSource")
 
         //variables
         let data = JSON.parse(imageGalleryData.replaceAll("'", "\""))
-        let newImagePos = parseInt(imageGallery.alt) + 1
+        let newImagePos = parseInt(nextImage.alt) + 1
         let totalGalleryImages = data.length
-
-        //set background image opacity
-        if(backgroundImageUnderlay.style.opacity == "0.6" || backgroundImageUnderlay.style.opacity == "") 
-        { backgroundImageUnderlay.style.opacity = "0.02"; return }
 
         //check error
         if(newImagePos >= totalGalleryImages) { newImagePos = 0 }
+        
+        //set image background opacity
+        if(categoryUnderlay.style.opacity == "0.6" || categoryUnderlay.style.opacity == "") 
+        { categoryUnderlay.style.opacity = "0.02"; return }
 
-        //set gallery alt text
-        imageGallery.alt = newImagePos
+        //set image alt text
+        nextImage.alt = newImagePos
 
-        //set gallery image src
-        imageGallery.src = data[newImagePos].image
+        //set image image src
+        nextImage.src = data[newImagePos].image
 
         //update elements
         galleryImagePos.innerText = (newImagePos + 1) + "/" + totalGalleryImages
         galleryImageDescription.innerText = data[newImagePos].pos + "/" + totalGalleryImages + " · " + data[newImagePos].description
-        backgroundImageUnderlay.style.opacity = "0.02"
-        imageGallery.scrollIntoView()
+        categoryUnderlay.style.opacity = "0.02"
+        nextImage.scrollIntoView()
     }
 
 
@@ -1085,35 +1039,34 @@ export default {
         // console.log("currentImage: " + currentImagePos)
 
         //elements
-        let imageGallery = document.getElementById("imageGallery#" + imageGalleryId)
+        let previousImage = document.getElementById("imageGallery#" + imageGalleryId)
         let galleryImagePos = document.getElementById("galleryImagePos#" + imageGalleryId)
-        let backgroundImageUnderlay = document.getElementById("backgroundImageUnderlay")
+        let categoryUnderlay = document.getElementById("categoryUnderlay")
         let galleryImageDescription = document.getElementById("galleryImageDescription#" + imageGalleryId)
-        let galleryImageSource = document.getElementById("galleryImageSource")
 
         //variables
         let data = JSON.parse(imageGalleryData.replaceAll("'", "\""))
-        let newImagePos = parseInt(imageGallery.alt) - 1
+        let newImagePos = parseInt(previousImage.alt) - 1
         let totalGalleryImages = data.length
 
-        //set background image opacity
-        if(backgroundImageUnderlay.style.opacity == "0.6" || backgroundImageUnderlay.style.opacity == "") 
-        { backgroundImageUnderlay.style.opacity = "0.02"; return }
-        
         //check error
         if(newImagePos <= -1) { newImagePos = totalGalleryImages - 1}
 
-        //set gallery alt text
-        imageGallery.alt = newImagePos
+        //set image background opacity
+        if(categoryUnderlay.style.opacity == "0.6" || categoryUnderlay.style.opacity == "") 
+        { categoryUnderlay.style.opacity = "0.02"; return }
 
-        //set gallery image src
-        imageGallery.src = data[newImagePos].image
+        //set image alt text
+        previousImage.alt = newImagePos
+
+        //set image image src
+        previousImage.src = data[newImagePos].image
 
         //update elements
         galleryImagePos.innerText = (newImagePos + 1) + "/" + totalGalleryImages
         galleryImageDescription.innerText = data[newImagePos].pos + "/" + totalGalleryImages + " · " + data[newImagePos].description
-        backgroundImageUnderlay.style.opacity = "0.02"
-        imageGallery.scrollIntoView()
+        categoryUnderlay.style.opacity = "0.02"
+        previousImage.scrollIntoView()
     }
 
 
@@ -1124,30 +1077,26 @@ export default {
 
         //elements
         let imageGallery = document.getElementById("imageGallery#" + imageGalleryId)
-        let backgroundImageUnderlay = document.getElementById("backgroundImageUnderlay")
+        let categoryUnderlay = document.getElementById("categoryUnderlay")
         let galleryImageDescription = document.getElementById("galleryImageDescription#" + imageGalleryId)
-        // let galleryImagePos = document.getElementById("galleryImagePos#" + imageGalleryId)
-        // let galleryImageSource = document.getElementById("galleryImageSource")
 
         //variables
         let data = JSON.parse(imageGalleryData.replaceAll("'", "\""))
         let newImagePos = specificImageNr - 1
         let totalGalleryImages = data.length
 
-        // console.log(data[newImagePos].image)
-        
-        //set gallery image src
+        //set image src
         imageGallery.src = data[newImagePos].image
 
-        //set gallery image description
+        //set image description
         galleryImageDescription.innerText = (newImagePos + 1) + "/" + totalGalleryImages + " · " + data[newImagePos].description
 
-        //set gallery image alt text
+        //set image alt text
         imageGallery.alt = newImagePos
 
-        //set background image opacity
-        if(backgroundImageUnderlay.style.opacity == "0.6" || backgroundImageUnderlay.style.opacity == "") 
-        { backgroundImageUnderlay.style.opacity = "0.02"; return }
+        //set image background opacity
+        if(categoryUnderlay.style.opacity == "0.6" || categoryUnderlay.style.opacity == "") 
+        { categoryUnderlay.style.opacity = "0.02"; return }
     }
 
 
@@ -1196,17 +1145,17 @@ export default {
         console.log(data.settings)
 
         //elements
-        let componentFrontend = document.getElementById("componentFrontend")
-        let frontendSectionsElement = document.getElementById("frontendSections")
-        let selectedCategoryTitle = document.getElementById("selectedCategoryTitle")
-        let frontendSectionsList = document.getElementById("frontendSectionsList")
-        let frontendDataRows = document.getElementById("frontendDataRows")
         let loadingScreen = document.getElementById("loadingScreen")
         let buttonSelectSections = document.getElementById("buttonSelectSections")
         let buttonStartElement = document.getElementById("buttonStart")
+        // let componentFrontend = document.getElementById("componentFrontend")
+        // let frontendSectionsElement = document.getElementById("frontendSections")
+        // let selectedCategoryTitle = document.getElementById("selectedCategoryTitle")
+        // let frontendSectionsList = document.getElementById("frontendSectionsList")
+        // let frontendDataRows = document.getElementById("frontendDataRows")
         // let buttonIndexElement = document.getElementById("buttonIndex")
         // let buttonEndElement = document.getElementById("buttonEnd")
-        let sectionButtons = document.getElementsByClassName("section")
+        // let sectionButtons = document.getElementsByClassName("section")
 
         //variables
         let navIconSizeHeight = ""
@@ -1228,9 +1177,8 @@ export default {
         let frontendSectionsListFlexDirection = ""
         let navIconTypeBorderRadius = ""
         let route = data.route
-        // let firstSection = sortFrontendSections(frontendSections.value)[0]
         
-        // console.log(route)
+        //set html title
         document.title = capitalizeString(route.domain.replaceAll("-", " "))
         
         //save to vuex
@@ -1239,42 +1187,39 @@ export default {
         store.dispatch('storage/actionSetFrontendData', data.data)
         store.dispatch('storage/actionSetFrontendSettings', data.settings)
 
+        //set globals
         settings = data.settings
 
-        //load loading screen
+        //set loading screen
         if(settings.loadingScreen == "true")
         { 
             loadingScreen.style.display = "block"
             setTimeout(() => { loadingScreen.style.display = "none"}, 3000)
         }
 
-        //routing
+        //set route
         handleRouting(route)
 
         //set styling
         setTimeout(() => {
             //set pages
             if(settings.pageStart == "true") { buttonStartElement.style.display = "block" }
-            // if(settings.pageIndex == "true") { buttonIndexElement.style.display = "block" }
-            // if(settings.pageEnd == "true") { buttonEndElement.style.display = "block" }
 
-            //set buttons
+            //set nav buttons
             if(settings.buttonAbout == "true") { buttonAbout.style.display = "block" }
-            if(settings.buttonContact == "true") { buttonContact.style.display = "block"; store.dispatch('storage/actionSetFrontendContact', data.contact) }
+            if(settings.buttonContact == "true") { store.dispatch('storage/actionSetFrontendContact', data.contact) }
             if(settings.buttonFullscreen == "true") { buttonFullscreen.style.display = "block" }
             if(settings.buttonSearch == "true") { buttonSearch.style.display = "block" }
-            buttonSelectSections.style.display = "block"
+            if(buttonSelectSections ) { buttonSelectSections.style.display = "block" }
 
-            //set icons
+            //set nav icons
             if(settings.navIconSize == "small") { navIconSizeHeight = "20px"; navIconSizeWidth = "20px"}
             else if(settings.navIconSize == "medium") { navIconSizeHeight = "30px"; navIconSizeWidth = "30px" }
             else if(settings.navIconSize == "large") { navIconSizeHeight = "40px"; navIconSizeWidth = "40px" }
             if(settings.navIconType == "square") { navIconTypeBorderRadius = "0%"}
             else if(settings.navIconType == "rounded") { navIconTypeBorderRadius = "90%" }
-            // else if(settings.navIconType == "numbers") { }
-            // else if(settings.navIconType == "thumbnails") { }
             
-            //set nav position
+            //set nav position defaults
             navTop = "initial"
             navBottom = "initial"
             navLeft = "initial"
@@ -1289,6 +1234,8 @@ export default {
             frontendDataTop = "12%"
             frontendDataRowsMaxHeight = "80vh"
             frontendSectionsListDisplay = "flex"
+
+            //set nav top
             if(settings.navPosition == "top") 
             {   
                 navTop = "0px"
@@ -1300,6 +1247,8 @@ export default {
                 frontendCategoriesTop = "12%"
                 frontendDataTop = "20%"
             }
+
+            //set nav bottom
             else if(settings.navPosition == "bottom") 
             {
                 navBottom = "0px"
@@ -1309,13 +1258,17 @@ export default {
                 frontendSectionsPadding = "0px 0px 0px 39vw"
                 frontendSectionsListFlexDirection = "row"
                 frontendDataRowsMaxHeight = "74vh" 
-            } 
+            }
+
+            //set nav left
             else if(settings.navPosition == "left") 
             { 
                 navLeft = "0px"
                 frontendSectionsListHeight = "100vh"
                 frontendSectionsListFlexDirection = "column"
-            } 
+            }
+
+            //set nav right
             else if(settings.navPosition == "right") 
             {
                 navRight = "0px"
@@ -1326,7 +1279,6 @@ export default {
             //set CSS variables
             document.documentElement.style.setProperty("--backgroundPageStart", "url('" + settings.pageStartBackgroundImage + ")")
             document.documentElement.style.setProperty("--backgroundPageEnd", "url('" +  settings.pageEndBackgroundImage + ")")
-
             document.documentElement.style.setProperty("--navTop", navTop);
             document.documentElement.style.setProperty("--navBottom", navBottom);
             document.documentElement.style.setProperty("--navLeft", navLeft);
@@ -1334,7 +1286,6 @@ export default {
             document.documentElement.style.setProperty("--navIconSizeHeight", navIconSizeHeight)
             document.documentElement.style.setProperty("--navIconSizeWidth", navIconSizeWidth)
             document.documentElement.style.setProperty("--navIconTypeBorderRadius", navIconTypeBorderRadius)
-
             document.documentElement.style.setProperty("--frontendDataRowsHeight", frontendDataRowsMaxHeight);
             document.documentElement.style.setProperty("--frontendSectionsHeight", frontendSectionsHeight);
             document.documentElement.style.setProperty("--frontendSectionsWidth", frontendSectionsWidth);
@@ -1347,7 +1298,6 @@ export default {
             document.documentElement.style.setProperty("--frontendCategoriesTop", frontendCategoriesTop);
             document.documentElement.style.setProperty("--frontendDataTop", frontendDataTop);
             document.documentElement.style.setProperty("--frontendDataRowsMaxHeight", frontendDataRowsMaxHeight);
-
             document.documentElement.style.setProperty("--colorLoadingScreen", settings.colorLoadingScreen)
             document.documentElement.style.setProperty("--colorNavBackground", settings.colorNavBackground)
             document.documentElement.style.setProperty("--colorNavIcons", settings.colorNavIcons)
@@ -1370,8 +1320,8 @@ export default {
         let aboutModal = document.getElementById("aboutModal")
         let contactModal = document.getElementById("contactModal")
         let searchModal = document.getElementById("searchModal")
-        let sectionElements = document.getElementsByClassName("section")
-        let categoryElements = document.getElementsByClassName("category")
+        // let sectionElements = document.getElementsByClassName("section")
+        // let categoryElements = document.getElementsByClassName("category")
 
         //reset elements
         if(pageStart) { pageStart.style.display = "none" }
@@ -1388,27 +1338,17 @@ export default {
         if(aboutModal) { aboutModal.style.display = "none" }
         if(contactModal) { contactModal.style.display = "none" }
         if(searchModal) { searchModal.style.display = "none" }
-        // for(let item in sectionElements)
-        // {
-        //     let element = document.getElementById(sectionElements[item].id)
-        //     if(element) { element.style.opacity = "0.1" }
-        // }
-        // for(let item in categoryElements)
-        // {
-        //     let element = document.getElementById(categoryElements[item].id)
-        //     if(element) { element.style.opacity = "1" }
-        // }
-
         buttonStart.style.opacity = "1"
         // buttonIndex.style.opacity = "1"
-        // buttonEnd.style.opacity = "1"
     }
 
 
     function indexCategoryAsLetter(value)
     {   
+        //variables
         let letter = ""
 
+        //set letter
         if(value == '1') { letter = "A" }
         else if(value == '2') { letter = "B" }
         else if(value == '3') { letter = "C" }
@@ -1437,57 +1377,67 @@ export default {
         else if(value == '26') { letter = "Z" }
         else { letter = value }
 
+        //return value
         return letter
     }
 
 
     function fullscreen()
     {   
+        //elements
         let doc = document.documentElement,
 
+        //variables
         state = (document.webkitIsFullScreen || document.isFullScreen),
         requestFullscreen = (doc.requestFullscreen || doc.webkitRequestFullScreen),
         cancelFullscreen = (document.cancelFullScreen || document.webkitCancelFullScreen);
 
+        //activate fullscreen
         if(!state) { requestFullscreen.call(doc) }
+
+        //close fullscreen
         else { cancelFullscreen.call(document) }
     }
 
 
     function displayMobileNavigator()
     {
+        //elements
         let mobileNavigatorModal = document.getElementById("mobileNavigatorModal")
 
+        //update elements
         mobileNavigatorModal.style.display = "block"
     }
 
 
     function setRoutePath(value)
     {   
+        //debugging
         console.log("setRoutePath")
-    
+
+        //variables
         let routeParams = router.currentRoute.value.params
         let currentRouteString = router.currentRoute.value.fullPath
         let newPath = '/' + routeParams.domain.toLowerCase() + '/' + value.replaceAll(" ", "-").toLowerCase()
-        // let previousRoute = router.options.history.state.back
+        let previousRoute = router.options.history.state.back
 
         //null check
         if(("/" + routeParams.domain + "/" + value) == currentRouteString) { return }
         else if(newPath == router.currentRoute.value.fullPath.toLowerCase() && newPath.includes("search=")) { return }
         else if(newPath == router.currentRoute.value.fullPath.toLowerCase()) { undisplayModals(); return }
 
-        //set new path       
+        //set new path   
         router.push({ path: newPath })
     }
 
 
-    function backgroundImageUnderlaySetOpacity(value)
+    function categoryUnderlaySetOpacity(value)
     {
-        console.log("backgroundImageUnderlaySetOpacity")
+        //elements
+        let categoryUnderlaySetOpacity = document.getElementById("categoryUnderlay")
 
-        let backgroundImageUnderlaySetOpacity = document.getElementById("backgroundImageUnderlay")
-
-        backgroundImageUnderlaySetOpacity.style.opacity = value
+        //update elements
+        categoryUnderlaySetOpacity.style.opacity = value
     }
 
 
@@ -1495,25 +1445,19 @@ export default {
     {   
         //debugging
         console.log("handleRouting")
-        // console.log(route)
-        // console.log(settings)
 
         //variables
         let type = ""
         let firstSection = ""
         let sectionObj = ""
         let searchSame = false
-        // let loadSection = false
-        // let loadSectionWithCategory = false
-        // let loadDefault = false
 
         //set type
-        if(route.section.includes("search=")) 
+        if(route.section == null) { type = "default" }
+        else if(route.section.includes("search=")) 
         { 
             let searchStringPrevious = frontendSearchString.value
             let searchStringNew = route.section.replace("search=", "")
-            // console.log("searchStringPrevious: " + searchStringPrevious)
-            // console.log("searchStringNew: " + searchStringNew)
             
             if(searchStringNew == searchStringPrevious) 
             { 
@@ -1535,9 +1479,10 @@ export default {
         else if(route.section != undefined && route.category != undefined) { type = "section + category" }
         else { type = "default" }
         
-        // console.log("handleRouting: " + type)
+        //null check
         if(searchSame == true) { return }
         
+        //set first section
         firstSection = sortFrontendSections(frontendSections.value)[0]
 
         //set section obj
@@ -1547,35 +1492,28 @@ export default {
             { sectionObj = frontendSections.value[item] }
         }
 
-        //load page start
-        if(type == "start") { settings.pageStart == "true" ? displayExtraPage('start') : loadSectionCategories(firstSection, '', '') }
-        
-        //load page end
+        //load route
+        if(type == "default") { settings.pageStart == "true" ? displayExtraPage('start') : loadSectionCategories(firstSection, '', '') }
+        else if(type == "start") { settings.pageStart == "true" ? displayExtraPage('start') : loadSectionCategories(firstSection, '', '') }
         else if(type == "end") { settings.pageEnd == "true" ? displayExtraPage('end') : loadSectionCategories(firstSection, '', '') }
-        
-        //load section specified
         else if(type == "section") { loadSectionCategories(sectionObj, '', '') }
-        
-        //load section/category specified
         else if(type == "section + category") 
         {   
-            // let searchItemSpecified = false
             let rowDivId = ""
             let rowDivImage = ""
             let splitRoute = ""
             let itemType = ""
 
+            //route is standard
             if(!route.category.includes("@")) 
             {
                 loadSectionCategories(sectionObj, route.section , route.category)
             }
             
+            //route includes row/item
             else if(route.category.includes("@")) 
             { 
-                // searchItemSpecified = true
-                
                 splitRoute = route.category.split("@")
-                
                 route.category = splitRoute[0]
                 
                 if(splitRoute[1] == "") { return }
@@ -1585,23 +1523,19 @@ export default {
                 rowDivId = splitRoute[1].split("-")[0].toString().replace("row", "")
                 rowDivImage = splitRoute[1].split("-")[1].toString().replace("image", "")
                 
-                console.log("rowDivId: " + rowDivId)
-                console.log("rowDivImagePos: " + rowDivImage)
-                console.log("itemType: " + itemType)
-
+                //debugging
+                // console.log("rowDivId: " + rowDivId)
+                // console.log("rowDivImagePos: " + rowDivImage)
+                // console.log("itemType: " + itemType)
                 // console.log("searchItemSpecified: " + searchItemSpecified)
                 // console.log(searchItemObj)
                 
                 loadSectionCategories(sectionObj, route.section , route.category)
 
                 setTimeout(() => { 
-                    let searchItemDiv = document.getElementById("data" + rowDivId) //searchItemObj.divId
-                    console.log(searchItemDiv)
+                    let searchItemDiv = document.getElementById("data" + rowDivId)
                     
-                    if(itemType == "item") 
-                    {
-                        searchItemDiv.scrollIntoView({ behavior: 'smooth' })
-                    }
+                    if(itemType == "item") { searchItemDiv.scrollIntoView({ behavior: 'smooth' }) }
 
                     else if(itemType == "image")
                     {
@@ -1619,20 +1553,18 @@ export default {
                 }, 300)
             }
         }
-
-        //load default
-        else if(type == "default") 
-        { settings.pageStart == "true" ? displayExtraPage('start') : loadSectionCategories(firstSection, '', '') }
     }
 
     
     function loadNextSection()
     {
+        //variables
         let sectionObj = ""
         let nextSectionObj = ""
         let totalSections = frontendSections.value.length - 1
         let id = ""
 
+        //set section id
         for(let item in frontendSections.value)
         {
             sectionObj = frontendSections.value[item]
@@ -1641,22 +1573,26 @@ export default {
             else if(selectedSection == sectionObj.title) { id = parseInt(item) + 1; break }
         }
 
+        //set next section data
         nextSectionObj = frontendSections.value[id]
+
+        //set globals
         selectedSection = nextSectionObj.title
 
-        // console.log("loadNextSection: " + selectedSection)
-
+        //set next section path
         setRoutePath(selectedSection)
     }
 
 
     function loadPreviousSection()
-    {
+    {   
+        //variables
         let sectionObj = ""
         let previousSectionObj = ""
         let totalSections = frontendSections.value.length - 1
         let id = ""
 
+        //set section id
         if(selectedSection.toLowerCase() == frontendSections.value[0].title.toLowerCase()) { id = totalSections }
         else
         {
@@ -1668,27 +1604,28 @@ export default {
             }
         }
 
+        //set previous section data
         previousSectionObj = frontendSections.value[id]
+
+        //set globals
         selectedSection = previousSectionObj.title
 
-        // console.log("loadPreviousSection: " + selectedSection)
-        
+        //set next previous path
         setRoutePath(selectedSection)
     }
 
 
     function capitalizeString(value)
-    {
+    {   
+        //variables
         let words = value.split(" ")
         let newValue = ""
 
+        //format words
         for(let item in words)
         {
-            // console.log(words[item])
             newValue += words[item].substring(0, 1).toUpperCase() + words[item].substring(1, words[item].length) + " "
         }
-
-        // console.log("newValue: " + newValue)
 
         return newValue
     }
@@ -1720,42 +1657,44 @@ export default {
             searchModal.style.display = "none"
             underlayModal.style.display = "none"
         }
+
+        //set selected element
+        selectedElement = "searchModal"
     }
 
     
     function setSearchPath()
     {
+        //elements
         let searchModalInput = document.getElementById("searchModalInput")
         
-        // setRoutePath("search=" + searchModalInput.value.toLowerCase())
-
-        // value = value.replaceAll(" ", "-").toLowerCase()
+        //variables
         let value = "search=" + searchModalInput.value.toLowerCase()
-        //debuggin
-        // console.log(router.currentRoute.value)
-        console.log("setSearchPath: " + value)
-        
         let route = router.currentRoute.value.params
         let newPath = '/' + route.domain.toLowerCase() + '/' + value.toLowerCase()
         
+        //null check
         if(newPath == router.currentRoute.value.fullPath.toLowerCase() && newPath.includes("search=")) { return }
 
+        //set search path
         router.push({ path: newPath })
     }
 
 
     function search(value)
     {
+        //debugging
         console.log("search: " + value)
 
+        //elements
         let searchModalInput = document.getElementById("searchModalInput")
         let searchModal = document.getElementById("searchModal")
         
+        //variables
         let forbiddenCharacters = ["'", "\"", "/", "\\", "_", "<", ">"]
         let sectionHits = 0
         let categoryHits = 0
         let dataHits = 0
-        let searchHits = 0
         let sectionHitsObjects = []
         let categoryHitsObjects = []
         let dataHitsObjects = []
@@ -1763,106 +1702,82 @@ export default {
         let frontendSectionsData = toRaw(frontendSections.value)
         let frontendCategoriesData = toRaw(frontendCategories.value)
         let searchString = value
+        let dataExists = "false"
+        let dataRowsArray = ""
+        let row = ""
+        let rdf = ""
+        let rdfItem = ""
 
+        //add SECTION search hits
         for(let item in frontendSectionsData)
         {
-            let section = frontendSectionsData[item].title.toLowerCase()
-
-            frontendSectionsData[item].searchResultType = "section"
-
-            if(section.includes(searchString)) 
+            if(frontendSectionsData[item].title.toLowerCase().includes(searchString)) 
             { 
+                frontendSectionsData[item].searchResultType = "section"
                 sectionHits++
                 sectionHitsObjects.push(frontendSectionsData[item])
                 searchResults.push(frontendSectionsData[item])
             }
         }
 
+        //add CATEGORY search hits
         for(let item in frontendCategoriesData)
         {
-            let category = frontendCategoriesData[item].title.toLowerCase()
-
-            frontendCategoriesData[item].searchResultType = "category"
-
-            if(category.includes(searchString)) 
+            if(frontendCategoriesData[item].title.toLowerCase().includes(searchString)) 
             { 
+                frontendCategoriesData[item].searchResultType = "category"
                 categoryHits++
                 categoryHitsObjects.push(frontendCategoriesData[item]) 
                 searchResults.push(frontendCategoriesData[item]) 
             }
         }
 
+        //add DATA search hits
         for(let item in frontendData.value)
         {
-            let dataExists = "false"
-            let dataRowsArray = ""
-            
-            if(frontendData.value[item].rows) { dataExists = "true"}
-
-            if(dataExists = "true")
+            if(frontendData.value[item].rows)
             {
                 dataRowsArray = toRaw(frontendData.value[item].rows)
-                // console.log(dataRowsArray)
 
                 for(let r in dataRowsArray)
                 {
-                    let row = JSON.parse(dataRowsArray[r])
-                    // console.log("search dataRowsArray")
-                    // console.log(row)
-                    // console.log(row.type + ": " + row.title)
+                    row = JSON.parse(dataRowsArray[r])
                     
-                    if(row.hidden == "false" && row.type == 'singleline')
+                    //data is singleline
+                    if(row.hidden == "false" && row.type == 'singleline' && row.data.toLowerCase().includes(searchString))
                     {
-                        //debugging
-                        // console.log("row is singleline")
-                        // console.log(row.data.toLowerCase())
+                        row.section = frontendData.value[item].section
+                        row.category = frontendData.value[item].category
+                        row.dataType = row.type
+                        row.searchResultType = "text"
+                        row.text = row.data
+                        row.divId = row.pos
+                        // row.dataFull = JSON.stringify(row)
 
-                        if(row.data.toLowerCase().includes(searchString))
-                        { 
-                            row.section = frontendData.value[item].section
-                            row.category = frontendData.value[item].category
-                            row.dataType = row.type
-                            row.searchResultType = "text"
-                            row.text = row.data
-                            // row.dataFull = JSON.stringify(row)
-                            row.divId = row.pos
-                            dataHits++
-                            dataHitsObjects.push(row)
-                            searchResults.push(row)
-                        }
+                        dataHits++
+                        dataHitsObjects.push(row)
+                        searchResults.push(row)
                     }
 
+                    //data is NOT singleline
                     else if(row.hidden == "false" && row.type != 'singleline') 
                     {   
-                        let rdf = JSON.parse(row.data.replaceAll("'", "\""))
+                        rdf = JSON.parse(row.data.replaceAll("'", "\""))
                     
-                        // if(row.type == 'multiline') { temp = rdf.text }
-                        // console.log(rdf)
-
                         for(let o in rdf)
-                        {
-                            let rdfItem = "" //rdf[o].text || rdf[o].description
-                            
-                            if(rdf[o].text) 
-                            { 
-                                rdfItem = rdf[o].text.toLowerCase()
-                                rdf[o].searchResultType = "text" 
-                            }
-                            else 
-                            { 
-                                rdfItem = rdf[o].description.toLowerCase()
-                                rdf[o].searchResultType = "image" 
-                            }
-                            
-                            // rdfItem = rdfItem.toString().toLowerCase()
-                            // console.log(rdfItem)
+                        {   
+                            //data is text
+                            if(rdf[o].text) { rdfItem = rdf[o].text.toLowerCase(); rdf[o].searchResultType = "text" }
 
-                            // rdf[o].searchResultType = "data"
+                            //data is image
+                            else { rdfItem = rdf[o].description.toLowerCase(); rdf[o].searchResultType = "image" }
+                            
                             rdf[o].section = frontendData.value[item].section
                             rdf[o].category = frontendData.value[item].category
                             rdf[o].dataType = row.type
                             rdf[o].divId = row.pos
                             rdf[o].dataFull = row
+                            // rdf[o].searchResultType = "data"
 
                             if(rdfItem.includes(searchString))
                             { 
@@ -1870,49 +1785,47 @@ export default {
                                 dataHitsObjects.push(rdf[o])
                                 searchResults.push(rdf[o])
                             }
-                            // if(rdf[o].description.toString().includes(searchString)) { dataHitsObjects.push(rdf[0]); dataHits++ }
                         }
                     }
                 }
             }
         }
 
-        searchHits = sectionHits + categoryHits + dataHits
-
-        // console.log("sectionHits: " + sectionHits)
-        // console.log("categoryHits: " + categoryHits)
-        // console.log("dataHits: " + dataHits)
-        // console.log("searchHits: " + searchHits)
+        //debugging
         // console.log(sectionHitsObjects)
         // console.log(categoryHitsObjects)
         // console.log(dataHitsObjects)
         // console.log("searchResults")
         // console.log(searchResults)
 
+        //save to vuex
         store.dispatch('storage/actionSetFrontendSearchString', searchString)
         store.dispatch('storage/actionSetFrontendSearchResults', searchResults)
 
-        setTimeout(() => { selectSearchHitsCategory('all', searchResults) }, 100)
-        
+        //update elements
         searchModal.style.display = "block"
+        setTimeout(() => { selectSearchHitsCategory('all', searchResults) }, 100)
     }
 
 
     function filterSearchResults(type, array)
     {
+        //variables
         let results = ""
 
+        //check type
         if(type == 'all') { results = array.slice().filter((item) => { return item.searchResultType != ''}) }
         else if(type == 'sections') { results = array.slice().filter((item) => { return item.searchResultType == 'section'}) }
         else if(type == 'categories') { results = array.slice().filter((item) => { return item.searchResultType == 'category'}) }
         else if(type == 'images') { results = array.slice().filter((item) => { return item.searchResultType == 'image'}) }
         else if(type == 'texts') { results = array.slice().filter((item) => { return item.searchResultType == 'text'}) }
 
+        //return value
         return results
     }
 
 
-    function selectSearchHitsCategory(type, array)
+    function selectSearchHitsCategory(type)
     {   
         //debuggin
         console.log("selectSearchHitsCategory: " + type)
@@ -1930,68 +1843,47 @@ export default {
         let searchResultSections = document.getElementsByClassName("searchResultSection")
         let searchResultOthers = document.getElementsByClassName("searchResultData")
 
-        //set local storage
-        // localStorage.setItem("cms-frontend-search-item-obj", "null")
-
         //reset elements
         searchHitCategoryAll.style.opacity = "0.2"
         searchHitCategorySections.style.opacity = "0.2"
         searchHitCategoryCategories.style.opacity = "0.2"
         searchHitCategoryImages.style.opacity = "0.2"
         searchHitCategoryTexts.style.opacity = "0.2"
-        for(let item in searchResultItemsAll)
-        {
-            if(searchResultItemsAll[item].style) { searchResultItemsAll[item].style.display = "none" }
-        }
+        for(let item in searchResultItemsAll) { if(searchResultItemsAll[item].style) { searchResultItemsAll[item].style.display = "none" } }
 
-        //search hits: all
+        //update elements ALL
         if(type == 'all')
         { 
-            for(let item in searchResultItemsAll)
-            {
-                if(searchResultItemsAll[item].style) { searchResultItemsAll[item].style.display = "flex" }
-            }
             searchHitCategoryAll.style.opacity = "1"
+            for(let item in searchResultItemsAll) { if(searchResultItemsAll[item].style) { searchResultItemsAll[item].style.display = "flex" } }
         }
 
-        //search hits: sections
+        //update elements SECTIONS
         else if(type == 'sections')
         { 
-            for(let item in searchResultSections)
-            {
-                if(searchResultSections[item].style) { searchResultSections[item].style.display = "block" }
-            }
             searchHitCategorySections.style.opacity = "1"
+            for(let item in searchResultSections) { if(searchResultSections[item].style) { searchResultSections[item].style.display = "block" } }
         }
 
-        //search hits: categories
+        //update elements CATEGORIES
         else if(type == 'categories')
         { 
-            for(let item in searchResultCategories)
-            {
-                if(searchResultCategories[item].style) { searchResultCategories[item].style.display = "block" }
-            }
             searchHitCategoryCategories.style.opacity = "1"
+            for(let item in searchResultCategories) { if(searchResultCategories[item].style) { searchResultCategories[item].style.display = "block" } }
         }
 
-        //search hits: images
+        //update elements IMAGES
         else if(type == 'images')
         { 
-            for(let item in searchResultImages)
-            {
-                if(searchResultImages[item].style) { searchResultImages[item].style.display = "flex" }
-            }
             searchHitCategoryImages.style.opacity = "1"
+            for(let item in searchResultImages) { if(searchResultImages[item].style) { searchResultImages[item].style.display = "flex" } }
         }
 
-        //search hits: texts
+        //update elements TEXTS
         else if(type == 'texts')
         { 
-            for(let item in searchResultOthers)
-            {
-                if(searchResultOthers[item].style) { searchResultOthers[item].style.display = "block" }
-            }
             searchHitCategoryTexts.style.opacity = "1"
+            for(let item in searchResultOthers) { if(searchResultOthers[item].style) { searchResultOthers[item].style.display = "block" } }
         }
 
         //scroll to top
@@ -2015,26 +1907,23 @@ export default {
         frontendSections,
         frontendCategories,
         frontendData,
-        // frontendCategoriesSelected,
         frontendDataSelected,
         frontendSettings,
         frontendContact,
         frontendSearchResults,
         frontendSearchString,
         router,
+        // frontendCategoriesSelected,
 
         //functions
         loadSectionCategories,
         loadCategoryData,
-        loadDataType,
         loadDataData,
-        loadDataInputs,
         loadCategoryNavigatorModal,
         loadSectionNavigatorModal,
         loadNextCategory,
         loadPreviousCategory,
         loadAboutModal,
-        loadContactModal,
         loadSearchModal,
         loadNextSection,
         loadPreviousSection,
@@ -2052,11 +1941,14 @@ export default {
         fullscreen,
         displayMobileNavigator,
         setRoutePath,
-        backgroundImageUnderlaySetOpacity,
+        categoryUnderlaySetOpacity,
         search,
         setSearchPath,
         filterSearchResults,
         selectSearchHitsCategory
+        // loadDataType,
+        // loadDataInputs,
+        // loadContactModal,
     }
   }
 }
@@ -2098,12 +1990,6 @@ export default {
     }
 </style>
 <style scoped>
-    /*** css variables ***/
-    /* * {
-        --colorText: blue;
-    } */
-
-
     /*** scrollbars */
     #frontendData::-webkit-scrollbar { height: 0px; width: 0px; }
     #frontendDataRows::-webkit-scrollbar { height: 0px; width: 0px; }
@@ -2116,9 +2002,11 @@ export default {
     #dataObjModalPreviewImages::-webkit-scrollbar-track { background: black; }
     #dataObjModalPreviewImages::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.1); }
     
+
     /*** elements ***/
     input[type='radio'] { accent-color:  #822c8b; }
     input[type='checkbox'] { accent-color:  #822c8b; }
+
 
     /*** ids ***/
     #componentFrontend 
@@ -2456,7 +2344,7 @@ export default {
         background-color: #1a1a1a;
     }
     #loadingScreen img { max-width: 97vw; -webkit-user-drag: none; }
-    #backgroundImageUnderlay 
+    #categoryUnderlay 
     { 
         position: fixed;
         height: 100vh; 
