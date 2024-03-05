@@ -267,7 +267,7 @@
         
         <!-- modal: edit categories -->
         <div id="editCategoriesModal">
-            <label id="editCategoryTitle">Edit Categories</label>
+            <label id="editCategoryTitle">Categories</label>
 
             <div id="editCategoriesList">
                 <div v-bind:id="'editCategoryObj#' + category.pos" class="editCategoryObj" v-for="category in sortBackendCategories(backendCategoryObjModal)">
@@ -311,7 +311,7 @@
 
         <!-- modal: edit sections -->
         <div id="editSectionsModal">
-            <label id="editSectionTitle">Edit Sections</label>
+            <label id="editSectionTitle">Sections</label>
 
             <div id="editSectionsList">
                 <div v-bind:id="'editSectionObj#' + section.pos" class="editSectionObj" v-for="section in sortBackendSections(backendSectionObjModal)">
@@ -577,7 +577,7 @@
                         <label class="editAccountToggle">About:</label>
                         <button id="editAccountAboutButtonYes" class="editAccountToggleButton" v-on:click="editAccount('buttonAbout', 'true', 'true')">Yes</button>
                         <button id="editAccountAboutButtonNo" class="editAccountToggleButton" v-on:click="editAccount('buttonAbout', 'false', 'true')">No</button>
-                        <input id="editAccountAboutText" class="editAccountInputText" type="text" placeholder="About Text" maxlength="1000" />
+                        <input id="editAccountAboutText" class="editAccountInputText" type="text" placeholder="About Text" maxlength="400" />
                     </div>
                 </div>
 
@@ -611,7 +611,7 @@
                         <label class="editAccountToggle">Loading Screen:</label>
                         <button id="editAccountLoadingScreenYes" class="editAccountToggleButton" v-on:click="editAccount('loadingScreen', 'true', 'true')">Yes</button>
                         <button id="editAccountLoadingScreenNo" class="editAccountToggleButton" v-on:click="editAccount('loadingScreen', 'false', 'true')">No</button>
-                        <input id="editAccountLoadingScreenUrl" class="editAccountInputText" type="text" placeholder="Gif Url" maxlength="1000"/>
+                        <!-- <input id="editAccountLoadingScreenUrl" class="editAccountInputText" type="text" placeholder="Gif Url" maxlength="1000"/> -->
                     </div>
                 </div>
             </div>
@@ -678,6 +678,7 @@
 
         <!-- button: edit account -->
         <div id="settingsAccount" v-on:click="editAccountModal(backendAccountSettings, backendAccountCredentials)">
+            <p id="settingsAccountText">Settings</p>
         </div>
     </div>
 </template>
@@ -818,7 +819,7 @@ export default {
         for(let item in sectionElements)
         {
             let element = document.getElementById(sectionElements[item].id)
-            if(element) { element.style.opacity = "0.1" }
+            if(element) { element.style.opacity = "0.2" }
         }
         for(let item in categoryElements)
         {
@@ -869,7 +870,7 @@ export default {
         for(let c in categories)
         {
             let e = document.getElementById(categories[c].id)
-            if(e) { e.style.opacity = "0.1" }
+            if(e) { e.style.opacity = "0.2" }
         }
         selectCategoryElement.style.opacity = "1"
         if(backendDataElement) { backendDataElement.style.display = "block" }
@@ -1907,7 +1908,7 @@ export default {
             //update elements
             if(dataObjModalEdit) dataObjModalEdit.style.display = "flex"
             for(let e in dataObjModalClass) 
-            { let element = document.getElementById(dataObjModalClass[e].id); if(element) { element.style.opacity = "0.1" } }
+            { let element = document.getElementById(dataObjModalClass[e].id); if(element) { element.style.opacity = "0.2" } }
             if(dataObjModalType) { dataObjModalType.style.opacity = "1" }
         }
 
@@ -2590,7 +2591,7 @@ export default {
         }
 
         //update elements
-        for(let e in editCategoryObjects) { let c = document.getElementById(editCategoryObjects[e].id); if(c) { c.style.opacity = "0.1" } }
+        for(let e in editCategoryObjects) { let c = document.getElementById(editCategoryObjects[e].id); if(c) { c.style.opacity = "0.2" } }
         setTimeout(() => {
             editCategoryObj = document.getElementById("editCategoryObj#" + id) 
             if(editCategoryObj) { editCategoryObj.style.opacity = "1";  editCategoryObj.scrollIntoView() }
@@ -2982,7 +2983,7 @@ export default {
         }
 
         //update elements
-        for(let e in editSectionObjects) { let c = document.getElementById(editSectionObjects[e].id); if(c) { c.style.opacity = "0.1" } }
+        for(let e in editSectionObjects) { let c = document.getElementById(editSectionObjects[e].id); if(c) { c.style.opacity = "0.2" } }
         setTimeout(() => {
             editSectionObj = document.getElementById("editSectionObj#" + id) 
             if(editSectionObj) { editSectionObj.style.opacity = "1";  editSectionObj.scrollIntoView() }
@@ -3413,10 +3414,10 @@ export default {
                 localStorage.setItem("cms-edit-settings", JSON.stringify(settings))
             }
 
-            editAccountNavTop.style.color = "white"; editAccountNavTop.style.opacity = "0.1"
-            editAccountNavBottom.style.color = "white"; editAccountNavBottom.style.opacity = "0.1"
-            editAccountNavLeft.style.color = "white"; editAccountNavLeft.style.opacity = "0.1"
-            editAccountNavRight.style.color = "white"; editAccountNavRight.style.opacity = "0.1"
+            editAccountNavTop.style.color = "white"; editAccountNavTop.style.opacity = "0.2"
+            editAccountNavBottom.style.color = "white"; editAccountNavBottom.style.opacity = "0.2"
+            editAccountNavLeft.style.color = "white"; editAccountNavLeft.style.opacity = "0.2"
+            editAccountNavRight.style.color = "white"; editAccountNavRight.style.opacity = "0.2"
 
             if(value == "top") { editAccountNavTop.style.color = "#822c8b"; editAccountNavTop.style.opacity = "1" }
             else if(value == "bottom") { editAccountNavBottom.style.color = "#822c8b"; editAccountNavBottom.style.opacity = "1" }
@@ -3432,10 +3433,10 @@ export default {
                 localStorage.setItem("cms-edit-settings", JSON.stringify(settings))
             }
 
-            editAccountNavSquare.style.color = "white"; editAccountNavSquare.style.opacity = "0.1"
-            editAccountNavRounded.style.color = "white"; editAccountNavRounded.style.opacity = "0.1"
-            // editAccountNavThumbnails.style.color = "white"; editAccountNavThumbnails.style.opacity = "0.1"
-            // editAccountNavNumbers.style.color = "white"; editAccountNavNumbers.style.opacity = "0.1"
+            editAccountNavSquare.style.color = "white"; editAccountNavSquare.style.opacity = "0.2"
+            editAccountNavRounded.style.color = "white"; editAccountNavRounded.style.opacity = "0.2"
+            // editAccountNavThumbnails.style.color = "white"; editAccountNavThumbnails.style.opacity = "0.2"
+            // editAccountNavNumbers.style.color = "white"; editAccountNavNumbers.style.opacity = "0.2"
 
             if(value == "square") { editAccountNavSquare.style.color = "#822c8b"; editAccountNavSquare.style.opacity = "1" }
             else if(value == "rounded") { editAccountNavRounded.style.color = "#822c8b"; editAccountNavRounded.style.opacity = "1" }
@@ -3451,9 +3452,9 @@ export default {
                 localStorage.setItem("cms-edit-settings", JSON.stringify(settings))
             }
 
-            editAccountNavSmall.style.color = "white"; editAccountNavSmall.style.opacity = "0.1"
-            editAccountNavMedium.style.color = "white"; editAccountNavMedium.style.opacity = "0.1"
-            editAccountNavLarge.style.color = "white"; editAccountNavLarge.style.opacity = "0.1"
+            editAccountNavSmall.style.color = "white"; editAccountNavSmall.style.opacity = "0.2"
+            editAccountNavMedium.style.color = "white"; editAccountNavMedium.style.opacity = "0.2"
+            editAccountNavLarge.style.color = "white"; editAccountNavLarge.style.opacity = "0.2"
 
             if(value == "small") { editAccountNavSmall.style.color = "#822c8b"; editAccountNavSmall.style.opacity = "1" }
             else if(value == "medium") { editAccountNavMedium.style.color = "#822c8b"; editAccountNavMedium.style.opacity = "1" }
@@ -3468,8 +3469,8 @@ export default {
                 localStorage.setItem("cms-edit-settings", JSON.stringify(settings))
             }
 
-            editAccountTextNormal.style.color = "white"; editAccountTextNormal.style.opacity = "0.1"
-            editAccountTextBold.style.color = "white"; editAccountTextBold.style.opacity = "0.1"
+            editAccountTextNormal.style.color = "white"; editAccountTextNormal.style.opacity = "0.2"
+            editAccountTextBold.style.color = "white"; editAccountTextBold.style.opacity = "0.2"
 
             if(value == "normal") { editAccountTextNormal.style.color = "#822c8b"; editAccountTextNormal.style.opacity = "1" }
             else if(value == "bold") { editAccountTextBold.style.color = "#822c8b"; editAccountTextBold.style.opacity = "1" }
@@ -3483,9 +3484,9 @@ export default {
                 localStorage.setItem("cms-edit-settings", JSON.stringify(settings))
             }
 
-            editAccountTextSmall.style.color = "white"; editAccountTextSmall.style.opacity = "0.1"
-            editAccountTextMedium.style.color = "white"; editAccountTextMedium.style.opacity = "0.1"
-            editAccountTextLarge.style.color = "white"; editAccountTextLarge.style.opacity = "0.1"
+            editAccountTextSmall.style.color = "white"; editAccountTextSmall.style.opacity = "0.2"
+            editAccountTextMedium.style.color = "white"; editAccountTextMedium.style.opacity = "0.2"
+            editAccountTextLarge.style.color = "white"; editAccountTextLarge.style.opacity = "0.2"
 
             if(value == "small") { editAccountTextSmall.style.color = "#822c8b"; editAccountTextSmall.style.opacity = "1" }
             else if(value == "medium") { editAccountTextMedium.style.color = "#822c8b"; editAccountTextMedium.style.opacity = "1" }
@@ -3500,8 +3501,8 @@ export default {
                 localStorage.setItem("cms-edit-settings", JSON.stringify(settings))
             }
 
-            editAccountSitePublic.style.color = "white"; editAccountSitePublic.style.opacity = "0.1"
-            editAccountSitePrivate.style.color = "white"; editAccountSitePrivate.style.opacity = "0.1"
+            editAccountSitePublic.style.color = "white"; editAccountSitePublic.style.opacity = "0.2"
+            editAccountSitePrivate.style.color = "white"; editAccountSitePrivate.style.opacity = "0.2"
 
             if(value == "public") { editAccountSitePublic.style.color = "#822c8b"; editAccountSitePublic.style.opacity = "1" }
             else if(value == "private") { editAccountSitePrivate.style.color = "#822c8b"; editAccountSitePrivate.style.opacity = "1" }
@@ -3515,8 +3516,8 @@ export default {
                 localStorage.setItem("cms-edit-settings", JSON.stringify(settings))
             }
 
-            editAccountSitePasswordProtectedYes.style.color = "white"; editAccountSitePasswordProtectedYes.style.opacity = "0.1"
-            editAccountSitePasswordProtectedNo.style.color = "white"; editAccountSitePasswordProtectedNo.style.opacity = "0.1"
+            editAccountSitePasswordProtectedYes.style.color = "white"; editAccountSitePasswordProtectedYes.style.opacity = "0.2"
+            editAccountSitePasswordProtectedNo.style.color = "white"; editAccountSitePasswordProtectedNo.style.opacity = "0.2"
 
             if(value == "true") 
             { 
@@ -3546,8 +3547,8 @@ export default {
                 settings.pageStartBackgroundImage = editAccountStartPageBackgroundImage.value
             }
 
-            editAccountStartPageYes.style.color = "white"; editAccountStartPageYes.style.opacity = "0.1"
-            editAccountStartPageNo.style.color = "white"; editAccountStartPageNo.style.opacity = "0.1"
+            editAccountStartPageYes.style.color = "white"; editAccountStartPageYes.style.opacity = "0.2"
+            editAccountStartPageNo.style.color = "white"; editAccountStartPageNo.style.opacity = "0.2"
 
             if(value == "true") 
             { 
@@ -3581,8 +3582,8 @@ export default {
                 localStorage.setItem("cms-edit-settings", JSON.stringify(settings))
             }
             
-            editAccountEndPageYes.style.color = "white"; editAccountEndPageYes.style.opacity = "0.1"
-            editAccountEndPageNo.style.color = "white"; editAccountEndPageNo.style.opacity = "0.1"
+            editAccountEndPageYes.style.color = "white"; editAccountEndPageYes.style.opacity = "0.2"
+            editAccountEndPageNo.style.color = "white"; editAccountEndPageNo.style.opacity = "0.2"
 
             if(value == "true") 
             { 
@@ -3613,8 +3614,8 @@ export default {
                 localStorage.setItem("cms-edit-settings", JSON.stringify(settings))
             }
             
-            editAccountIndexPageYes.style.color = "white"; editAccountIndexPageYes.style.opacity = "0.1"
-            editAccountIndexPageNo.style.color = "white"; editAccountIndexPageNo.style.opacity = "0.1"
+            editAccountIndexPageYes.style.color = "white"; editAccountIndexPageYes.style.opacity = "0.2"
+            editAccountIndexPageNo.style.color = "white"; editAccountIndexPageNo.style.opacity = "0.2"
 
             if(value == "true") { editAccountIndexPageYes.style.color = "#822c8b"; editAccountIndexPageYes.style.opacity = "1" }
             else if(value == "false") { editAccountIndexPageNo.style.color = "#822c8b"; editAccountIndexPageNo.style.opacity = "1" }
@@ -3628,8 +3629,8 @@ export default {
                 localStorage.setItem("cms-edit-settings", JSON.stringify(settings))
             }
 
-            editAccountFullscreenButtonYes.style.color = "white"; editAccountFullscreenButtonYes.style.opacity = "0.1"
-            editAccountFullscreenButtonNo.style.color = "white"; editAccountFullscreenButtonNo.style.opacity = "0.1"
+            editAccountFullscreenButtonYes.style.color = "white"; editAccountFullscreenButtonYes.style.opacity = "0.2"
+            editAccountFullscreenButtonNo.style.color = "white"; editAccountFullscreenButtonNo.style.opacity = "0.2"
 
             if(value == "true") { editAccountFullscreenButtonYes.style.color = "#822c8b"; editAccountFullscreenButtonYes.style.opacity = "1" }
             else if(value == "false") { editAccountFullscreenButtonNo.style.color = "#822c8b"; editAccountFullscreenButtonNo.style.opacity = "1" }
@@ -3643,8 +3644,8 @@ export default {
                 localStorage.setItem("cms-edit-settings", JSON.stringify(settings))
             }
 
-            editAccountSearchButtonYes.style.color = "white"; editAccountSearchButtonYes.style.opacity = "0.1"
-            editAccountSearchButtonNo.style.color = "white"; editAccountSearchButtonNo.style.opacity = "0.1"
+            editAccountSearchButtonYes.style.color = "white"; editAccountSearchButtonYes.style.opacity = "0.2"
+            editAccountSearchButtonNo.style.color = "white"; editAccountSearchButtonNo.style.opacity = "0.2"
 
             if(value == "true") { editAccountSearchButtonYes.style.color = "#822c8b"; editAccountSearchButtonYes.style.opacity = "1" }
             else if(value == "false") { editAccountSearchButtonNo.style.color = "#822c8b"; editAccountSearchButtonNo.style.opacity = "1" }
@@ -3658,8 +3659,8 @@ export default {
                 localStorage.setItem("cms-edit-settings", JSON.stringify(settings))
             }
 
-            editAccountContactButtonYes.style.color = "white"; editAccountContactButtonYes.style.opacity = "0.1"
-            editAccountContactButtonNo.style.color = "white"; editAccountContactButtonNo.style.opacity = "0.1"
+            editAccountContactButtonYes.style.color = "white"; editAccountContactButtonYes.style.opacity = "0.2"
+            editAccountContactButtonNo.style.color = "white"; editAccountContactButtonNo.style.opacity = "0.2"
 
             if(value == "true") { editAccountContactButtonYes.style.color = "#822c8b"; editAccountContactButtonYes.style.opacity = "1" }
             else if(value == "false") { editAccountContactButtonNo.style.color = "#822c8b"; editAccountContactButtonNo.style.opacity = "1" }
@@ -3674,8 +3675,8 @@ export default {
                 localStorage.setItem("cms-edit-settings", JSON.stringify(settings))
             }
 
-            editAccountAboutButtonYes.style.color = "white"; editAccountAboutButtonYes.style.opacity = "0.1"
-            editAccountAboutButtonNo.style.color = "white"; editAccountAboutButtonNo.style.opacity = "0.1"
+            editAccountAboutButtonYes.style.color = "white"; editAccountAboutButtonYes.style.opacity = "0.2"
+            editAccountAboutButtonNo.style.color = "white"; editAccountAboutButtonNo.style.opacity = "0.2"
 
             if(value == "true") 
             { 
@@ -3700,8 +3701,8 @@ export default {
                 localStorage.setItem("cms-edit-settings", JSON.stringify(settings))
             }
 
-            editAccountSlideshowModeYes.style.color = "white"; editAccountSlideshowModeYes.style.opacity = "0.1"
-            editAccountSlideshowModeNo.style.color = "white"; editAccountSlideshowModeNo.style.opacity = "0.1"
+            editAccountSlideshowModeYes.style.color = "white"; editAccountSlideshowModeYes.style.opacity = "0.2"
+            editAccountSlideshowModeNo.style.color = "white"; editAccountSlideshowModeNo.style.opacity = "0.2"
 
             if(value == "true") { editAccountSlideshowModeYes.style.color = "#822c8b"; editAccountSlideshowModeYes.style.opacity = "1" }
             else if(value == "false") { editAccountSlideshowModeNo.style.color = "#822c8b"; editAccountSlideshowModeNo.style.opacity = "1" }
@@ -3716,8 +3717,8 @@ export default {
                 localStorage.setItem("cms-edit-settings", JSON.stringify(settings))
             }
 
-            editAccountSectionBackgroundImageYes.style.color = "white"; editAccountSectionBackgroundImageYes.style.opacity = "0.1"
-            editAccountSectionBackgroundImageNo.style.color = "white"; editAccountSectionBackgroundImageNo.style.opacity = "0.1"
+            editAccountSectionBackgroundImageYes.style.color = "white"; editAccountSectionBackgroundImageYes.style.opacity = "0.2"
+            editAccountSectionBackgroundImageNo.style.color = "white"; editAccountSectionBackgroundImageNo.style.opacity = "0.2"
 
             if(value == "true") 
             { 
@@ -3739,25 +3740,25 @@ export default {
             if(clicked == "true")
             {
                 settings.loadingScreen = value
-                settings.loadingScreenUrl = editAccountLoadingScreenUrl.value
+                // settings.loadingScreenUrl = editAccountLoadingScreenUrl.value
                 localStorage.setItem("cms-edit-settings", JSON.stringify(settings))
             }
 
-            editAccountLoadingScreenYes.style.color = "white"; editAccountLoadingScreenYes.style.opacity = "0.1"
-            editAccountLoadingScreenNo.style.color = "white"; editAccountLoadingScreenNo.style.opacity = "0.1"
+            editAccountLoadingScreenYes.style.color = "white"; editAccountLoadingScreenYes.style.opacity = "0.2"
+            editAccountLoadingScreenNo.style.color = "white"; editAccountLoadingScreenNo.style.opacity = "0.2"
 
             if(value == "true") 
             { 
                 editAccountLoadingScreenYes.style.color = "#822c8b"
                 editAccountLoadingScreenYes.style.opacity = "1"
-                editAccountLoadingScreenUrl.style.display = "block"
-                editAccountLoadingScreenUrl.value = settings.loadingScreenUrl
+                // editAccountLoadingScreenUrl.style.display = "block"
+                // editAccountLoadingScreenUrl.value = settings.loadingScreenUrl
             }
             else if(value == "false") 
             { 
                 editAccountLoadingScreenNo.style.color = "#822c8b"
                 editAccountLoadingScreenNo.style.opacity = "1"
-                editAccountLoadingScreenUrl.style.display = "none"
+                // editAccountLoadingScreenUrl.style.display = "none"
             }
         }
     }
@@ -3799,7 +3800,7 @@ export default {
         let editAccountPasswordProtectedPassword = document.getElementById("editAccountPasswordProtectedPassword")
         let editAccountAboutText = document.getElementById("editAccountAboutText")
         let editAccountSectionBackgroundImageUrl = document.getElementById("editAccountSectionBackgroundImageUrl")
-        let editAccountLoadingScreenUrl = document.getElementById("editAccountLoadingScreenUrl")
+        // let editAccountLoadingScreenUrl = document.getElementById("editAccountLoadingScreenUrl")
 
         //variables
         let credentials = {
@@ -3840,7 +3841,7 @@ export default {
         lsSettings.pageEndBackgroundImage = editAccountEndPageBackgroundImage.value
         lsSettings.buttonAboutText = editAccountAboutText.value
         lsSettings.sectionBackgroundImageUrl = editAccountSectionBackgroundImageUrl.value
-        lsSettings.loadingScreenUrl = editAccountLoadingScreenUrl.value
+        // lsSettings.loadingScreenUrl = editAccountLoadingScreenUrl.value
         lsSettings.sitePasswordProtectedPassword = editAccountPasswordProtectedPassword.value
 
         //check new username
@@ -4363,7 +4364,7 @@ export default {
         overflow-y: scroll;
         user-select: none;
         opacity: 1;
-        /* border: 2px solid white;  */
+        /* border: 3px solid #822c8b;  */
         background-color: transparent;
     }
     #confirmChanges { display: none; padding: 60px 0px 0px 0px; }
@@ -4457,10 +4458,10 @@ export default {
     { 
         position: fixed; 
         display: block; 
-        max-height: 72vh; 
+        max-height: 60vh; 
         width: 22vw; 
         left: 37%; 
-        top: 8%; 
+        top: 11%; 
         margin: 0px;
         padding: 60px;
         z-index: 2;
@@ -4584,10 +4585,10 @@ export default {
     { 
         position: fixed; 
         display: none; 
-        max-height: 72vh; 
+        max-height: 60vh; 
         width: 22vw; 
         left: 37%; 
-        top: 16%; 
+        top: 11%; 
         margin: 0px;
         padding: 60px;
         z-index: 2;
@@ -4602,10 +4603,10 @@ export default {
     {
         position: fixed; 
         display: none; 
-        max-height: 72vh; 
+        max-height: 60vh; 
         width: 22vw; 
         left: 36%; 
-        top: 16%; 
+        top: 11%; 
         margin: 0px;
         padding: 60px;
         z-index: 2;
@@ -4616,10 +4617,10 @@ export default {
         border: 3px solid #822c8b; 
         background-color: #1D212E; /* #822c8b */ /* #2c9b2c */
     }
-    #addDataRowTitle { display: block; margin: -9px 0px 40px 0px; font-size: 22px; font-weight: bold; text-shadow: 0px 1px black; color: white; }
-    #addNewTypeTitle { display: block; margin: -9px 0px 40px 0px; font-size: 22px; font-weight: bold; text-shadow: 0px 1px black; color: white; }
-    #editCategoryTitle { display: block; margin: -9px 0px 40px 0px; font-size: 22px; font-weight: bold; text-shadow: 0px 1px black; color: white; }
-    #editSectionTitle { display: block; margin: -9px 0px 40px 0px; font-size: 22px; font-weight: bold; text-shadow: 0px 1px black; color: white; }
+    #addDataRowTitle { display: block; margin: -9px 0px 40px 0px; font-size: 26px; font-weight: bold; text-shadow: 0px 1px black; color: white; }
+    #addNewTypeTitle { display: block; margin: -9px 0px 40px 0px; font-size: 26px; font-weight: bold; text-shadow: 0px 1px black; color: white; }
+    #editCategoryTitle { display: block; margin: -9px 0px 40px 0px; font-size: 26px; font-weight: bold; text-shadow: 0px 1px black; color: white; }
+    #editSectionTitle { display: block; margin: -9px 0px 40px 0px; font-size: 26px; font-weight: bold; text-shadow: 0px 1px black; color: white; }
     #addNewDataRow 
     { 
         display: none;
@@ -4664,7 +4665,7 @@ export default {
         left: calc(38% + 10px); 
         user-select: none; 
         -webkit-user-drag: none;
-        opacity: 0.1;
+        opacity: 0.2;
     }
     #settingsSectionsIcon:hover { opacity: 1; }
     #settingsCategoriesIcon:hover { opacity: 1; }
@@ -4673,9 +4674,9 @@ export default {
         position: fixed; 
         display: none; 
         max-height: 60vh; 
-        width: 30vw; 
-        left: 33%; 
-        top: 16%; 
+        width: 27vw; 
+        left: 32%; 
+        top: 11%; 
         margin: 0px;
         padding: 60px;
         z-index: 2;
@@ -4691,9 +4692,9 @@ export default {
         position: fixed; 
         display: none; 
         max-height: 60vh; 
-        width: 30vw; 
-        left: 33%; 
-        top: 16%; 
+        width: 27vw; 
+        left: 32%; 
+        top: 11%; 
         margin: 0px;
         padding: 60px;
         z-index: 2;
@@ -4709,8 +4710,8 @@ export default {
         position: fixed; 
         display: none; 
         max-height: 60vh; 
-        width: 34vw; 
-        left: 33%; 
+        width: 27vw; 
+        left: 32%; 
         top: 11%; 
         margin: 0px;
         padding: 70px;
@@ -4750,7 +4751,7 @@ export default {
     #editAccountAboutButton { display: block; margin: 0px; padding: 20px 0px 20px 14px; border-bottom: 1px solid #ffffff1f; }
     #editAccountStartPage { display: block; margin: 0px; padding: 20px 0px 20px 14px; border-top: 1px solid #ffffff1f; border-bottom: 1px solid #ffffff1f; }
     #editAccountLoadingScreen { display: block; margin: 0px; padding: 20px 0px 20px 14px; border-bottom: 1px solid #ffffff1f; }
-    #editAccountSectionBackgroundImage { display: block; margin: 0px; padding: 20px 0px 20px 14px; border-bottom: 1px solid #ffffff1f; }
+    #editAccountSectionBackgroundImage { display: none; margin: 0px; padding: 20px 0px 20px 14px; border-bottom: 1px solid #ffffff1f; }
     #editAcountEndPage { display: block; margin: 0px; padding: 20px 0px 20px 14px; border-bottom: 1px solid #ffffff1f; }
     #editAccountDangerConfirm { display: none; }
     #editAccountPasswordProtectedPassword { display: none; }
@@ -4763,7 +4764,7 @@ export default {
     #editAccountEndPageBackgroundImage { display: none; }
     #editAccountAboutText { display: none; }
     #editAccountSectionBackgroundImageUrl { display: none; }
-    #editAccountLoadingScreenUrl { display: none; }
+    /* #editAccountLoadingScreenUrl { display: none; } */
     #accountInfoCreatedAt { border-top: 1px solid #ffffff1f; }
     #editAccountTitleCredentials { padding-top: 0px; }
     #editAccountChangePassword { display: none; }
@@ -4802,6 +4803,7 @@ export default {
         background-color: black; /* #822c8b */
         border: 0px solid white;
     }
+    #settingsAccountText { display: none; }
 
 
     /*** classes ***/
@@ -5400,9 +5402,9 @@ export default {
     { 
         margin: 0px 0px 0px 6px;
         padding: 8px; 
-        font-size: 24px;
+        font-size: 22px;
         font-weight: bold;
-        opacity: 0.1;
+        opacity: 0.2;
         color: white;
         text-shadow: 0px 1px black;
         white-space: nowrap;
@@ -5410,7 +5412,7 @@ export default {
         background-color: #1D212E; 
     }
     .editAccountSelectedSetting { color: #822c8b; opacity: 1; }
-    .accountInfoTitle { }
+    .accountInfoTitle { font-size: 22px; }
     .accountInfoText
     {     
         margin: 0px 0px 0px 10px;
@@ -5427,35 +5429,193 @@ export default {
 
     
     /*** mobile ***/
-    /* @media screen and (max-width: 1000px) 
+    @media screen and (max-width: 1000px) 
     {   
-        #backendSections { height: auto; width: 100vw; margin: 0px; padding: 0px; }
-        #backendSectionsList { height: auto; display: flex; flex-direction: row; }
-        #backendCategories { width: 90%; top: 10%; left: initial; right: initial; margin: auto; padding: 0px; }
+        #backendSections 
+        { 
+            height: auto; 
+            width: 80vw;
+            top: 2px;
+            bottom: initial;
+            left: initial;
+            right: initial;
+            margin: 0px; 
+            padding: 0px 0px 0px 20vw; 
+            border-bottom: 2px solid black; 
+            background-color: black; /* #1D212E */
+        }
+        #backendSectionsList { height: auto; display: flex; flex-direction: row; background-color: black; }
+        #backendCategories 
+        { 
+            width: 100vw; 
+            top: 11%; 
+            left: initial; 
+            right: initial; 
+            margin: auto; 
+            padding: 0px 0px 0px 0px;
+            opacity: 0.6;
+            /* border-bottom: 4px solid #822c8b;  */
+        }
         #backendCategoriesList { width: auto; }
-        #settingsAccount { top: initial; bottom: 28px; right: 30px; }
-        #backendData { width: 90vw; top: 20%; left: initial; }
-        #backendDataRows { max-height: 66vh; }
+        #backendData { width: 100vw; top: 0px; left: 0px; margin: 0px; padding: 0px; top: 22%; left: initial; }
+        
+        #addDataRowModal { max-height: initial; height: 76vh; width: 80vw; top: 0%; left: 0%; padding: 40px 10vw 40px 10vw; border: 0px solid white; }
+        #dataObjModal 
+        { 
+            max-height: initial; 
+            height: 80vh; 
+            width: 80vw; 
+            top: 0%; 
+            left: 0%; 
+            padding: 20px 10vw 40px 10vw; 
+            border: 0px solid white;
+            border-bottom: 4px solid #822c8b; 
+        }
         #editCategoriesModal 
         { 
-            max-height: none; 
-            height: 86vh; 
-            width: 90vw; 
-            left: initial; 
-            top: initial; 
-            padding: 20px; 
-            border: 0px solid white; 
+            max-height: initial; 
+            height: 80vh; 
+            width: 88vw; 
+            top: 0%; left: 0%; 
+            padding: 20px 6vw 40px 6vw; 
+            border: 0px solid white;
+            border-bottom: 4px solid #822c8b;
         }
-        #editCategoriesList { max-height: 49vh; }
-        #editCategoryTitle { margin-top: 10px; margin-bottom: 26px; }
-        #editCategoriesInputs { padding: 12px; overflow-x: scroll; }
+        #editAccountModal 
+        { 
+            max-height: initial; 
+            height: 80vh; 
+            width: 88vw; 
+            top: 0%; 
+            left: 0%; 
+            padding: 20px 6vw 40px 6vw; 
+            border: 0px solid white;
+            border-bottom: 4px solid #822c8b;
+        }
+        #editSectionsModal 
+        { 
+            max-height: 80vh; 
+            height: auto; 
+            width: 88vw; 
+            top: 0%; 
+            left: 0%; 
+            padding: 20px 6vw 40px 6vw; 
+            border: 0px solid white;
+            border-bottom: 4px solid #822c8b;
+        }
+        
+        #backendDataRows { max-height: 56vh; }
+        
+        #editCategoriesList { max-height: 53vh; opacity: 0.6; }
+        #editSectionsList { max-height: 53vh; opacity: 0.6; }
+        
+        #editCategoryTitle { margin: 0px 0px 20px 0px; }
+        #editSectionTitle { margin: 0px 0px 20px 0px; }
 
-        .section { margin: 0px 10px 0px 10px; padding: 20px; background-color: black; }
+        #editCategoriesInputs { padding: 12px; overflow-x: scroll; opacity: 0.6; }
+        #editSectionsInputs { padding: 12px; overflow-x: scroll; opacity: 0.6; }
+        #dataObjModalEditMultiline { padding: 10px; overflow-x: scroll; opacity: 0.6; }
+        #dataObjModalEditTextlist { padding: 10px; overflow-x: scroll; opacity: 0.6; }
+        #dataObjModalEditTimeline { padding: 10px; overflow-x: scroll; opacity: 0.6; }
+        #dataObjModalEditLinklist { padding: 10px; overflow-x: scroll; opacity: 0.6; }
+        
+        #editAccountNavPosition { padding: 12px 24px 12px 24px; }
+        #editAccountNavIconType { padding: 12px 24px 12px 24px; }
+        #editAccountNavIconSize { padding: 12px 24px 12px 24px; }
+        #editAccountTextStyle { padding: 12px 24px 12px 24px; }
+        #editAccountTextSize { padding: 12px 24px 12px 24px; }
+        #editAccountSiteAccess { padding: 12px 24px 12px 24px; }
+        #editAccountSitePasswordProtected { padding: 12px 24px 12px 24px; }
+        #editAccountStartPage { padding: 12px 24px 12px 24px; }
+        #editAcountEndPage { padding: 12px 24px 12px 24px; }
+        #editAccountIndexPage { padding: 12px 24px 12px 24px; }
+        #editAccountFullscreenButton { padding: 12px 24px 12px 24px; }
+        #editAccountSearchButton { padding: 12px 24px 12px 24px; }
+        #editAccountContactButton { padding: 12px 24px 12px 24px; }
+        #editAccountAboutButton { padding: 12px 24px 12px 24px; }
+        #editAccountSlideshowMode { padding: 12px 24px 12px 24px; }
+        #editAccountSectionBackgroundImage { padding: 12px 24px 12px 24px; }
+        #editAccountLoadingScreen { padding: 12px 24px 12px 24px; }
+        #editAccountTitleCredentials { padding-bottom: 16px; }
+        #settingsAccountText { display: block; }
+
+        #settingsAccount 
+        { 
+            height: auto; 
+            width: 100vw; 
+            top: initial; 
+            bottom: 0px; 
+            left: 0px; 
+            right: initial;
+            font-weight: bold;
+            font-size: 20px;
+            opacity: 1;
+            color: white;
+            border-radius: 0%;
+            background-color: black;
+        }
+        #settingsSectionsIcon 
+        { 
+            height: 70px; 
+            width: auto; 
+            top: 0px;
+            bottom: initial; 
+            left: 0px; 
+            right: initial;
+            margin: 0px;
+            padding: 0px; 
+            opacity: 1; 
+            background-color: black; 
+        }
+        #settingsCategoriesIcon 
+        { 
+            height: 70px; 
+            width: auto; 
+            top: initial;
+            bottom: initial; 
+            left: initial; 
+            right: initial;
+            margin: 0px;
+            padding: 0px; 
+            opacity: 1; 
+            background-color: transparent; 
+        }
+        #labelSave { font-size: 22px; }
+        #labelDelete{ font-size: 22px; }
+        #editAccountDangerConfirm { width: 86vw; margin: auto; }
+        #confirmCheckbox { margin-top: 40px; }
+        #buttonSaveUpdateSections { width: 80vw; }
+        #buttonSaveUpdateCategories { width: 80vw; }
+        #buttonSaveUpdateSettings { width: 80vw; }
+        #editAccountDanger { width: 80vw; margin: auto; }
+
+        .section { margin: 0px 6px 0px 6px; padding: 20px; background-color: transparent; }
+        .category { margin: 0px 10px 0px 10px ; padding: 0px; font-size: 24px; font-weight: normal; }
+        .data { padding: 20px 20px 20px 26px; font-size: 20px; opacity: 0.6; }
         .editPosDisplay { margin: 6px 12px 0px 12px; }
         .editPosDown { margin: 6px 12px 0px 12px; }
         .editPosUp { margin: 6px 12px 0px 12px; }
         .inputCategorySave { margin: 6px 12px 0px 12px; }
         .editItemDelete { margin: 6px 12px 0px 12px; }
         .editAddRow { margin: 6px 12px 0px 12px; }
-    } */
+        .editAccountColors { display: flex; }
+        .editAccountText { width: 40%; padding-top: 13px; white-space: nowrap; overflow-x: scroll; }
+        .editAccountInputColor { width: 40%; font-size: 20px; }
+        .editAccountInputText { font-size: 20px; padding: 14px 24px 14px 24px; }
+        .editAccountText { font-size: 20px; }
+        .editAccountToggle { font-size: 20px; }
+        .editAccountToggleButton { font-size: 20px; }
+        .editAccountTitle { font-size: 24px; padding-bottom: 10px; }
+        .dataObjHeader { font-size: 22px; margin-bottom: -49px; }
+        .dataObjModalRowTitle { font-size: 22px; }
+        .editAccountInputDanger { font-size: 20px; }
+        .accountInfoTitle { display: inline-block; width: auto; font-size: 20px; white-space: nowrap; }
+        .accountInfoText { display: inline-block; width: -webkit-fill-available; margin: 0px; font-size: 20px; white-space: nowrap; overflow-x: scroll; }
+        .inputMultilineText { padding: 10px; }
+        .dataObjModalRowInput { padding: 3px 10px 3px 10px; }
+        .inputMultilineSidebarPos { padding: 20px 10px 10px 20px; }
+        .dataObjRow { margin: 80px 0px 0px 0px; }
+        .editAddRow { margin-top: 0px; }
+        .editItemDelete { margin-top: 3px; }
+    }
 </style>

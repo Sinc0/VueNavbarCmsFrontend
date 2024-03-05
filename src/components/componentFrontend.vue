@@ -166,7 +166,7 @@
             <p class="navigatorModalTitle">Sections</p>
             <!-- <p class="navigatorModalTitle">Sections · {{frontendSections.length}}</p> -->
 
-            <div class="categoryNavigatorModalItems">
+            <div class="sectionNavigatorModalItems">
                 <!-- <p class="selectSection" v-on:click="setRoutePath('start')">· Start</p> -->
                 <!-- <p class="selectSection" v-on:click="setRoutePath('index')">· Index</p> -->
                 
@@ -199,14 +199,14 @@
         <div id="aboutModal" v-if="frontendSettings">
         
             <!-- about -->
-            <p id="aboutTitle" class="modalTitle">About</p>
             <div id="infoAboutText">
-                <p id="aboutText">{{frontendSettings.buttonAboutText}}</p>
+                <p id="infoAboutTitle" class="modalTitle">About</p>
+                <p id="aboutText" class="infoItem">{{frontendSettings.buttonAboutText}}</p>
             </div>
             
             <!-- contact -->
-            <p id="aboutTitle" class="modalTitle">Contact</p>
             <div id="infoContactDetails" v-if="frontendContact">
+                <p id="infoContactTitle" class="modalTitle">Contact</p>
                 <div id="contactEmail" class="contactCategory" v-if="frontendContact.email">
                     <img src="/iconContactEmail.png" class="contactDetailThumbnail" />
                     <p class="contactDetailText">{{frontendContact.email}}</p>
@@ -229,10 +229,20 @@
             </div>
             
             <!-- keybinds -->
-            <p id="aboutTitle" class="modalTitle">Keybinds</p>
+            <div id="infoKeybinds">
+                <p id="infoKeybindsTitle" class="modalTitle">Keybinds</p>
+                <p class="infoItem">#1</p>
+                <p class="infoItem">#2</p>
+                <p class="infoItem">#3</p>
+            </div>
             
             <!-- privacy policy -->
-            <p id="aboutTitle" class="modalTitle">Privacy Policy</p>
+            <div id="infoPrivacyPolicy">
+                <p id="infoPrivacyPolicyTitle" class="modalTitle">Privacy Policy</p>
+                <p class="infoItem">#1</p>
+                <p class="infoItem">#2</p>
+                <p class="infoItem">#3</p>
+            </div>
         </div>
 
 
@@ -1997,7 +2007,10 @@ export default {
     #categoryNavigatorModal::-webkit-scrollbar { height: 0px; width: 0px; }
     #sectionNavigatorModal::-webkit-scrollbar { height: 0px; width: 0px; }
     #searchModalResults::-webkit-scrollbar { height: 0px; width: 0px; }
+    #aboutModal::-webkit-scrollbar { height: 0px; width: 0px; }
     .categoryNavigatorModalItems::-webkit-scrollbar { height: 0px; width: 0px; }
+    .sectionNavigatorModalItems::-webkit-scrollbar { height: 0px; width: 0px; }
+
     #dataObjModalPreviewImages::-webkit-scrollbar { height: 12px; width: 10px; }
     #dataObjModalPreviewImages::-webkit-scrollbar-track { background: black; }
     #dataObjModalPreviewImages::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.1); }
@@ -2150,6 +2163,8 @@ export default {
         font-size: 32px; 
         font-weight: bold;
         text-transform: capitalize;
+        white-space: nowrap;
+        overflow-x: scroll;
         color: var(--colorText);
         border: 0px solid white;
         background-color: transparent;
@@ -2159,9 +2174,9 @@ export default {
         position: fixed;
         display: none;
         max-height: 60vh;
-        width: 34vw;
-        top: 20%;
-        left: 30%;
+        width: 28vw;
+        top: 10%;
+        left: 34%;
         margin: 0px;
         padding: 40px;
         z-index: 2;
@@ -2172,8 +2187,8 @@ export default {
         overflow-y: scroll;
         opacity: 1;
         /* transform: translate(-40%, -50%); */
-        border: 3px solid var(--colorText);
-        background-color: #1D212E;
+        /* border: 3px solid var(--colorText); */
+        /* background-color: #1D212E; */
     }
     #contactModal 
     {
@@ -2323,14 +2338,52 @@ export default {
         background-color: var(--colorSectionBackground); 
     }
     #pageIndexSections { display: block; height: 80vh; margin: 10vh 0px 0px 0px; overflow-y: scroll; }
-    #pageStartTitle { margin: 36vh 0px 0px 0px; font-size: 60px; font-weight: bold; text-shadow: 0px 1px black; }
-    #pageStartText { margin: 20px 0px 0px 0px; font-size: 29px; font-weight: bold; opacity: 0.6; text-shadow: 0px 1px black; }
-    #pageEndTitle { margin: 36vh 0px 0px 0px; font-size: 60px; font-weight: bold; text-shadow: 0px 1px black; }
-    #pageEndText { margin: 20px 0px 0px 0px; font-size: 29px; font-weight: bold; opacity: 0.6; text-shadow: 0px 1px black; }
+    #pageStartTitle 
+    { 
+        max-width: 60vw;
+        margin: auto;
+        margin-top: 36vh; 
+        font-size: 60px; 
+        font-weight: bold;
+        text-shadow: 0px 1px black;
+        white-space: nowrap;
+        overflow-x: scroll;
+    }
+    #pageStartText 
+    {
+        max-width: 60vw;
+        margin: auto;
+        font-size: 29px; 
+        font-weight: bold;
+        text-shadow: 0px 1px black;
+        white-space: nowrap;
+        opacity: 0.6;
+        overflow-x: scroll;
+    }
+    #pageEndTitle 
+    { 
+        max-width: 60vw;
+        margin: auto;
+        margin-top: 36vh; 
+        font-size: 60px; 
+        font-weight: bold;
+        text-shadow: 0px 1px black;
+        white-space: nowrap;
+        overflow-x: scroll;
+    }
+    #pageEndText 
+    { 
+        max-width: 60vw;
+        margin: auto;
+        font-size: 29px; 
+        font-weight: bold;
+        text-shadow: 0px 1px black;
+        white-space: nowrap;
+        opacity: 0.6;
+        overflow-x: scroll;
+    }
     #mobileNavigatorButton { display: none; }
     #mobileNavigatorModal { display: none; }
-    #aboutTitle { }
-    #aboutText { margin: 0px; margin-top: 20px; padding: 0px; font-weight: bold; font-size: 20px; }
     #loadingScreen 
     {
         display: none;
@@ -2388,6 +2441,14 @@ export default {
         text-align: center; 
     }
     #searchHitCategoryAll { opacity: 1; }
+    #infoAboutTitle { margin: 0px 0px 12px 0px; }
+    #infoContactTitle { margin: 60px 0px 0px 0px; }
+    #infoKeybindsTitle { margin: 60px 0px 12px 0px; }
+    #infoPrivacyPolicyTitle { margin: 60px 0px 12px 0px; }
+    #contactEmail { margin: 12px 0px 20px 22%; }
+    #contactName { margin: 0px 0px 20px 22%; }
+    #contactPhone { margin: 0px 0px 20px 22%; }
+    #contactCountry { margin: 0px 0px 0px 22%; }
     /* #data1 { margin-top: calc(-49px - 1px); } */
 
 
@@ -2414,7 +2475,7 @@ export default {
     }
     .category 
     { 
-        width: fit-content;
+        width: -webkit-fill-available;
         margin: 0px; 
         padding: 20px; 
         text-wrap: nowrap; 
@@ -2422,13 +2483,16 @@ export default {
         font-size: 32px; 
         font-weight: bold;
         text-transform: capitalize;
+        white-space: nowrap;
+        overflow-x: scroll;
+        user-select: none;
         color: var(--colorText); /* #822c8b */
         /* border: 1px solid white; */
         /* background-color: #1D212E; */
     }
     .selectSection 
     { 
-        width: fit-content;
+        width: -webkit-fill-available;
         margin: 0px; 
         padding: 20px; 
         text-wrap: nowrap; 
@@ -2436,6 +2500,9 @@ export default {
         font-size: 32px; 
         font-weight: bold;
         text-transform: capitalize;
+        white-space: nowrap;
+        overflow-x: scroll;
+        user-select: none;
         /* text-transform: uppercase; */
         color: var(--colorText); /* #822c8b */
         /* border: 1px solid white; */
@@ -2670,7 +2737,7 @@ export default {
         /* background-color: #822c8b; */
     }
     .modalTitle { margin: 0px; font-size: 28px; font-weight: bold; }
-    .contactCategory { display: flex; margin: 40px 0px 0px 0px; flex-direction: row; justify-content: left; align-items: center; }
+    .contactCategory { display: flex; margin: 0px; flex-direction: row; justify-content: left; align-items: center; }
     .contactDetailText 
     { 
         display: inline-block; 
@@ -2681,6 +2748,7 @@ export default {
         user-select: text;
         white-space: nowrap;
         overflow-x: scroll;
+        opacity: 0.7;
     }
     .contactDetailThumbnail { display: inline-block; margin: 0px 0px 0px 20px; height: 60px; width: auto; user-select: none; -webkit-user-drag: none; }
     .pageTitle 
@@ -2713,6 +2781,28 @@ export default {
     }
     .pageIndexSection { display: block; margin: 0px 0px 40px 0px; }
     .categoryNavigatorModalItems
+    {
+        position: fixed;
+        display: block;
+        max-height: 60vh;
+        width: 34vw;
+        left: 33%;
+        top: 19%;
+        margin: 0px;
+        padding: 0px;
+        z-index: 2;
+        text-align: -webkit-center;
+        user-select: none;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        overflow-y: scroll;
+        opacity: 1;
+        /* transform: translate(-40%, -50%); */
+        /* border: 3px solid #822c8b; */
+        /* background-color: #1D212E; */
+    }
+    .sectionNavigatorModalItems
     {
         position: fixed;
         display: block;
@@ -2777,57 +2867,54 @@ export default {
     .dotSearchCategory { display: inline-block; margin: 0px 8px 0px 8px; opacity: 0.2; }
     .searchHitCategory { display: block; white-space: nowrap; opacity: 0.2; }
     .searchResultDataType { opacity: 0.6; }
+    .infoItem { margin: 0px; margin: 0px; padding: 0px; font-weight: bold; font-size: 20px; opacity: 0.7; }
 
     
     /*** mobile ***/
-    /* @media screen and (max-width: 1000px) 
+    @media screen and (max-width: 1000px) 
     {
-        #componentFrontend { height: 100vh; width: 100vw; overflow-x: hidden; }
-        #frontendSections { display: none; }
-        #frontendSectionsList { display: none; }
-        #mobileNavigatorButton 
-        { 
-            display: block;
-            position: fixed;
-            bottom: 10px;
-            right: 10px;
-            height: 40px; 
-            width: 40px;
-            z-index: 3;
-            border-radius: 90%;
-            background-color: var(--colorNavBackground); 
-        }
-        #mobileNavigatorModal
+        #frontendSections { bottom: 0px; height: auto; width: 100vw; margin: 0px; padding: 0px; }
+        #frontendSectionsList { flex-direction: row; height: auto; justify-content: center; } 
+        #frontendCategories { width: 80vw; top: 3vh; left: 0%; margin: 0px 10vw 0px 10vw; }
+        #frontendData { width: 80vw; left: 0%; margin: 0px 10vw 0px 10vw; }
+        #frontendDataRows { max-height: 76vh; }
+        #sectionNavigatorModal { width: 80vw; top: 4%; left: 0%; margin: 0px 10vw 0px 10vw; }
+        #categoryNavigatorModal { width: 80vw; top: 4%; left: 0%; margin: 0px 10vw 0px 10vw; }
+        #searchModal { width: 80vw; top: 4%; left: 0%; margin: 0px 10vw 0px 10vw; }
+        #aboutModal 
         {
-            position: fixed;
-            height: 100vh;
-            width: calc(100vw - 20px);
-            padding: 3vw;
-            z-index: 3;
-            overflow-y: scroll;
-            background-color: var(--colorNavBackground);
+            display: block;
+            max-height: 84vh;
+            width: 80vw; 
+            top: 4%; 
+            left: 0%; 
+            margin: 0px 10vw 0px 10vw;
+            padding: 0px;
+            border: 0px;
+            background-color: transparent;
         }
-        #frontendData { width: 100vw; left: initial; }
-        #frontendCategories 
-        { 
-            width: 100vw; 
-            left: initial; 
-            top: initial; 
-            margin-top: 20px; 
-            margin-bottom: 0px; 
-            z-index: 1;
-            background-color: var(--colorSectionBackground);
-        }
-        #frontendDataTitleImageGallery { margin: 40px; }
-        #aboutModal { top: 0px; left: 0px; height: 80vh; max-height: initial; width: 100vw; padding: 10vh 0px 10vh 0px; border: 0px solid white; }
+        #infoKeybinds { display: none; }
+        #contactEmail { margin: 12px 0px 20px 3%; }
+        #contactName { margin: 0px 0px 20px 3%; }
+        #contactPhone { margin: 0px 0px 20px 3%; }
+        #contactCountry { margin: 0px 0px 0px 3%; }
+        #pageStartTitle { max-width: 80vw; margin: auto; margin-top: 40vh; font-size: 34px; }
+        #pageStartText { max-width: 80vw; margin: auto; font-size: 22px; }
+        #pageEndTitle { max-width: 80vw; margin: auto; margin-top: 40vh; font-size: 34px; }
+        #pageEndText { max-width: 80vw; margin: auto; font-size: 22px; }
+        #searchModalHitsCategories { padding-top: 0px; }
+        #searchModalResults { max-height: 70vh; }
+        /* #buttonFullscreen { display: none; } */
 
-        .galleryImageDescription { margin-top: 40px; margin-bottom: 40px; }
-        .galleryImageSource { width: 80vw; margin: auto; }
-        .dataSingleline { padding: 40px; }
-        .dataMultiline { padding: 40px; }
-        .dataLinklist { padding: 40px; }
-        .dataTextlist { padding: 40px; }
-        .dataTimeline { padding: 40px; }
-        .galleryImagePos { top: 29px; left: 49px; }
-    }    */
+        .section { margin: 13px 13px 18px 13px; }
+        .dataSingleline { padding: 30px 0px 30px 0px; }
+        .dataMultiline { padding: 30px 0px 30px 0px; }
+        .dataTextlist { padding: 30px 0px 30px 0px; }
+        .dataTimeline { padding: 30px 0px 30px 0px; }
+        .dataLinklist { padding: 30px 0px 30px 0px; }
+        .galleryImageDescription { width: 80vw; }
+        .galleryImageSource { width: 80vw; border: 0px solid white; }
+        .categoryNavigatorModalItems { max-height: 74vh; width: 80vw; top: 18%; left: 0%; margin: 0px 10vw 0px 10vw; }
+        .sectionNavigatorModalItems { max-height: 74vh; width: 80vw; top: 18%; left: 0%; margin: 0px 10vw 0px 10vw; }
+    }
 </style>
