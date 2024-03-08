@@ -71,8 +71,8 @@
                         <!-- data -->
                         <div class="timelineDataObj frontendDataData" v-if="timelineData != ''" v-for="item in timelineData">
                             <div class="timeline">
-                                <span id="timelineYear">━━━ {{item.year}} </span>
-                                <span id="timelineText">━━━🞂 {{item.text}}</span>
+                                <span class="timelineYear">━━ {{item.year}} ━━🞂</span>
+                                <span class="timelineText">  {{item.text}}</span>
                             </div>
                         </div>
                     </div>
@@ -113,7 +113,8 @@
                             <!-- first gallery image -->
                             <p v-bind:id="'galleryImagePos#' + data.pos" class="galleryImagePos">{{firstGalleryImage.pos}}/{{totalImgs}}</p>
                             <img v-bind:id="'imageGallery#' + data.pos" class="galleryImageSource" v-bind:src='firstGalleryImage.image' v-bind:alt='(firstGalleryImage.pos - 1)' v-on:click.left="nextImageGalleryItem(data.pos, data.data)" v-on:click.right="previousImageGalleryItem(data.pos, data.data)" />
-                            <p v-bind:id="'galleryImageDescription#' + data.pos" class="galleryImageDescription">{{firstGalleryImage.pos}}/{{totalImgs}} · {{firstGalleryImage.description}}</p>
+                            <p v-bind:id="'galleryImageDescription#' + data.pos" class="galleryImageDescription" v-if="totalImgs == 1 && firstGalleryImage.description == ''"></p>
+                            <p v-bind:id="'galleryImageDescription#' + data.pos" class="galleryImageDescription" v-else>{{firstGalleryImage.pos}}/{{totalImgs}} · {{firstGalleryImage.description}}</p>
                         </div>
                     </div>
                 </div>
@@ -164,6 +165,7 @@
         <!-- modal: navigator sections -->
         <div id="sectionNavigatorModal" v-if="frontendSections">
             <p class="navigatorModalTitle">Sections</p>
+            <!-- <p class="navigatorModalTitle">{{capitalizeString(router.currentRoute.value.params.domain)}}</p> -->
             <!-- <p class="navigatorModalTitle">Sections · {{frontendSections.length}}</p> -->
 
             <div class="sectionNavigatorModalItems">
@@ -183,7 +185,7 @@
 
         <!-- modal: navigator categories -->
         <div id="categoryNavigatorModal" v-if="frontendCategories">
-            <p class="navigatorModalTitle">Categories</p> <!-- Categories · {{currentSection}} -->
+            <p class="navigatorModalTitle" v-if="sortFrontendCategories(frontendCategories)[0]">{{sortFrontendCategories(frontendCategories)[0].section}}</p> <!-- Categories · {{currentSection}} -->
             <!-- <p class="navigatorModalTitle">Categories · {{frontendCategoriesSelected.length}}</p> -->
 
             <div class="categoryNavigatorModalItems">
@@ -228,20 +230,72 @@
                 </div>
             </div>
             
-            <!-- keybinds -->
-            <div id="infoKeybinds">
-                <p id="infoKeybindsTitle" class="modalTitle">Keybinds</p>
-                <p class="infoItem">#1</p>
-                <p class="infoItem">#2</p>
-                <p class="infoItem">#3</p>
-            </div>
-            
             <!-- privacy policy -->
             <div id="infoPrivacyPolicy">
                 <p id="infoPrivacyPolicyTitle" class="modalTitle">Privacy Policy</p>
-                <p class="infoItem">#1</p>
-                <p class="infoItem">#2</p>
-                <p class="infoItem">#3</p>
+                <p class="privacyPolicyItem">Collects Account Data: <span class="yes">Yes</span></p>
+                <p class="privacyPolicyItem">Collects Personal Data: <span class="yes">Yes</span></p>
+                <p class="privacyPolicyItem">Collects Device Data: <span class="no">No</span></p>
+                <p class="privacyPolicyItem">Collects Metrics Data: <span class="no">No</span></p>
+                <p class="privacyPolicyItem">Collects Diagnostics Data: <span class="no">No</span></p>
+                <p class="privacyPolicyItem">Collects Location Data: <span class="no">No</span></p>
+                <p class="privacyPolicyItem">Collects Financial Data: <span class="no">No</span></p>
+                <p class="privacyPolicyItem">Collects Messages Data: <span class="no">No</span></p>
+                <p class="privacyPolicyItem">Collects Media Data: <span class="no">No</span></p>
+                <p class="privacyPolicyItem">Uses Cookies: <span class="yes">Yes</span></p>
+                <p class="privacyPolicyItem">Uses Local Storage: <span class="yes">Yes</span></p>
+                <p class="privacyPolicyItem">Links to Other Websites: <span class="yes">Yes</span></p>
+                <p class="privacyPolicyItem">Policy Might Change: <span class="yes">Yes</span></p>
+            </div>
+
+            <!-- keybinds -->
+            <div id="infoKeybinds">
+                <p id="infoKeybindsTitle" class="modalTitle">Keybinds</p>
+                <p class="infoItemKeybind">
+                    <span class="infoItemKeybindName">⬆</span>
+                    <span class="dotKeybindItem">·</span>
+                    <span class="infoItemKeybindDescription">Prev Category</span>
+                </p>
+                <p class="infoItemKeybind">
+                    <span class="infoItemKeybindName">⬇</span>
+                    <span class="dotKeybindItem">·</span>
+                    <span class="infoItemKeybindDescription">Next Category</span>
+                </p>
+                <p class="infoItemKeybind">
+                    <span class="infoItemKeybindName">⬅</span>
+                    <span class="dotKeybindItem">·</span>
+                    <span class="infoItemKeybindDescription">Prev Section</span>
+                </p>
+                <p class="infoItemKeybind">
+                    <span class="infoItemKeybindName">➡</span>
+                    <span class="dotKeybindItem">·</span>
+                    <span class="infoItemKeybindDescription">Next Section</span>
+                </p>
+                <p class="infoItemKeybind">
+                    <span class="infoItemKeybindName">§</span>
+                    <span class="dotKeybindItem">·</span>
+                    <span class="infoItemKeybindDescription">Search</span>
+                </p>
+                <p class="infoItemKeybind">
+                    <span class="infoItemKeybindNameNotSingleKey">Shift + S</span>
+                    <span class="dotKeybindItem">·</span>
+                    <span class="infoItemKeybindDescription">Sections</span>
+                </p>
+                <p class="infoItemKeybind">
+                    <span class="infoItemKeybindNameNotSingleKey">Shift + C</span>
+                    <span class="dotKeybindItem">·</span>
+                    <span class="infoItemKeybindDescription">Categories</span>
+                </p>
+                <p class="infoItemKeybind">
+                    <span class="infoItemKeybindNameNotSingleKey">Shift + F</span>
+                    <span class="dotKeybindItem">·</span>
+                    <span class="infoItemKeybindDescription">Fullscreen</span>
+                </p>
+                <p class="infoItemKeybind">
+                    <span class="infoItemKeybindNameNotSingleKey">Esc</span>
+                    <span class="dotKeybindItem">·</span>
+                    <span class="infoItemKeybindDescription">Close Windows</span>
+                </p>
             </div>
         </div>
 
@@ -1189,7 +1243,7 @@ export default {
         let route = data.route
         
         //set html title
-        document.title = capitalizeString(route.domain.replaceAll("-", " "))
+        document.title = capitalizeString(route.domain)
         
         //save to vuex
         store.dispatch('storage/actionSetFrontendSections', data.sections)
@@ -1287,8 +1341,8 @@ export default {
             }
             
             //set CSS variables
-            document.documentElement.style.setProperty("--backgroundPageStart", "url('" + settings.pageStartBackgroundImage + ")")
-            document.documentElement.style.setProperty("--backgroundPageEnd", "url('" +  settings.pageEndBackgroundImage + ")")
+            document.documentElement.style.setProperty("--backgroundPageStart", "linear-gradient(to right, rgba(0,0,0, 0.4) 0 100%), url('" + settings.pageStartBackgroundImage + ")")
+            document.documentElement.style.setProperty("--backgroundPageEnd", "linear-gradient(to right, rgba(0,0,0, 0.4) 0 100%), url('" +  settings.pageEndBackgroundImage + ")")
             document.documentElement.style.setProperty("--navTop", navTop);
             document.documentElement.style.setProperty("--navBottom", navBottom);
             document.documentElement.style.setProperty("--navLeft", navLeft);
@@ -1315,6 +1369,9 @@ export default {
             document.documentElement.style.setProperty("--colorText", settings.colorText); // document.documentElement.style.cssText = "--colorText: green"; // document.documentElement.setAttribute("style", "--colorText: green");
             document.documentElement.style.setProperty("--colorSectionBackground", settings.colorSectionBackground)
         }, 100)
+
+        //preload images from galleries
+        preloadGalleryImages()
     }
 
 
@@ -1627,6 +1684,8 @@ export default {
 
     function capitalizeString(value)
     {   
+        value = value.replaceAll("-", " ")
+
         //variables
         let words = value.split(" ")
         let newValue = ""
@@ -1901,6 +1960,35 @@ export default {
     }
 
 
+    function preloadGalleryImages()
+    {
+        console.log("preloadGalleryImages")
+        // console.log(frontendData)
+
+        for(let item in frontendData.value)
+        {
+            // console.log(frontendData.value[item].rows)
+            for(let r in frontendData.value[item].rows)
+            {
+                let rObj = JSON.parse(frontendData.value[item].rows[r])
+
+                if(rObj.type == 'galleryImages') 
+                {
+                    let gallery = JSON.parse(rObj.data.replaceAll("'", "\""))
+                    // console.log(gallery)
+
+                    for(let i in gallery)
+                    {
+                        // console.log(gallery[i].image)
+                        let newImg = new Image;
+                        newImg.src = gallery[i].image
+                    }
+                }
+            }
+        }
+    }
+
+
     // function displayLoadingScreen()
     // {
     //     //elements
@@ -1955,7 +2043,8 @@ export default {
         search,
         setSearchPath,
         filterSearchResults,
-        selectSearchHitsCategory
+        selectSearchHitsCategory,
+        capitalizeString,
         // loadDataType,
         // loadDataInputs,
         // loadContactModal,
@@ -2521,7 +2610,7 @@ export default {
         /* border: 1px solid white; */
         /* background-color: #1D212E; */
     }
-    .dot { display: inline-block; padding: 0px 10px 0px 0px; color: white; }
+    .dot { display: inline-block; padding: 0px 10px 0px 0px; color: white; opacity: 0.4; }
     .data 
     { 
         height: auto; 
@@ -2581,11 +2670,12 @@ export default {
     }
     .timeline 
     { 
-        display: inline-block; 
+        display: flex;
+        flex-direction: row; 
         margin: 20px 0px 20px 0px; 
         font-size: 20px; 
-        opacity: 0.7; 
-        white-space: nowrap;
+        /* opacity: 0.7;  */
+        /* white-space: nowrap; */
         text-shadow: 0px 1px #1D212E;
         color: var(--colorText); 
     }
@@ -2606,7 +2696,7 @@ export default {
     .linklist 
     { 
         display: inline-block; 
-        margin: 20px 0px 0px 0px; 
+        margin: 6px 0px 6px 0px; 
         font-size: 20px; 
         text-decoration: none; 
         opacity: 0.7;
@@ -2616,7 +2706,7 @@ export default {
     .textlist 
     { 
         display: inline-block; 
-        margin: 10px 0px 10px 0px; 
+        margin: 6px 0px 6px 0px; 
         font-size: 20px; 
         opacity: 0.7;
         text-shadow: 0px 1px #1D212E;
@@ -2631,7 +2721,7 @@ export default {
         margin-top: 30px; 
         margin-bottom: 30px; 
         padding: 0px; 
-        font-size: 20px;
+        font-size: 19px;
         font-weight: bold;
         text-align: center;
         opacity: 0.7;
@@ -2643,8 +2733,8 @@ export default {
     }
     .timelineDataObj 
     { 
-        margin: 0px 0px 0px 4px; 
-        padding: 40px 0px 0px 0px;
+        margin: -20px 0px 0px 0px; 
+        padding: 40px 0px 40px 0px;
         text-shadow: 0px 1px #1D212E;
         border-left: 3px solid var(--colorText); 
     }
@@ -2864,10 +2954,20 @@ export default {
         text-align: center; 
     }
     .dotSearchItem { display: inline-block; margin: 0px 8px 0px 8px; opacity: 0.4; }
+    .dotKeybindItem { display: inline-block; margin: 0px 10px 0px 10px; opacity: 0.4; vertical-align: super; }
     .dotSearchCategory { display: inline-block; margin: 0px 8px 0px 8px; opacity: 0.2; }
     .searchHitCategory { display: block; white-space: nowrap; opacity: 0.2; }
     .searchResultDataType { opacity: 0.6; }
     .infoItem { margin: 0px; margin: 0px; padding: 0px; font-weight: bold; font-size: 20px; opacity: 0.7; }
+    .privacyPolicyItem { margin: 0px; margin: 6px 0px 6px 27%; padding: 0px; font-weight: bold; font-size: 20px; opacity: 0.7; text-align: left }
+    .infoItemKeybind { margin: 0px; margin: 16px 0px 16px 28%; padding: 0px; font-weight: bold; font-size: 20px; opacity: 0.7; text-align: left; }
+    .timelineText { display: inline-block; padding: 3px 0px 0px 10px; opacity: 0.7; }
+    .timelineYear { display: inline-block; white-space: nowrap; }
+    .infoItemKeybindName { display: inline-block; font-size: 36px; }
+    .infoItemKeybindNameNotSingleKey { display: inline-block; font-size: 26px; vertical-align: super; }
+    .infoItemKeybindDescription { display: inline-block; vertical-align: super; font-size: 24px; opacity: 0.9; }
+    .no { color: red; }
+    .yes { color: lightgreen; }
 
     
     /*** mobile ***/
@@ -2906,7 +3006,7 @@ export default {
         #searchModalResults { max-height: 70vh; }
         /* #buttonFullscreen { display: none; } */
 
-        .section { margin: 13px 13px 18px 13px; }
+        .section { margin: 13px 16px 18px 16px; } /* 13px 13px 18px 13px */
         .dataSingleline { padding: 30px 0px 30px 0px; }
         .dataMultiline { padding: 30px 0px 30px 0px; }
         .dataTextlist { padding: 30px 0px 30px 0px; }
@@ -2914,7 +3014,10 @@ export default {
         .dataLinklist { padding: 30px 0px 30px 0px; }
         .galleryImageDescription { width: 80vw; }
         .galleryImageSource { width: 80vw; border: 0px solid white; }
-        .categoryNavigatorModalItems { max-height: 74vh; width: 80vw; top: 18%; left: 0%; margin: 0px 10vw 0px 10vw; }
-        .sectionNavigatorModalItems { max-height: 74vh; width: 80vw; top: 18%; left: 0%; margin: 0px 10vw 0px 10vw; }
+        .categoryNavigatorModalItems { max-height: 74vh; width: 80vw; top: 16%; left: 0%; margin: 0px 10vw 0px 10vw; }
+        .sectionNavigatorModalItems { max-height: 74vh; width: 80vw; top: 16%; left: 0%; margin: 0px 10vw 0px 10vw; }
+        .timeline { flex-direction: column; }
+        .textlist { width: -webkit-fill-available; margin: 2px 0px 2px 0px; white-space: nowrap; overflow-x: scroll; }
+        .privacyPolicyItem { margin: 0px 0px 2px 0px; text-align: center; }
     }
 </style>

@@ -107,7 +107,7 @@
                         </div>
 
                         <div id="dataObjModalEditImageDescription">
-                            <input id="inputImageDescription" type="text" value="" placeholder="Description"  maxlength="100"/>
+                            <input id="inputImageDescription" type="text" value="" placeholder="Description"  maxlength="400"/>
                             <input id="buttonEditDescription" class="editItemSave" type="button" value="✓" v-on:click="imageGalleryUpdateImageDescription()" />
                         </div>
                     </div>
@@ -162,8 +162,8 @@
                         <div id="dataObjModalTimelineRows">
                             <div v-bind:id="'dataObjModalTimeline#' + item.pos" class="dataObjModalTimeline" v-for="item in loadDataInputs(row, 'timeline')" v-on:click="editData('timeline','click', item.pos)">
                                 <input v-bind:id="'dataObjModalTimelinePos#' + item.pos" class="inputTimelineSidebarPos" type="button" v-bind:value="item.pos" disabled />
-                                <input v-bind:id="'dataObjModalTimelineYear#' + item.pos" class="inputTimelineYear" maxlength="100" v-bind:value="item.year" placeholder="year" />
-                                <input v-bind:id="'dataObjModalTimelineText#' + item.pos" class="inputTimelineText" maxlength="100" v-bind:value="item.text" placeholder="text" />
+                                <input v-bind:id="'dataObjModalTimelineYear#' + item.pos" class="inputTimelineYear" maxlength="40" v-bind:value="item.year" placeholder="year" />
+                                <input v-bind:id="'dataObjModalTimelineText#' + item.pos" class="inputTimelineText" maxlength="400" v-bind:value="item.text" placeholder="text" />
                             </div>
                         </div>
 
@@ -582,7 +582,7 @@
                 </div>
 
                 <!-- edit: account extras -->
-                <label class="editAccountTitle">Extras</label>
+                <label class="editAccountTitle">Extra</label>
                 <div id="editAccountExtras" class="editAccountSection">
 
                     <!-- toggle: slideshow mode -->
@@ -4211,7 +4211,7 @@ export default {
         //variables
         let allowedCharacters = [
             "a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z",
-            "0","1","2","3","4","5","6","7","8","9","-"," "
+            "0","1","2","3","4","5","6","7","8","9"," "
         ]
         let valueString = value.toString().toLowerCase()
         let totalForbiddenCharacters = value.length
@@ -4842,8 +4842,8 @@ export default {
         width: -webkit-fill-available; 
         display: block;
         margin: 1px 0px 0px 0px;
-        padding: 26px 26px 26px 40px; 
-        font-size: 19px; 
+        padding: 26px 26px 26px 40px;
+        font-size: 20px; 
         font-weight: bold; 
         text-align: left;
         /* text-shadow: 0px 1px black; */
