@@ -1,33 +1,50 @@
 <template>
     <div id="componentStart">
-
+        
+        <!-- menu categories -->
         <div id="menu">
-            <span v-on:click="displaySelectedMenu('info')">Info</span>
+            <span id="menuCategoryLogin" class="menuCategory" v-on:click="displaySelectedMenu('login')">Login</span>
             <span class="dot"> • </span>
-            <span v-on:click="displaySelectedMenu('login')">Login</span>
+            <span id="menuCategoryRegister" class="menuCategory" v-on:click="displaySelectedMenu('register')">Register</span>
             <span class="dot"> • </span>
-            <span v-on:click="displaySelectedMenu('register')">Register</span>
-            <span class="dot"> • </span>
-            <span v-on:click="displaySelectedMenu('about')">About</span>
+            <span id="menuCategoryAbout" class="menuCategory" v-on:click="displaySelectedMenu('about')">About</span>
+            <!-- <span class="menuCategory" v-on:click="displaySelectedMenu('info')">Info</span> -->
+            <!-- <span class="dot"> • </spa n> -->
         </div>
 
+        <!-- modal: register -->
         <div id="register">
-            <label id="registerInfoUsername">username max characters: 10</label>
-            <label id="registerInfoPassword">password max characters: 10</label>
+            <label id="registerInfoUsername">username max length: 10</label>
+            <label id="registerInfoPassword">password max length: 10</label>
             <label id="registerErrorMessage"></label>
-            <input id="registerUsername" class="inputRegister" type="text" placeholder="username" maxlength="10" />
-            <input id="registerPassword" class="inputRegister" type="password" placeholder="password" maxlength="10" />
-            <input id="registerConfirmPassword" class="inputRegister" type="password" placeholder="confirm password" maxlength="10" />
-            <input id="registerButton" class="buttonRegister" type="button" value="Register" v-on:click="register()" />
+            <input required id="registerUsername" class="inputRegister" type="text" placeholder="username" maxlength="10" />
+            <input required id="registerPassword" class="inputRegister" type="password" placeholder="password" maxlength="10" />
+            <input required id="registerConfirmPassword" class="inputRegister" type="password" placeholder="password again" maxlength="10" />
+            <div id="registerPasswordOverlayImages">
+                <img id="iconShowRegister" class="inputOverlayImg" src="/iconHidden.png" v-on:click="showPasswordCharacters()" />
+            </div>
+            <input required id="registerButton" class="buttonRegister" type="button" value="Confirm" v-on:click="register()" />
         </div>
 
+        <!-- modal: login -->
         <div id="login">
             <label id="loginErrorMessage"></label>
-            <input id="loginUsername" class="inputLogin" type="text" placeholder="username" maxlength="10" />
-            <input id="loginPassword" class="inputLogin" type="password" placeholder="password" maxlength="10" />
-            <input id="loginButton" class="buttonLogin" type="button" value="Login" v-on:click="login()" />
+            <input required id="loginUsername" class="inputLogin" type="text" placeholder="username" maxlength="10" />
+            <input required id="loginPassword" class="inputLogin" type="password" placeholder="password" maxlength="10" />
+            <div id="registerLoginOverlayImages">
+                <img id="iconShowLogin" class="inputOverlayImg" src="/iconHidden.png" v-on:click="showPasswordCharacters()" />
+            </div>
+            <input required id="loginButton" class="buttonLogin" type="button" value="Confirm" v-on:click="login()" />
         </div>
 
+        <!-- modal: about -->
+        <div id="about">
+            <p class="aboutTextItem">This CMS is made to learn about Vue, Python, Databases</p>
+            <p class="aboutTextItem">Examples: </p>
+            <p class="aboutTextItem">#1</p>
+            <p class="aboutTextItem">#2</p>
+            <p class="aboutTextItem">#3</p>
+        </div>
     </div>
 </template>
 
@@ -53,19 +70,31 @@ export default {
         //elements
         let register = document.getElementById("register")
         let login = document.getElementById("login")
+        let about = document.getElementById("about")
+        let menuCategoryLogin = document.getElementById("menuCategoryLogin")
+        let menuCategoryRegister = document.getElementById("menuCategoryRegister")
+        let menuCategoryAbout = document.getElementById("menuCategoryAbout")
         let registerErrorMessage = document.getElementById("registerErrorMessage")
 
         //reset elements
         register.style.display = "none"
         login.style.display = "none"
-        // about.style.display = "none"
+        about.style.display = "none"
+        menuCategoryLogin.style.opacity = "0.2"
+        menuCategoryRegister.style.opacity = "0.2"
+        menuCategoryAbout.style.opacity = "0.2"
         // info.style.display = "none"
 
         //check type
-        if(type == "info") { }
-        else if(type == "about") { }
+        // if(type == "info") { }
+        if(type == "about") 
+        { 
+            menuCategoryAbout.style.opacity = "1"
+            about.style.display = "block"
+        }
         else if(type == "login") 
         { 
+            menuCategoryLogin.style.opacity = "1"
             login.style.display = "block"
             registerInfoUsername.style.display = "block"
             registerInfoPassword.style.display = "block"
@@ -77,7 +106,11 @@ export default {
             registerConfirmPassword.value = ""
             registerErrorMessage.innerText = "" 
         }
-        else if(type == "register") { register.style.display = "block" }
+        else if(type == "register") 
+        { 
+            menuCategoryRegister.style.opacity = "1"
+            register.style.display = "block" 
+        }
     }
     
 
@@ -92,6 +125,17 @@ export default {
         //variables
         let username = loginUsername.value
         let password = loginPassword.value
+
+        if(username == "")
+        {
+            loginErrorMessage.innerText = "username cannot be empty"
+            return
+        }
+        else if(password == "")
+        {
+            loginErrorMessage.innerText = "password cannot be empty" 
+            return
+        }
 
         //disable login button
         loginButton.disabled = true; setTimeout(() => { loginButton.disabled = false }, 1000)
@@ -128,7 +172,6 @@ export default {
             //login failed
             else if(data.status == "user login failed") 
             { 
-                loginErrorMessage.style.color = "red"
                 loginErrorMessage.innerText = "login failed" 
             }
 
@@ -184,9 +227,9 @@ export default {
         let registerButton = document.getElementById("registerButton")
 
         //variables
-        let username = registerUsername.value.toString().toLowerCase()
-        let password = registerPassword.value.toString().toLowerCase()
-        let confirmPassword = registerConfirmPassword.value.toString().toLowerCase()
+        let username = registerUsername.value.toString().toLowerCase().trim()
+        let password = registerPassword.value.toString().toLowerCase().trim()
+        let confirmPassword = registerConfirmPassword.value.toString().toLowerCase().trim()
         let obj = ""
         let isInvalid = false
         
@@ -226,6 +269,22 @@ export default {
             registerInfoUsername.style.display = "none"
             registerInfoPassword.style.display = "none"
             registerErrorMessage.innerText = "passwords does not match" 
+        }
+
+        else if(username == "")
+        {
+            registerInfoUsername.style.display = "none"
+            registerInfoPassword.style.display = "none"
+            registerErrorMessage.innerText = "username cannot be empty"
+            return
+        }
+
+        else if(confirmPassword == "")
+        {
+            registerInfoUsername.style.display = "none"
+            registerInfoPassword.style.display = "none"
+            registerErrorMessage.innerText = "password cannot be empty" 
+            return
         }
 
         //passwords match
@@ -271,6 +330,46 @@ export default {
     }
 
 
+    function showPasswordCharacters()
+    {
+        //debugging
+        console.log("showPasswordCharacters")
+
+        //elements
+        let loginPassword = document.getElementById("loginPassword")
+        let registerPassword = document.getElementById("registerPassword")
+        let registerConfirmPassword = document.getElementById("registerConfirmPassword")
+        let iconShowLogin = document.getElementById("iconShowLogin")
+        let iconShowRegister = document.getElementById("iconShowRegister")
+
+        //login
+        if(loginPassword.type == "text")
+        {
+            loginPassword.type = "password"
+            iconShowLogin.src = "/iconHidden.png"
+        }
+        else if(loginPassword.type == "password")
+        {
+            loginPassword.type = "text"
+            iconShowLogin.src = "/iconShow.png"
+        }
+
+        //register
+        if(registerPassword.type == "text")
+        {
+            registerPassword.type = "password"
+            registerConfirmPassword.type = "password"
+            iconShowRegister.src = "/iconHidden.png"
+        }
+        else if(registerPassword.type == "password")
+        {
+            registerPassword.type = "text"
+            registerConfirmPassword.type = "text"
+            iconShowRegister.src = "/iconShow.png"
+        }
+    }
+
+
     return {
       //variables
 
@@ -278,7 +377,8 @@ export default {
       displaySelectedMenu,
       login,
       register,
-      logout
+      logout,
+      showPasswordCharacters
     }
 
 
@@ -286,8 +386,26 @@ export default {
 }
 </script>
 
-
+<style>
+/* :root {
+    --honeyColor: #1D212E;
+    --honeyBorderColor: hsla(294, 100%, 34%, 0.2);
+    --size: 30px;
+} */
+</style>
 <style scoped>
+    /*** elements ***/
+    input 
+    { 
+        width: -webkit-fill-available;
+        padding: 16px; 
+        border: 0px solid white; 
+        color: white; /* #9d00ad */
+        background-color:black; 
+    }
+
+
+    /*** ids ***/
     #componentStart 
     { 
         display: block;
@@ -295,33 +413,187 @@ export default {
         top: 0;
         height: 100vh; 
         width: 100vw; 
-        color: white; 
-        /* background-image: url('https://c.tenor.com/S89fWSFaFowAAAAd/tenor.gif'); /* 'https://wallpaperaccess.com/full/1374109.jpg' */
-        background-color: black; 
+        color: white;
+        background: black;
+        /* background-image: linear-gradient(to right, rgba(0,0,0, 0.8) 0 100%), url('/componentStartBackgroundImage.jpg'); */
+        /* background-size: cover; */
+        /* background: linear-gradient(to right, rgba(0,0,0, 0.7) 0 100%),
+                    radial-gradient(circle farthest-side at 0% 50%, var(--honeyColor) 23.5%,transparent 0)calc(var(--size)*0.7) var(--size),
+                    radial-gradient(circle farthest-side at 0% 50%,var(--honeyBorderColor) 24%,transparent 0)calc(var(--size)*19/30) var(--size),
+                    linear-gradient(var(--honeyColor) 14%,transparent 0, transparent 85%, var(--honeyColor) 0)0 0,
+                    linear-gradient(150deg, var(--honeyColor) 24%,var(--honeyBorderColor) 0,var(--honeyBorderColor) 26%,transparent 0,transparent 74%,var(--honeyBorderColor) 0,var(--honeyBorderColor) 76%, var(--honeyColor) 0)0 0,
+                    linear-gradient(30deg, var(--honeyColor) 24%,var(--honeyBorderColor) 0,var(--honeyBorderColor) 26%,transparent 0,transparent 74%,var(--honeyBorderColor) 0,var(--honeyBorderColor) 76%, var(--honeyColor) 0)0 0,
+                    linear-gradient(90deg,var(--honeyBorderColor) 2%, var(--honeyColor) 0, var(--honeyColor) 98%,var(--honeyBorderColor) 0%)0 0 var(--honeyColor);
+        background-size:calc(var(--size)*4/3) calc(var(--size)*2); */
     }
-    #register { display: none; width: 300px; margin: auto; margin-bottom: 20px; padding: 10px 30px 30px 30px; background-color: black; }
-    #login { display: block; width: 300px; margin: auto; margin-bottom: 20px; padding: 30px; background-color: black; }
+    #register 
+    { 
+        display: none; 
+        width: 24vw; 
+        margin: auto; 
+        margin-bottom: 20px; 
+        padding: 10px 30px 30px 30px; 
+        background-color: transparent; 
+    }
+    #login 
+    { 
+        display: block; 
+        width: 24vw; 
+        margin: auto; 
+        margin-bottom: 20px; 
+        padding: 0px; 
+        background-color: transparent; 
+    }
+    #about 
+    { 
+        display: none; 
+        width: 24vw; 
+        margin: auto; 
+        margin-bottom: 20px; 
+        padding: 0px; 
+        background-color: transparent; 
+    }
     #menu 
     { 
         display: block; 
-        width: 320px; 
+        width: 30vw; 
         margin: auto; 
-        margin-top: 30vh; 
+        margin-top: 4vh; 
         padding: 10px 20px 10px 20px;
         font-weight: bold;
         font-size: 18px;
         user-select: none;
         /* border: 1px solid white; */
-        background-color: black;
+        background-color: transparent;
     }
-    #registerErrorMessage { display: block; margin: 0px 0px 20px 0px; font-weight: bold; user-select: none; color: red; }
-    #loginErrorMessage { display: block; margin: 0px 0px 30px 0px; font-weight: bold; user-select: none; color: red; }
-    #registerInfoUsername { display: block; margin: 0px 0px 0px 0px; font-weight: bold; user-select: none; color: red; }
-    #registerInfoPassword { display: block; margin: 0px 0px 0px 0px; font-weight: bold; user-select: none; color: red; }
+    #registerErrorMessage 
+    { 
+        display: block; 
+        margin: 20px 0px 40px 0px; 
+        font-weight: bold; 
+        font-size: 22px; 
+        user-select: none;
+        opacity: 0.6; 
+        color: #9d00ad; 
+    }
+    #loginErrorMessage 
+    { 
+        display: block; 
+        margin: 20px 0px 30px 0px; 
+        font-weight: bold; 
+        font-size: 22px; 
+        user-select: none;
+        opacity: 0.4; 
+        color: #9d00ad; 
+    }
+    #registerInfoUsername 
+    { 
+        display: block; 
+        margin: 10px 0px 0px 0px; 
+        font-weight: bold; 
+        font-size: 22px; 
+        user-select: none;
+        opacity: 0.4;
+        color: #9d00ad; 
+    }
+    #registerInfoPassword 
+    { 
+        display: block; 
+        margin: 0px 0px 30px 0px; 
+        font-weight: bold; 
+        font-size: 22px;
+        user-select: none;
+        opacity: 0.4;
+        color: #9d00ad; 
+    }
+    #loginButton { margin: 20px 0px 0px 0px; }
+    #registerButton { margin: 20px 0px 0px 0px; }
+    #loginUsername 
+    { 
+        border-top: 4px solid hsla(294, 100%, 34%, 0.7); 
+        border-left: 4px solid hsla(294, 100%, 34%, 0.7); 
+        border-right: 4px solid hsla(294, 100%, 34%, 0.7); 
+    }
+    #loginPassword 
+    { 
+        border-bottom: 4px solid hsla(294, 100%, 34%, 0.7); 
+        border-left: 4px solid hsla(294, 100%, 34%, 0.7); 
+        border-right: 4px solid hsla(294, 100%, 34%, 0.7); 
+    }
+    #registerUsername 
+    { 
+        border-top: 4px solid hsla(294, 100%, 34%, 0.7); 
+        border-left: 4px solid hsla(294, 100%, 34%, 0.7); 
+        border-right: 4px solid hsla(294, 100%, 34%, 0.7); 
+    }
+    #registerPassword 
+    { 
+        border-left: 4px solid hsla(294, 100%, 34%, 0.7); 
+        border-right: 4px solid hsla(294, 100%, 34%, 0.7); 
+    }
+    #registerConfirmPassword
+    { 
+        border-left: 4px solid hsla(294, 100%, 34%, 0.7); 
+        border-right: 4px solid hsla(294, 100%, 34%, 0.7);
+        border-bottom: 4px solid hsla(294, 100%, 34%, 0.7); 
+    }
+    #menuCategoryAbout { opacity: 0.2; }
+    #menuCategoryLogin { opacity: 1; }
+    #menuCategoryRegister { opacity: 0.2; }
+    #registerPasswordOverlayImages { display: block; height: 0; width: 24vw; text-align: right; background-color: red; }
+    #registerLoginOverlayImages { display: block; height: 0; width: 24vw; text-align: right; background-color: red; }
+    #iconShowLogin { top: -53px; left: -16px; }
+    #iconShowRegister { top: -53px; left: -16px; }
 
-    .inputRegister { display: block; padding: 6px; width: -webkit-fill-available; font-size: 16px; font-weight: bold; }
-    .inputLogin { display: block; padding: 6px; width: -webkit-fill-available; font-size: 16px; font-weight: bold; }
-    .dot { margin: 0px 10px 0px 10px; }
-    .buttonRegister { width: -webkit-fill-available; padding: 8px; font-weight: bold; font-size: 16px; color: black; }
-    .buttonLogin { width: -webkit-fill-available; padding: 8px; font-weight: bold; font-size: 16px; color: black; }
+
+    /*** classes ***/
+    .inputRegister { display: block; padding: 16px; width: -webkit-fill-available; font-size: 22px; font-weight: bold; }
+    .inputLogin { display: block; padding: 16px; width: -webkit-fill-available; font-size: 22px; font-weight: bold; }
+    .dot { margin: 0px 10px 0px 10px; opacity: 0.1; }
+    .buttonRegister 
+    { 
+        width: -webkit-fill-available; 
+        padding: 22px; 
+        font-weight: bold; 
+        font-size: 24px;
+        opacity: 0.2; 
+        color: white;
+        background-color: transparent; 
+    }
+    .buttonRegister:active { opacity: 1; }
+    .buttonLogin 
+    { 
+        width: -webkit-fill-available; 
+        padding: 22px; 
+        font-weight: bold; 
+        font-size: 24px; 
+        color: white;
+        opacity: 0.2;
+        background-color: transparent; 
+    }
+    .buttonLogin:active { opacity: 1; }
+    .menuCategory { font-size: 26px; opacity: 0.2; color: white }
+    .aboutTextItem { font-size: 24px; font-weight: bold; user-select: none; opacity: 0.6; color: #9d00ad; }
+    .inputOverlayImg { position: relative; display: inline-block; height: 40px; width: 40px; }
+
+
+    /*** mobile ***/
+    @media screen and (max-width: 1000px) 
+    {
+        #menu { width: 90vw; }
+        #register { width: 80vw; }
+        #login { width: 80vw; }
+        #about { width: 80vw; }
+        #registerInfoUsername { font-size: 20px; }
+        #registerInfoPassword { font-size: 20px; }
+        #registerErrorMessage { font-size: 20px; }
+        #loginErrorMessage { font-size: 20px; }
+        #registerPasswordOverlayImages { display: block; height: 0; width: 80vw; text-align: right; background-color: red; }
+        #registerLoginOverlayImages { display: block; height: 0; width: 80vw; text-align: right; background-color: red; }
+        #iconShowLogin { top: -53px; left: -16px; }
+        #iconShowRegister { top: -53px; left: -16px; }
+
+        .aboutTextItem { font-size: 20px; }
+        .menuCategory { font-size: 24px; }
+    }
 </style>

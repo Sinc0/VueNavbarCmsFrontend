@@ -5,7 +5,7 @@
         
 
         <!-- category underlay -->
-        <div id="categoryUnderlay" v-on:click="categoryUnderlaySetOpacity('0.6')"></div>
+        <div id="categoryUnderlay" v-on:click="categoryUnderlaySetOpacity('0.49')"></div>
 
 
         <!-- sections nav bar -->
@@ -16,6 +16,7 @@
                 <div id="buttonAbout" class="section" v-on:click="loadAboutModal()">ㅤ</div>
                 <div id="buttonFullscreen" class="section" v-on:click="fullscreen()"></div>
                 <div id="buttonSearch" class="section" v-on:click="loadSearchModal()">ㅤ</div>
+                <div id="buttonSlideshowMode" class="section" v-on:click="slideshowMode()"></div>
                 <!-- <div id="buttonContact" class="section" v-on:click="loadContactModal()">ㅤ</div> -->
                 <!-- <div id="buttonIndex" class="section" v-on:click="setRoutePath('index')">ㅤ</div> -->
                 <!-- <div id="buttonEnd" class="section" v-on:click="setRoutePath('end')">Eㅤ</div> -->
@@ -114,6 +115,7 @@
                             <p v-bind:id="'galleryImagePos#' + data.pos" class="galleryImagePos">{{firstGalleryImage.pos}}/{{totalImgs}}</p>
                             <img v-bind:id="'imageGallery#' + data.pos" class="galleryImageSource" v-bind:src='firstGalleryImage.image' v-bind:alt='(firstGalleryImage.pos - 1)' v-on:click.left="nextImageGalleryItem(data.pos, data.data)" v-on:click.right="previousImageGalleryItem(data.pos, data.data)" />
                             <p v-bind:id="'galleryImageDescription#' + data.pos" class="galleryImageDescription" v-if="totalImgs == 1 && firstGalleryImage.description == ''"></p>
+                            <p v-bind:id="'galleryImageDescription#' + data.pos" class="galleryImageDescription" v-else-if="totalImgs == 1 && firstGalleryImage.description != ''">{{firstGalleryImage.description}}</p>
                             <p v-bind:id="'galleryImageDescription#' + data.pos" class="galleryImageDescription" v-else>{{firstGalleryImage.pos}}/{{totalImgs}} · {{firstGalleryImage.description}}</p>
                         </div>
                     </div>
@@ -189,8 +191,8 @@
             <!-- <p class="navigatorModalTitle">Categories · {{frontendCategoriesSelected.length}}</p> -->
 
             <div class="categoryNavigatorModalItems">
-                <div id="" v-for="(item, index) in sortFrontendCategories(frontendCategories)" v-on:click="setRoutePath(item.section + '/' + item.title)">
-                    <div id="" v-if="item.hidden == 'false'" class="category">{{item.title}}</div>
+                <div id="" v-for="(item, index) in sortFrontendCategories(frontendCategories)">
+                    <div id="" v-if="item.hidden == 'false'" class="category" v-on:click="setRoutePath(item.section + '/' + item.title)">{{item.title}}</div>
                     <!-- {{index + 1}} · {{item.title}} -->
                 </div>
             </div>
@@ -420,27 +422,91 @@
             </div>
         </div>
 
+        <!-- modal: slideshow mode -->
+        <div id="slideshowModal">
+            <p hidden id="" v-if="frontendSlideshowPage">hidden: {{frontendSlideshowPage.hidden}}</p>
+            <p hidden id="" v-if="frontendSlideshowPage">type: {{frontendSlideshowPage.type}}</p>
+            
+            <!-- slideshow current page -->
+            <p id="slidesCurrentPageNumber"></p>
+
+            <!-- slideshow page title -->
+            <p id="slideshowSectionStart" v-if="frontendSlideshowPage && frontendSlideshowPage.type == 'slideshowStart'">{{frontendSlideshowPage.title}}</p>
+            <p id="slideshowSectionStart" v-else-if="frontendSlideshowPage && frontendSlideshowPage.type == 'slideshowEnd'">{{frontendSlideshowPage.title}}</p>
+            <p id="slideshowSectionStart" v-else-if="frontendSlideshowPage && frontendSlideshowPage.type == 'sectionStart'">{{frontendSlideshowPage.pos}}. {{frontendSlideshowPage.title}}</p>
+            <p id="slideshowTitle" v-else-if="frontendSlideshowPage && frontendSlideshowPage.title != ''">{{frontendSlideshowPage.title}}</p>
+            <p id="slideshowTitle" v-else-if="frontendSlideshowPage && frontendSlideshowPage.title == '' && frontendSlideshowPage.type == 'timeline'">Timeline</p>
+            <p id="slideshowTitle" v-else-if="frontendSlideshowPage && frontendSlideshowPage.title == '' && frontendSlideshowPage.type == 'galleryImages'">{{frontendSlideshowPage.category}}</p>
+            <p id="slideshowTitle" v-else-if="frontendSlideshowPage && frontendSlideshowPage.title == ''">&#8203;</p>
+
+            <!-- slideshow page data -->
+            <div id="slideshowData">
+                <div id="" class="" v-if="frontendSlideshowPage && frontendSlideshowPage.hidden == 'true'"></div>
+                <div id="" class="slideshowStartText" v-else-if="frontendSlideshowPage && frontendSlideshowPage.type == 'slideshowStart'">{{frontendSlideshowPage.data}}</div>
+                <div id="" class="slideshowEndText" v-else-if="frontendSlideshowPage && frontendSlideshowPage.type == 'slideshowEnd'">{{frontendSlideshowPage.data}}</div>
+                <div id="" class="" v-else-if="frontendSlideshowPage && frontendSlideshowPage.type == 'sectionStart'"></div>
+                
+                <div id="" class="slideshowSingleline" v-else-if="frontendSlideshowPage && frontendSlideshowPage.type == 'singleline'">{{frontendSlideshowPage.data}}</div>
+                
+                <div id="" class="" v-else-if="frontendSlideshowPage && frontendSlideshowPage.type != 'singleline' && frontendSlideshowPage.type != 'galleryImages'" v-for="row in JSON.parse(frontendSlideshowPage.data)">
+                    <div id="" class="slideshowDataItem">
+                        <!-- {{row}} -->
+    
+                        <!-- mutliline -->
+                        <div id="" v-if="frontendSlideshowPage.type == 'multiline'">
+                            <div class="slideshowItemMultiline">{{row.text}}</div>
+                        </div>
+    
+                        <!-- textlist -->
+                        <div id="" v-else-if="frontendSlideshowPage.type == 'textlist'">
+                            <div class="slideshowItemTextlist"> • {{row.text}}</div>
+                        </div>
+                        
+                        <!-- linklist -->
+                        <div id="" class="slideshowItemLinklist" v-else-if="frontendSlideshowPage.type == 'linklist'">
+                            <div class="slideshowItemLinklistText">{{row.text}}</div>
+                            <div class="slideshowItemLinklistLink">• {{row.link.replaceAll("https://", "").replaceAll("http", "").replaceAll("www.", "")}}</div>
+                        </div>
+    
+                        <!-- timeline -->
+                        <div id="" class="slideshowItemTimeline" v-else-if="frontendSlideshowPage.type == 'timeline'">
+                            <div class="slideshowItemTimelineYear">{{row.year}}</div>
+                            <div class="slideshowItemTimelineText">{{row.text}}</div>
+                        </div>
+                    </div>
+                </div>
+    
+                <div id="" v-else-if="frontendSlideshowPage && frontendSlideshowPage.type == 'galleryImages'">
+                    <div hidden>{{slideshowImageObjectData = JSON.parse(frontendSlideshowPage.data)}}</div>
+                    <!-- {{frontendSlideshowPage}} -->
+                    
+                    <img class="slideshowImage" v-bind:src="slideshowImageObjectData.image" />
+                    <p class="slideshowImageDescription">{{slideshowImageObjectData.description}}</p>
+                </div>
+            </div>
+
+            <!-- debugging -->
+            <!-- <p id="" v-if="frontendSlideshowPage">{{frontendSlideshowPage.section}}</p> -->
+            <!-- <p id="" v-if="frontendSlideshowPage">{{frontendSlideshowPage.category}}</p> -->
+            <!-- <p id="" v-if="frontendSlideshowPage">{{frontendSlideshowPage}}</p> -->
+        </div>
+
 
         <!-- mobile -->
-        <!-- <div id="mobileNavigatorButton" v-on:click="displayMobileNavigator()"></div> -->
-        <!-- <div id="mobileNavigatorModal"> -->
-            <!-- <p class="selectSection">Select Section:</p> -->
+        <div id="mobilePortraitExitSlideshow" v-on:click="slideshowModeExit()">
+            <p id="mobilePortraitExitSlideshowText" v-on:click="">Press to Exit</p>
+        </div>
 
-            <!-- <p class="selectSection" v-on:click="loadAboutModal()">About</p> -->
-            <!-- <p class="selectSection" v-on:click="">Info</p> -->
-            <!-- <p class="selectSection" v-on:click="">Contact</p> -->
-            <!-- <p class="selectSection" v-on:click="">Search</p> -->
-            <!-- <p class="selectSection" v-on:click="">---</p> -->
-            <!-- <p class="selectSection" v-on:click="setRoutePath('index')">Index</p> -->
-            
-            <!-- <p class="selectSection" v-on:click="setRoutePath('start')">Start</p> -->
-            <!-- <div id="" class="selectSection" v-for="item in sortFrontendSections(frontendSections)" v-on:click="loadSectionCategories(item, '', '')"> -->
-                <!-- {{item.title}} -->
-                <!-- {{item.pos}}: {{item.title}} -->
-            <!-- </div> -->
-            
-            <!-- <p class="selectSection" v-on:click="setRoutePath('end')">End</p> -->
-        <!-- </div> -->
+        <div id="mobileLandscapeStartSlideshow">
+            <p id="mobileLandscapeStartSlideshowText" v-on:click="slideshowMode()">Press to Start</p>
+        </div>
+
+        <div id="mobileLandscapeNavArrows">
+            <div id="mobileLandscapePreviousSlide" v-on:click="slideshowModePrevious()">🞀</div>
+            <div id="mobileLandscapeNextSlide" v-on:click="slideshowModeNext()">🞂</div>
+        </div>
+
+        <div id="mobileExitSlideshow" v-on:click="slideshowModeExit()">x</div>
     </div>
 </template>
 
@@ -467,6 +533,7 @@ export default {
     const frontendContact = computed(() => { return store.getters['storage/frontendContact']})
     const frontendSearchResults = computed(() => { return store.getters['storage/frontendSearchResults']})
     const frontendSearchString = computed(() => { return store.getters['storage/frontendSearchString']})
+    const frontendSlideshowPage = computed(() => { return store.getters['storage/frontendSlideshowPage']})
 
 
     //globals
@@ -475,6 +542,8 @@ export default {
     var selectedCategoryPos = ""
     var settings = ""
     var selectedElement = ""
+    var slideshowModeActive = "false"
+    var slidesCurrentPage = 0
 
 
     //lifecycle hook: on mounted
@@ -497,53 +566,66 @@ export default {
         // console.log(routePreviousPath)
         // console.log(routeCurrentPath)
         // console.log(routerCurrentPathElement)
+
+        //check slideshow status
+        if(slideshowModeActive == "true") { slideshowModal.style.display = "block"; return }
         
         //load route
         if(routeCurrentPath != routePreviousPath) { handleRouting(routeParams) }
+
     })
 
 
     //event listener: keyboard
-    document.addEventListener('keyup', function(e) 
-    { 
+    document.addEventListener('keyup', function(e) { 
         //debugging
         // console.log(e)
 
-        //null check
-        if(selectedElement == 'searchModal' && e.code == "Escape") { undisplayModals(); selectedElement = "" }
-        else if(selectedElement == 'searchModal' && e.code != "Escape") { return }
+        //slideshow
+        if(slideshowModeActive == "true")
+        {
+            if(e.code == "Escape") { slideshowModeExit() }
+            else if(e.code == "ArrowRight") { slideshowModeNext() }
+            else if(e.code == "ArrowLeft") { slideshowModePrevious() }
+        }
 
-        //single key
-        if(e.code == "Escape") { undisplayModals() }
-        else if(e.code == "ArrowDown") { loadNextCategory() }
-        else if(e.code == "ArrowUp") { loadPreviousCategory() }
-        else if(e.code == "ArrowLeft") { loadPreviousSection() }
-        else if(e.code == "ArrowRight") { loadNextSection() }
-        else if(e.key == "§") { loadSearchModal() }
-        // else if(e.code == "KeyS") { loadSectionNavigatorModal() }
-        
-        //shift + key
-        else if(e.shiftKey && e.code == "KeyF") { fullscreen() }
-        else if(e.shiftKey && e.code == "KeyS") { loadSectionNavigatorModal() }
-        else if(e.shiftKey && e.code == "KeyC") { loadCategoryNavigatorModal() }
-        // else if(e.shiftKey && e.code == "ArrowRight") { }
-        // else if(e.shiftKey && e.code == "ArrowLeft") { }
-
-        //ctrl + key
-        // else if(e.ctrlKey && e.code == "KeyF") { selectedElement = "" }
-        // else if(e.shiftKey && e.code == "KeyS") { selectedElement = "" }
+        //standard
+        else if(slideshowModeActive == "false")
+        {
+            //null check
+            if(selectedElement == 'searchModal' && e.code == "Escape") { undisplayModals(); selectedElement = "" }
+            else if(selectedElement == 'searchModal' && e.code != "Escape") { return }
+    
+            //single key
+            if(e.code == "Escape") { undisplayModals() }
+            else if(e.code == "ArrowDown") { loadNextCategory() }
+            else if(e.code == "ArrowUp") { loadPreviousCategory() }
+            else if(e.code == "ArrowLeft") { loadPreviousSection() }
+            else if(e.code == "ArrowRight") { loadNextSection() }
+            else if(e.key == "§") { loadSearchModal() }
+            // else if(e.code == "KeyS") { loadSectionNavigatorModal() }
+            
+            //shift + key
+            else if(e.shiftKey && e.code == "KeyF") { fullscreen() }
+            else if(e.shiftKey && e.code == "KeyS") { loadSectionNavigatorModal() }
+            else if(e.shiftKey && e.code == "KeyC") { loadCategoryNavigatorModal() }
+            // else if(e.shiftKey && e.code == "ArrowRight") { }
+            // else if(e.shiftKey && e.code == "ArrowLeft") { }
+    
+            //ctrl + key
+            // else if(e.ctrlKey && e.code == "KeyF") { selectedElement = "" }
+            // else if(e.shiftKey && e.code == "KeyS") { selectedElement = "" }
+        }
     })
     
 
     //event listener: default browser context menu
-    document.addEventListener('contextmenu', function(e)
-    {
-        //prevent default browser right click window
-        e.preventDefault()
+    document.addEventListener('contextmenu', function(e) {
+        e.preventDefault() //prevent default browser right click window
     })
     
 
-    //event listener: mouse scroll wheel
+    //event listener: mouse scroll
     document.addEventListener('wheel', function(e) {
         //elements 
         let searchModalHitsCategories = document.getElementById("searchModalHitsCategories")
@@ -551,6 +633,33 @@ export default {
         //categories horizontal scroll
         if (e.deltaY > 0) { if(searchModalHitsCategories != null) { searchModalHitsCategories.scrollLeft += 60; } }
         else { if(searchModalHitsCategories != null) { searchModalHitsCategories.scrollLeft -= 60; } }
+    })
+
+
+    //event listener: mouse click
+    document.addEventListener('mouseup', function(e) {
+        //debugging
+        console.log(e)
+
+        //e.button 0 = left click
+        //e.button 1 = middle click
+        //e.button 2 = right click
+        //e.button 3 = side-back click
+        //e.button 4 = side-front click
+
+        //slideshow
+        if(slideshowModeActive == "true")
+        {
+            if(e.button == 1) { slideshowModeExit() }
+            else if(e.button == 3) { e.preventDefault(); slideshowModePrevious() }
+            else if(e.button == 4) { e.preventDefault(); slideshowModeNext() }  
+        }
+
+        //standard
+        else if(slideshowModeActive == "false")
+        {
+            if(e.button == 1) { slideshowMode() }
+        }
     })
     
 
@@ -719,7 +828,7 @@ export default {
             if(addNewDataRow) { addNewDataRow.style.display = "block" }
             if(selectedCategoryTitle) { selectedCategoryTitle.innerText = category.replaceAll("-", " ") }
             if(frontendDataRows) { frontendDataRows.scrollTo(0,0) }
-            if(categoryUnderlay) { categoryUnderlay.style.opacity = "0.6" }
+            if(categoryUnderlay) { categoryUnderlay.style.opacity = "0.49" }
             undisplayModals()
         }, 20)
     }
@@ -813,6 +922,30 @@ export default {
 
         //return value
         return rows
+    }
+
+    function sortFrontendDataSlideshow(data)
+    {
+        //variables
+        // let rows = []
+
+        //add data rows to array
+        // for(let c in data) { rows.push(JSON.parse(data[c])) }
+
+        //sort data rows by position
+        // let x = data.sort((a, b) => {
+        //     return a.section < b.section 
+        // })
+
+        let x = data.sort(function (x, y) {
+            let a = x.section.toLowerCase(),
+                b = y.section.toLowerCase();
+
+            return a == b ? 0 : a > b ? 1 : -1;
+        });
+
+        //return value
+        return x
     }
 
 
@@ -962,6 +1095,7 @@ export default {
         let contactModal = document.getElementById("contactModal")
         let mobileNavigatorModal = document.getElementById("mobileNavigatorModal")
         let searchModal = document.getElementById("searchModal")
+        // let slideshowModal = document.getElementById("slideshowModal")
 
         //update elements
         if(underlayModal) { underlayModal.style.display = "none" }
@@ -971,7 +1105,8 @@ export default {
         if(sectionNavigatorModal) { sectionNavigatorModal.style.display = "none" }
         if(mobileNavigatorModal) { mobileNavigatorModal.style.display = "none" }
         if(searchModal) { searchModal.style.display = "none" }
-
+        // if(slideshowModal) { slideshowModal.style.display = "none" }
+        document.documentElement.style.cursor = 'auto';
         selectedElement = ""
     }
     
@@ -1075,11 +1210,14 @@ export default {
         let newImagePos = parseInt(nextImage.alt) + 1
         let totalGalleryImages = data.length
 
+        //null check
+        if(totalGalleryImages <= 1) { return }
+
         //check error
         if(newImagePos >= totalGalleryImages) { newImagePos = 0 }
         
         //set image background opacity
-        if(categoryUnderlay.style.opacity == "0.6" || categoryUnderlay.style.opacity == "") 
+        if(categoryUnderlay.style.opacity == "0.49" || categoryUnderlay.style.opacity == "") 
         { categoryUnderlay.style.opacity = "0.02"; return }
 
         //set image alt text
@@ -1113,11 +1251,14 @@ export default {
         let newImagePos = parseInt(previousImage.alt) - 1
         let totalGalleryImages = data.length
 
+        //null check
+        if(totalGalleryImages <= 1) { return }
+
         //check error
         if(newImagePos <= -1) { newImagePos = totalGalleryImages - 1}
 
         //set image background opacity
-        if(categoryUnderlay.style.opacity == "0.6" || categoryUnderlay.style.opacity == "") 
+        if(categoryUnderlay.style.opacity == "0.49" || categoryUnderlay.style.opacity == "") 
         { categoryUnderlay.style.opacity = "0.02"; return }
 
         //set image alt text
@@ -1159,7 +1300,7 @@ export default {
         imageGallery.alt = newImagePos
 
         //set image background opacity
-        if(categoryUnderlay.style.opacity == "0.6" || categoryUnderlay.style.opacity == "") 
+        if(categoryUnderlay.style.opacity == "0.49" || categoryUnderlay.style.opacity == "") 
         { categoryUnderlay.style.opacity = "0.02"; return }
     }
 
@@ -1276,6 +1417,8 @@ export default {
             if(settings.buttonSearch == "true") { buttonSearch.style.display = "block" }
             if(buttonSelectSections ) { buttonSelectSections.style.display = "block" }
 
+            if(settings.modeSlideshow == "false") { buttonSlideshowMode.style.display = "none" }
+
             //set nav icons
             if(settings.navIconSize == "small") { navIconSizeHeight = "20px"; navIconSizeWidth = "20px"}
             else if(settings.navIconSize == "medium") { navIconSizeHeight = "30px"; navIconSizeWidth = "30px" }
@@ -1341,8 +1484,8 @@ export default {
             }
             
             //set CSS variables
-            document.documentElement.style.setProperty("--backgroundPageStart", "linear-gradient(to right, rgba(0,0,0, 0.4) 0 100%), url('" + settings.pageStartBackgroundImage + ")")
-            document.documentElement.style.setProperty("--backgroundPageEnd", "linear-gradient(to right, rgba(0,0,0, 0.4) 0 100%), url('" +  settings.pageEndBackgroundImage + ")")
+            document.documentElement.style.setProperty("--backgroundPageStart", "linear-gradient(to right, rgba(0,0,0, 0.49) 0 100%), url('" + settings.pageStartBackgroundImage + ")")
+            document.documentElement.style.setProperty("--backgroundPageEnd", "linear-gradient(to right, rgba(0,0,0, 0.49) 0 100%), url('" +  settings.pageEndBackgroundImage + ")")
             document.documentElement.style.setProperty("--navTop", navTop);
             document.documentElement.style.setProperty("--navBottom", navBottom);
             document.documentElement.style.setProperty("--navLeft", navLeft);
@@ -1410,43 +1553,43 @@ export default {
     }
 
 
-    function indexCategoryAsLetter(value)
-    {   
-        //variables
-        let letter = ""
+    // function indexCategoryAsLetter(value)
+    // {   
+    //     //variables
+    //     let letter = ""
 
-        //set letter
-        if(value == '1') { letter = "A" }
-        else if(value == '2') { letter = "B" }
-        else if(value == '3') { letter = "C" }
-        else if(value == '4') { letter = "D" }
-        else if(value == '5') { letter = "E" }
-        else if(value == '6') { letter = "F" }
-        else if(value == '7') { letter = "G" }
-        else if(value == '8') { letter = "H" }
-        else if(value == '9') { letter = "I" }
-        else if(value == '10') { letter = "J" }
-        else if(value == '11') { letter = "K" }
-        else if(value == '12') { letter = "L" }
-        else if(value == '13') { letter = "M" }
-        else if(value == '14') { letter = "N" }
-        else if(value == '15') { letter = "O" }
-        else if(value == '16') { letter = "P" }
-        else if(value == '17') { letter = "Q" }
-        else if(value == '18') { letter = "R" }
-        else if(value == '19') { letter = "S" }
-        else if(value == '20') { letter = "T" }
-        else if(value == '21') { letter = "U" }
-        else if(value == '22') { letter = "V" }
-        else if(value == '23') { letter = "W" }
-        else if(value == '24') { letter = "X" }
-        else if(value == '25') { letter = "Y" }
-        else if(value == '26') { letter = "Z" }
-        else { letter = value }
+    //     //set letter
+    //     if(value == '1') { letter = "A" }
+    //     else if(value == '2') { letter = "B" }
+    //     else if(value == '3') { letter = "C" }
+    //     else if(value == '4') { letter = "D" }
+    //     else if(value == '5') { letter = "E" }
+    //     else if(value == '6') { letter = "F" }
+    //     else if(value == '7') { letter = "G" }
+    //     else if(value == '8') { letter = "H" }
+    //     else if(value == '9') { letter = "I" }
+    //     else if(value == '10') { letter = "J" }
+    //     else if(value == '11') { letter = "K" }
+    //     else if(value == '12') { letter = "L" }
+    //     else if(value == '13') { letter = "M" }
+    //     else if(value == '14') { letter = "N" }
+    //     else if(value == '15') { letter = "O" }
+    //     else if(value == '16') { letter = "P" }
+    //     else if(value == '17') { letter = "Q" }
+    //     else if(value == '18') { letter = "R" }
+    //     else if(value == '19') { letter = "S" }
+    //     else if(value == '20') { letter = "T" }
+    //     else if(value == '21') { letter = "U" }
+    //     else if(value == '22') { letter = "V" }
+    //     else if(value == '23') { letter = "W" }
+    //     else if(value == '24') { letter = "X" }
+    //     else if(value == '25') { letter = "Y" }
+    //     else if(value == '26') { letter = "Z" }
+    //     else { letter = value }
 
-        //return value
-        return letter
-    }
+    //     //return value
+    //     return letter
+    // }
 
 
     function fullscreen()
@@ -1989,6 +2132,296 @@ export default {
     }
 
 
+    function slideshowMode()
+    {
+        console.log("slideshowMode")
+
+        //elements
+        let slideshowModal = ""
+        let mobileLandscapeStartSlideshow = document.getElementById("mobileLandscapeStartSlideshow")
+        // let slideshowTitle = document.getElementById("slideshowTitle")
+        
+        //variables
+        let totalSections = frontendSections.value.length
+        let totalCategories = frontendCategories.value.length
+        let sectionsSorted = sortFrontendSections(toRaw(frontendSections.value))
+        let dataSorted = sortFrontendDataSlideshow(toRaw(frontendData.value))
+        let categoriesSorted = frontendCategories.value
+        let sectionsByPos = []
+        let dataRowsInOrder = []
+        let slides = [{
+            "backgroundImage": settings.pageStartBackgroundImage,
+            "category": "",
+            "data": settings.pageStartText,
+            "hidden": "false",
+            "pos": "0",
+            "section": "",
+            "title": settings.pageStartTitle,
+            "type": "slideshowStart"
+        }]
+
+        //add sections to array
+        for(let s in sectionsSorted)
+        {
+            sectionsByPos.push(sectionsSorted[s].title)
+        }
+        
+        //debugging
+        // console.log("slideshowMode Totals")
+        // console.log("sections: " + totalSections)
+        // console.log("categories: " + totalCategories)
+        // console.log(sectionsByPos)
+        // console.log(frontendData.value)
+        // console.log(dataSorted)
+        
+        //handle data rows
+        for(let item in dataSorted)
+        {
+            let obj = dataSorted[item]
+            let section = obj.section.toLowerCase()
+            let category = obj.category.toLowerCase()
+            let rows = dataSorted[item].rows
+
+            for(let item in rows) 
+            { 
+                let r = JSON.parse(rows[item])
+                
+                r.section = section
+                r.category = category
+                r.data = r.data.replaceAll("'", "\"")
+
+                for(let b in categoriesSorted)
+                {
+                    // console.log(categoriesSorted[b])
+                    let cItem = categoriesSorted[b]
+                    let cSection = cItem.section.toLowerCase()
+                    let cTitle = cItem.title.toLowerCase()
+
+                    if(cSection == r.section.toLowerCase() && cTitle == r.category.toLowerCase())
+                    {
+                        r.backgroundImage = categoriesSorted[b].backgroundImage
+                        break
+                    }
+                }
+
+                if(r.hidden == "false" && r.type != 'galleryImages') 
+                { 
+                    // console.log(r)
+                    dataRowsInOrder.push(r) 
+                }
+                else if(r.hidden == "false" && r.type == 'galleryImages') 
+                {   
+                    // console.log(r)
+                    // console.log(JSON.parse(r.data))
+                    let imageObjects = JSON.parse(r.data)
+
+                    for(let x in imageObjects)
+                    {
+                        dataRowsInOrder.push({
+                            "category": r.category,
+                            "data": JSON.stringify(imageObjects[x]),
+                            "hidden": r.hidden,
+                            "pos": r.pos,
+                            "section": r.section,
+                            "title": r.title,
+                            "type": r.type,
+                            "backgroundImage": r.backgroundImage
+                        })
+                    }
+                }
+            }
+            
+            // console.log(dataSorted[item])
+            // console.log(section + "/" + category + " - " + obj.rows.length)
+        }
+        // console.log(dataRowsInOrder)
+        
+        //add slides to array
+        for(let item in sectionsByPos)
+        {
+            //variables
+            let s = {
+                "backgroundImage": "",
+                "category": "",
+                "data": "",
+                "hidden": "false",
+                "pos": (parseInt(item) + 1).toString(),
+                "section": sectionsByPos[item],
+                "title": firstLetterToUpperCase(sectionsByPos[item]),
+                "type": "sectionStart"
+            }
+
+            //add section start slide
+            slides.push(s)
+
+            //set section background image
+            for(let b in categoriesSorted)
+            {
+                let cItem = categoriesSorted[b]
+                let cSection = cItem.section.toLowerCase()
+                let cTitle = cItem.title.toLowerCase()
+
+                if(cSection == s.section.toLowerCase())
+                {
+                    s.backgroundImage = categoriesSorted[b].backgroundImage
+                    break
+                }
+            }
+
+            //check if data is set to hidden
+            for(let d in dataRowsInOrder)
+            {
+                if(dataRowsInOrder[d].section.toLowerCase() == s.title.toLowerCase())
+                {
+                    if(dataRowsInOrder[d].hidden == "false") { slides.push(dataRowsInOrder[d]) }
+                }
+            }
+        }
+
+        //add end page
+        slides.push({
+            "backgroundImage": settings.pageEndBackgroundImage,
+            "category": "",
+            "data": settings.pageEndText,
+            "hidden": "false",
+            "pos": slides.length.toString(),
+            "section": "",
+            "title": settings.pageEndTitle,
+            "type": "slideshowEnd"
+        })
+
+        //set local storage
+        localStorage.setItem("cms-slides", JSON.stringify(slides))
+
+        //set vuex
+        store.dispatch('storage/actionSetFrontendSlideshowPage', slides[0])
+
+        //update elements
+        let doc = document.documentElement,
+        requestFullscreen = (doc.requestFullscreen || doc.webkitRequestFullScreen)
+        requestFullscreen.call(doc)
+        mobileLandscapeStartSlideshow.style.display = "none"
+        mobilePortraitExitSlideshow.style.display = "block"
+        setTimeout(() => {
+            slideshowModal = document.getElementById("slideshowModal")
+            slideshowModal.style.backgroundImage = "linear-gradient(to right, rgba(0,0,0, 0.4) 0 100%), url('" + slides[slidesCurrentPage].backgroundImage + "')"
+            slideshowModal.style.backgroundSize = "cover"
+            slideshowModal.style.display = "block"
+            document.documentElement.style.cursor = 'none';
+        }, 100)
+        
+        //set slideshow status
+        slideshowModeActive = "true"
+        
+        //debugging
+        console.log(slides)
+    }
+
+
+    function slideshowModeNext()
+    {
+        console.log("slideshowModeNext")
+
+        //elements
+        let slideshowModal = document.getElementById("slideshowModal")
+        let slidesCurrentPageNumber = document.getElementById("slidesCurrentPageNumber")
+
+        //variables
+        let slides = JSON.parse(localStorage.getItem("cms-slides"))
+        let totalSlides = slides.length
+
+        //increment slide page
+        slidesCurrentPage++
+
+        //null check
+        if(slidesCurrentPage > (totalSlides - 1)) { slidesCurrentPage = 0 }
+
+        //debugging
+        // console.log("slidesCurrentPage: " + slidesCurrentPage)
+        // console.log(slides[slidesCurrentPage])
+
+        //update elements
+        slidesCurrentPageNumber.innerText = slidesCurrentPage + "/" + (totalSlides - 1)
+        if(slides[slidesCurrentPage].backgroundImage != "")
+        {
+            slideshowModal.style.backgroundImage = "linear-gradient(to right, rgba(0,0,0, 0.49) 0 100%), url('" + slides[slidesCurrentPage].backgroundImage + "')"
+            slideshowModal.style.backgroundSize = "cover"
+        }
+        else if(slides[slidesCurrentPage].backgroundImage == "")
+        {
+            slideshowModal.style.backgroundImage = "none"
+        }
+        
+        //update vuex
+        store.dispatch('storage/actionSetFrontendSlideshowPage', slides[slidesCurrentPage])
+    }
+
+
+    function slideshowModePrevious()
+    {
+        console.log("slideshowModePrevious")
+
+        //elements
+        let slideshowModal = document.getElementById("slideshowModal")
+        let slidesCurrentPageNumber = document.getElementById("slidesCurrentPageNumber")
+
+        //variables
+        let slides = JSON.parse(localStorage.getItem("cms-slides"))
+        let totalSlides = slides.length
+
+        //decrement slide page
+        slidesCurrentPage--
+
+        //null check
+        if(slidesCurrentPage < 0) { slidesCurrentPage = (totalSlides - 1) }
+
+        //debugging
+        // console.log("slidesCurrentPage: " + slidesCurrentPage)
+        // console.log(slides[slidesCurrentPage])
+
+        //update elements
+        slidesCurrentPageNumber.innerText = slidesCurrentPage + "/" + (totalSlides - 1)
+        if(slides[slidesCurrentPage].backgroundImage != "")
+        {
+            slideshowModal.style.backgroundImage = "linear-gradient(to right, rgba(0,0,0, 0.49) 0 100%), url('" + slides[slidesCurrentPage].backgroundImage + "')"
+            slideshowModal.style.backgroundSize = "cover"
+        }
+        else if(slides[slidesCurrentPage].backgroundImage == "")
+        {
+            slideshowModal.style.backgroundImage = "none"
+        }
+
+        //update vuex
+        store.dispatch('storage/actionSetFrontendSlideshowPage', slides[slidesCurrentPage])
+    }
+
+    function slideshowModeExit()
+    {
+        setTimeout(() => {
+            //elements
+            let slideshowModal = document.getElementById("slideshowModal")
+            let mobileLandscapeStartSlideshow = document.getElementById("mobileLandscapeStartSlideshow")
+            let mobilePortraitExitSlideshow = document.getElementById("mobilePortraitExitSlideshow")
+
+            //update elements
+            slideshowModal.style.display = "none"
+            mobileLandscapeStartSlideshow.style.display = "initial"
+            mobilePortraitExitSlideshow.style.display = "none"
+            document.documentElement.style.cursor = 'auto';
+
+            //set globals
+            slideshowModeActive = "false"
+            slidesCurrentPage = 0
+            
+            //exit browser fullscreen
+            let doc = document.documentElement,
+            cancelFullscreen = (document.cancelFullScreen || document.webkitCancelFullScreen);
+            cancelFullscreen.call(document)
+            return 
+        }, 400)
+    }
+
+    
     // function displayLoadingScreen()
     // {
     //     //elements
@@ -2010,6 +2443,7 @@ export default {
         frontendContact,
         frontendSearchResults,
         frontendSearchString,
+        frontendSlideshowPage,
         router,
         // frontendCategoriesSelected,
 
@@ -2035,7 +2469,7 @@ export default {
         previousImageGalleryItem,
         fetchProtectedDomain,
         displayExtraPage,
-        indexCategoryAsLetter,
+        // indexCategoryAsLetter,
         fullscreen,
         displayMobileNavigator,
         setRoutePath,
@@ -2045,6 +2479,10 @@ export default {
         filterSearchResults,
         selectSearchHitsCategory,
         capitalizeString,
+        slideshowMode,
+        slideshowModeNext,
+        slideshowModePrevious,
+        slideshowModeExit,
         // loadDataType,
         // loadDataInputs,
         // loadContactModal,
@@ -2089,7 +2527,7 @@ export default {
     }
 </style>
 <style scoped>
-    /*** scrollbars */
+    /*** scrollbars ***/
     #frontendData::-webkit-scrollbar { height: 0px; width: 0px; }
     #frontendDataRows::-webkit-scrollbar { height: 0px; width: 0px; }
     #frontendSectionsList::-webkit-scrollbar { height: 0px; width: 0px; }
@@ -2097,9 +2535,11 @@ export default {
     #sectionNavigatorModal::-webkit-scrollbar { height: 0px; width: 0px; }
     #searchModalResults::-webkit-scrollbar { height: 0px; width: 0px; }
     #aboutModal::-webkit-scrollbar { height: 0px; width: 0px; }
+    #slideshowModal::-webkit-scrollbar { height: 0px; width: 0px; }
+    #slideshowData::-webkit-scrollbar { height: 0px; width: 0px; }
     .categoryNavigatorModalItems::-webkit-scrollbar { height: 0px; width: 0px; }
     .sectionNavigatorModalItems::-webkit-scrollbar { height: 0px; width: 0px; }
-
+    
     #dataObjModalPreviewImages::-webkit-scrollbar { height: 12px; width: 10px; }
     #dataObjModalPreviewImages::-webkit-scrollbar-track { background: black; }
     #dataObjModalPreviewImages::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.1); }
@@ -2355,6 +2795,7 @@ export default {
     #buttonFullscreen { display: none; background-image: url('/iconFullscreen.png'); background-size: contain; background-repeat: no-repeat; }
     #buttonSearch { display: none; background-image: url('/iconSearch.png'); background-size: contain; background-repeat: no-repeat; }
     #buttonStart { display: none; background-image: url('/iconStart.png'); background-size: contain; background-repeat: no-repeat; }
+    #buttonSlideshowMode { display: block; background-image: url('/iconSlideshow.png'); background-size: contain; background-repeat: no-repeat; }
     /* #buttonIndex { display: none; background-image: url('/iconIndex.png'); background-size: contain; background-repeat: no-repeat; } */
     /* #buttonEnd { display: none; } */
     #buttonSelectSections { display: none; background-image: url('/iconSection.png'); background-size: contain; background-repeat: no-repeat; }
@@ -2494,7 +2935,7 @@ export default {
         margin: auto; 
         padding: 0px;
         z-index: 0;
-        opacity: 0.6;
+        opacity: 0.49;
         color: white;
         background-color: var(--colorSectionBackground);
         background-image: none;
@@ -2538,7 +2979,57 @@ export default {
     #contactName { margin: 0px 0px 20px 22%; }
     #contactPhone { margin: 0px 0px 20px 22%; }
     #contactCountry { margin: 0px 0px 0px 22%; }
-    /* #data1 { margin-top: calc(-49px - 1px); } */
+    #slideshowModal 
+    { 
+        position: fixed; 
+        display: none; 
+        top: 0px; 
+        left: 0px; 
+        height: 100vh; 
+        width: 100vw;
+        z-index: 10;
+        background-color: var(--colorSectionBackground);;
+    }
+    #slideshowSectionStart 
+    { 
+        display: block; 
+        margin: 43vh 0px 0px 0px; 
+        padding: 0px; 
+        font-size: 60px; 
+        font-weight: bold; 
+        user-select: none;
+        text-transform: capitalize;
+        color: var(--colorText) 
+    }
+    #slideshowTitle 
+    { 
+        display: block; 
+        margin: 60px 0px 30px 0px; 
+        padding: 0px; 
+        font-size: 49px; 
+        font-weight: bold; 
+        user-select: none;
+        text-transform: capitalize;
+        color: var(--colorText) 
+    }
+    #slidesCurrentPageNumber 
+    { 
+        display: block; 
+        position: fixed; 
+        bottom: 8px; 
+        left: 24px; 
+        font-size: 20px; 
+        font-weight: bold; 
+        opacity: 0.2; 
+        color: white;
+    }
+    #slideshowData { display: block; max-height: 76vh; margin: auto; overflow-y: scroll; user-select: none; user-drag: none; }
+    #mobileLandscapeStartSlideshow { display: none; }
+    #mobileLandscapeStartSlideshowText { display: none; }
+    #mobilePortraitExitSlideshow { display: none; }
+    #mobilePortraitExitSlideshowText { display: none; }
+    #mobileLandscapeNavArrows { display: none; }
+    #mobileExitSlideshow { display: none; }
 
 
     /*** classes ***/
@@ -2564,7 +3055,7 @@ export default {
     }
     .category 
     { 
-        width: -webkit-fill-available;
+        width: max-content;
         margin: 0px; 
         padding: 20px; 
         text-wrap: nowrap; 
@@ -2581,7 +3072,7 @@ export default {
     }
     .selectSection 
     { 
-        width: -webkit-fill-available;
+        width: max-content;
         margin: 0px; 
         padding: 20px; 
         text-wrap: nowrap; 
@@ -2968,10 +3459,32 @@ export default {
     .infoItemKeybindDescription { display: inline-block; vertical-align: super; font-size: 24px; opacity: 0.9; }
     .no { color: red; }
     .yes { color: lightgreen; }
+    .slideshowImage { height: 600px; width: auto; user-select: none; user-drag: none; -webkit-user-drag: none; border: 1px solid rgba(255, 255, 255, 0.1); }
+    .slideshowImageDescription 
+    { 
+        width: 990px; 
+        margin: auto;
+        margin-top: 40px; 
+        margin-bottom: 20px; 
+        font-size: 22px; 
+        font-weight: bold; 
+        text-align: center;
+        opacity: 0.6; 
+    }
+    .slideshowItemMultiline { width: 49%; margin: auto; margin-bottom: 20px; font-size: 24px; font-weight: bold; opacity: 0.7; }
+    .slideshowItemTextlist { width: 40%; margin: auto; margin-bottom: 30px; font-size: 26px; font-weight: bold; text-align: center; opacity: 0.7; }
+    .slideshowItemLinklist { margin: 0px 0px 10px 0px; font-size: 24px; font-weight: bold; opacity: 1; }
+    .slideshowItemTimeline { width: 40%; margin: auto; margin-bottom: 80px;  }
+    .slideshowItemTimelineYear { margin: 0px 0px 0px 0px; font-size: 30px; font-weight: bold; text-align: left; opacity: 1; }
+    .slideshowItemTimelineText { margin: 0px 0px 0px 0px; font-size: 24px; font-weight: bold; text-align: left; opacity: 0.7; }
+    .slideshowSingleline { margin: 0px 0px 0px 0px; font-size: 24px; font-weight: bold; text-align: center; opacity: 0.7; }
+    .slideshowItemLinklistLink { margin: 0px 0px 40px 0px; font-size: 24px; font-weight: bold; text-align: center; opacity: 0.7; }
+    .slideshowStartText { margin: 0px 0px 0px 0px; font-size: 24px; font-weight: bold; text-align: center; opacity: 0.7; }
+    .slideshowEndText { margin: 0px 0px 0px 0px; font-size: 24px; font-weight: bold; text-align: center; opacity: 0.7; }
 
     
     /*** mobile ***/
-    @media screen and (max-width: 1000px) 
+    @media screen and (max-width: 1000px) and (orientation: portrait)
     {
         #frontendSections { bottom: 0px; height: auto; width: 100vw; margin: 0px; padding: 0px; }
         #frontendSectionsList { flex-direction: row; height: auto; justify-content: center; } 
@@ -3004,6 +3517,32 @@ export default {
         #pageEndText { max-width: 80vw; margin: auto; font-size: 22px; }
         #searchModalHitsCategories { padding-top: 0px; }
         #searchModalResults { max-height: 70vh; }
+        #buttonSlideshowMode { display: none; }
+        #mobileLandscapeStartSlideshow { display: none; }
+        #mobileLandscapeStartSlideshowText { display: none; }
+        #mobileExitSlideshow { display: none; }
+        #mobilePortraitExitSlideshow 
+        { 
+            position: fixed; 
+            display: none; 
+            top: 0px; 
+            left: 0px; 
+            width: 100vw; 
+            height: 100vh;
+            z-index: 20;
+            background-color: black;  
+        }
+        #mobilePortraitExitSlideshowText
+        {
+            display: block; 
+            width: fit-content; 
+            margin: auto;
+            margin-top: 42vh;
+            font-size: 30px; 
+            font-weight: bold; 
+            color: white; 
+        }
+        #mobileLandscapeNavArrows { display: none; }
         /* #buttonFullscreen { display: none; } */
 
         .section { margin: 13px 16px 18px 16px; } /* 13px 13px 18px 13px */
@@ -3019,5 +3558,85 @@ export default {
         .timeline { flex-direction: column; }
         .textlist { width: -webkit-fill-available; margin: 2px 0px 2px 0px; white-space: nowrap; overflow-x: scroll; }
         .privacyPolicyItem { margin: 0px 0px 2px 0px; text-align: center; }
+    }
+
+    @media screen and (max-width: 1000px) and (orientation: landscape)
+    {
+        #mobileLandscapeStartSlideshow 
+        { 
+            position: fixed; 
+            display: block; 
+            top: 0px; 
+            left: 0px; 
+            width: 100vw; 
+            height: 100vh;
+            z-index: 20;
+            background-color: black; 
+        }
+        #mobileLandscapeStartSlideshowText 
+        { 
+            display: block; 
+            width: fit-content; 
+            margin: auto;
+            margin-top: 42vh;
+            font-size: 30px; 
+            font-weight: bold; 
+            color: white; 
+        }
+        #mobilePortraitExitSlideshow { display: none; }
+        #mobilePortraitExitSlideshowText { display: none; }
+        #slideshowSectionStart { font-size: 40px; margin: 42vh 0px 0px 0px; }
+        #slideshowTitle { margin: 20px 0px 12px 0px; font-size: 34px; }
+        #slideshowData { max-width: 90vw; max-height: 70vh; }
+        #slidesCurrentPageNumber { top: initial; bottom: -10px; left: 12px; right: initial; font-size: 20px; opacity: 0.04; }
+        #mobileLandscapeNavArrows 
+        { 
+            position: fixed;
+            display: flex;
+            flex-direction: row;
+            width: fill-content;
+            bottom: -12px;
+            right: 12px;
+            z-index: 10;
+            font-size: 40px;
+            opacity: 0.04;
+            color: white;
+        }
+        #mobileLandscapePreviousSlide { margin-right: 10px; }
+        #mobileExitSlideshow 
+        { 
+            position: fixed; 
+            display: block; 
+            top: 0px;
+            left: 6px; 
+            font-size: 30px;
+            font-weight: bold; 
+            z-index: 10;
+            opacity: 0.04;
+            color: white; 
+        }
+
+        .slideshowItemLinklistText { font-size: 20px; }
+        .slideshowItemLinklistLink { font-size: 20px; }
+        .slideshowSingleline { font-size: 20px; }
+        .slideshowItemTimeline { width: 90%; margin-bottom: 49px; }
+        .slideshowItemTimelineYear { font-size: 27px; }
+        .slideshowItemTimelineText { font-size: 20px; }
+        .slideshowItemTextlist { width: auto; font-size: 20px; margin-bottom: 12px; }
+        .slideshowItemMultiline { width: 90%; font-size: 20px; }
+        .slideshowImage { position: absolute; height: 100vh; width: 100vw; top: -1px; left: -1px; z-index: -1; opacity: 1; filter: brightness(70%); }
+        .slideshowImageDescription 
+        { 
+            position: absolute; 
+            width: 90vw; 
+            bottom: 13vh;
+            margin: 0px;
+            padding: 0px;
+            font-size: 18px;
+            z-index: -1;
+            opacity: 0.9;
+            white-space: nowrap;
+            overflow-x: scroll; 
+        }
     }
 </style>

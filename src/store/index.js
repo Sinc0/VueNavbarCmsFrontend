@@ -40,6 +40,7 @@ export default createStore({
         frontendContact: null,
         frontendSearchResults: null,
         frontendSearchString: null,
+        frontendSlideshowPage: null,
       },
       
       getters: 
@@ -73,6 +74,7 @@ export default createStore({
         frontendContact(state) { return state.frontendContact },
         frontendSearchResults(state) { return state.frontendSearchResults },
         frontendSearchString(state) { return state.frontendSearchString },
+        frontendSlideshowPage(state) { return state.frontendSlideshowPage },
       },
 
       mutations: 
@@ -106,6 +108,7 @@ export default createStore({
         mutationSetFrontendContact(state, value) { state.frontendContact = value },
         mutationSetFrontendSearchResults(state, value) { state.frontendSearchResults = value },
         mutationSetFrontendSearchString(state, value) { state.frontendSearchString = value },
+        mutationSetFrontendSlideshowPage(state, value) { state.frontendSlideshowPage = value },
       },
 
       actions: 
@@ -139,5 +142,6 @@ export default createStore({
         actionSetFrontendContact({commit}, value) { commit('mutationSetFrontendContact', value) },
         actionSetFrontendSearchResults({commit}, value) { commit('mutationSetFrontendSearchResults', value) },
         actionSetFrontendSearchString({commit}, value) { commit('mutationSetFrontendSearchString', value) },
+        actionSetFrontendSlideshowPage({commit}, value) { commit('mutationSetFrontendSlideshowPage', value) },
       }
 }}})
