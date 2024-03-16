@@ -470,12 +470,12 @@
                     </div>
     
                     <!-- toggle: text size -->
-                    <div id="editAccountTextSize">
+                    <!-- <div id="editAccountTextSize">
                         <label class="editAccountToggle">Size:</label>
                         <button id="editAccountTextSmall" class="editAccountToggleButton" v-on:click="editAccount('textSize', 'small', 'true')">Small</button>
                         <button id="editAccountTextMedium" class="editAccountToggleButton" v-on:click="editAccount('textSize', 'medium', 'true')">Medium</button>
                         <button id="editAccountTextLarge" class="editAccountToggleButton" v-on:click="editAccount('textSize', 'large', 'true')">Large</button>
-                    </div>
+                    </div> -->
                 </div>
 
                 <!-- edit: account privacy -->
@@ -530,13 +530,13 @@
                     </div>
                     
                     <!-- toggle: index page -->
-                    <div id="editAccountIndexPage">
-                        <!-- <input id="editAccountIndexPageToggle" class="editAccountRadioButton" type="radio" /> -->
-                        <!-- <label class="editAccountText">Index Page</label> -->
+                    <!-- <div id="editAccountIndexPage">
+                        <input id="editAccountIndexPageToggle" class="editAccountRadioButton" type="radio" />
+                        <label class="editAccountText">Index Page</label>
                         <label class="editAccountToggle">Index:</label>
                         <button id="editAccountIndexPageYes" class="editAccountToggleButton" v-on:click="editAccount('pageIndex', 'true', 'true')">Yes</button>
                         <button id="editAccountIndexPageNo" class="editAccountToggleButton" v-on:click="editAccount('pageIndex', 'false', 'true')">No</button>
-                    </div>
+                    </div> -->
                 </div>
 
                 <!-- edit: account buttons -->
@@ -680,6 +680,21 @@
         <div id="settingsAccount" v-on:click="editAccountModal(backendAccountSettings, backendAccountCredentials)">
             <p id="settingsAccountText">Settings</p>
         </div>
+
+
+        <!-- button: checkout public site -->
+        <div id="checkoutPublicSite" v-on:click="checkoutPublicSite('desktop')">
+        </div>
+
+
+        <!-- button: logout account -->
+        <div id="logoutAccount">
+            <p id="logoutAccountText" v-on:click="logout()">⮨</p>
+        </div>
+
+        <!-- mobile only -->
+        <div id="mobileCheckoutPublicSite" v-on:click="checkoutPublicSite('mobile')">
+        </div>
     </div>
 </template>
 
@@ -687,12 +702,13 @@
 <script>
 import {useStore} from 'vuex'
 import {computed, onMounted, onUpdated, resolveDirective, toRaw} from 'vue'
-import router from '../router'
+import {useRouter} from 'vue-router'
 
 export default {
   setup() {
     //vue
     const store = useStore()
+    const router = useRouter()
 
 
     //variables
@@ -3266,7 +3282,7 @@ export default {
         editAccount("navIconType", settings.navIconType, 'false')
         editAccount("navIconSize", settings.navIconSize, 'false')
         editAccount("textStyle", settings.textStyle, 'false')
-        editAccount("textSize", settings.textSize, 'false')
+        // editAccount("textSize", settings.textSize, 'false')
         editAccount("siteAccess", settings.siteAccess, 'false')
         editAccount("sitePasswordProtected", settings.sitePasswordProtected, 'false')
         editAccount("pageStart", settings.pageStart, 'false')
@@ -3322,8 +3338,8 @@ export default {
         let editAccountStartPageYes = document.getElementById("editAccountStartPageYes")
         let editAccountEndPageYes = document.getElementById("editAcountEndPageYes")
         let editAccountEndPageNo = document.getElementById("editAcountEndPageNo")
-        let editAccountIndexPageYes = document.getElementById("editAccountIndexPageYes")
-        let editAccountIndexPageNo = document.getElementById("editAccountIndexPageNo")
+        // let editAccountIndexPageYes = document.getElementById("editAccountIndexPageYes")
+        // let editAccountIndexPageNo = document.getElementById("editAccountIndexPageNo")
         let editAccountFullscreenButtonYes = document.getElementById("editAccountFullscreenButtonYes")
         let editAccountFullscreenButtonNo = document.getElementById("editAccountFullscreenButtonNo")
         let editAccountSearchButtonYes = document.getElementById("editAccountSearchButtonYes")
@@ -3476,22 +3492,22 @@ export default {
             else if(value == "bold") { editAccountTextBold.style.color = "#822c8b"; editAccountTextBold.style.opacity = "1" }
         }
 
-        else if(type == "textSize") 
-        {
-            if(clicked == "true")
-            {
-                settings.textSize = value
-                localStorage.setItem("cms-edit-settings", JSON.stringify(settings))
-            }
+        // else if(type == "textSize") 
+        // {
+        //     if(clicked == "true")
+        //     {
+        //         settings.textSize = value
+        //         localStorage.setItem("cms-edit-settings", JSON.stringify(settings))
+        //     }
 
-            editAccountTextSmall.style.color = "white"; editAccountTextSmall.style.opacity = "0.2"
-            editAccountTextMedium.style.color = "white"; editAccountTextMedium.style.opacity = "0.2"
-            editAccountTextLarge.style.color = "white"; editAccountTextLarge.style.opacity = "0.2"
+        //     editAccountTextSmall.style.color = "white"; editAccountTextSmall.style.opacity = "0.2"
+        //     editAccountTextMedium.style.color = "white"; editAccountTextMedium.style.opacity = "0.2"
+        //     editAccountTextLarge.style.color = "white"; editAccountTextLarge.style.opacity = "0.2"
 
-            if(value == "small") { editAccountTextSmall.style.color = "#822c8b"; editAccountTextSmall.style.opacity = "1" }
-            else if(value == "medium") { editAccountTextMedium.style.color = "#822c8b"; editAccountTextMedium.style.opacity = "1" }
-            else if(value == "large") { editAccountTextLarge.style.color = "#822c8b"; editAccountTextLarge.style.opacity = "1" }
-        }
+        //     if(value == "small") { editAccountTextSmall.style.color = "#822c8b"; editAccountTextSmall.style.opacity = "1" }
+        //     else if(value == "medium") { editAccountTextMedium.style.color = "#822c8b"; editAccountTextMedium.style.opacity = "1" }
+        //     else if(value == "large") { editAccountTextLarge.style.color = "#822c8b"; editAccountTextLarge.style.opacity = "1" }
+        // }
 
         else if(type == "siteAccess") 
         {
@@ -3606,20 +3622,20 @@ export default {
             }
         }
 
-        else if(type == "pageIndex") 
-        {
-            if(clicked == "true")
-            {
-                settings.pageIndex = value
-                localStorage.setItem("cms-edit-settings", JSON.stringify(settings))
-            }
+        // else if(type == "pageIndex") 
+        // {
+        //     if(clicked == "true")
+        //     {
+        //         settings.pageIndex = value
+        //         localStorage.setItem("cms-edit-settings", JSON.stringify(settings))
+        //     }
             
-            editAccountIndexPageYes.style.color = "white"; editAccountIndexPageYes.style.opacity = "0.2"
-            editAccountIndexPageNo.style.color = "white"; editAccountIndexPageNo.style.opacity = "0.2"
+        //     editAccountIndexPageYes.style.color = "white"; editAccountIndexPageYes.style.opacity = "0.2"
+        //     editAccountIndexPageNo.style.color = "white"; editAccountIndexPageNo.style.opacity = "0.2"
 
-            if(value == "true") { editAccountIndexPageYes.style.color = "#822c8b"; editAccountIndexPageYes.style.opacity = "1" }
-            else if(value == "false") { editAccountIndexPageNo.style.color = "#822c8b"; editAccountIndexPageNo.style.opacity = "1" }
-        }
+        //     if(value == "true") { editAccountIndexPageYes.style.color = "#822c8b"; editAccountIndexPageYes.style.opacity = "1" }
+        //     else if(value == "false") { editAccountIndexPageNo.style.color = "#822c8b"; editAccountIndexPageNo.style.opacity = "1" }
+        // }
 
         else if(type == "buttonFullscreen") 
         {
@@ -4232,6 +4248,58 @@ export default {
     }
 
 
+    async function logout()
+    {   
+        //clear all local storage data
+        window.localStorage.clear()
+
+        //redirect to start
+        router.push("/")
+
+        // let username = localStorage.getItem("cms-account")
+        // let token = localStorage.getItem("cms-token")
+        // let lastLogin = localStorage.getItem("cms-last-login")
+        // let obj = JSON.stringify({ "username": username, "token": token, "lastLogin": lastLogin })
+
+        // //add user to db
+        // await fetch(BACKEND_API + "/user-sign-out", {method: 'post', body: obj})
+        // .then((response) => { return response.json() })
+        // .then((data) => {
+        //     //debugging
+        //     console.log(data)
+
+        //     //logout successful
+        //     if(data.status == "user logout successful") 
+        //     { 
+        //         //set local storage
+        //         localStorage.setItem("cms-account", "")
+        //         localStorage.setItem("cms-token", "")
+        //         localStorage.setItem("cms-last-login", "")
+
+        //         //redirect
+        //         // router.push("/")
+        //     }
+
+        //     //login failed
+        //     else if(data.status == "user logout failed") 
+        //     { 
+                
+        //     }
+
+        // })
+    }
+
+
+    function checkoutPublicSite(type)
+    {   
+        //open site in new tab
+        if(type == "desktop") { window.open("/" + backendAccountCredentials.value.domain,'_blank') }
+
+        //open site in same tab
+        else if(type == "mobile") { window.open("/" + backendAccountCredentials.value.domain, '_self') }
+    }
+
+
     return {
         //variables
         backendSections,
@@ -4282,7 +4350,9 @@ export default {
         showPasswordInputs,
         hidePasswordInputs,
         backendAccountLoginInfo,
-        imageGalleryUpdateImageDescription
+        imageGalleryUpdateImageDescription,
+        logout,
+        checkoutPublicSite
     }
   }
 }
@@ -4453,7 +4523,34 @@ export default {
         border-radius: 90%;
         background-color: #822c8b;
     }
+    #checkoutPublicSite 
+    { 
+        position: fixed; 
+        display: block; 
+        height: 80px; 
+        width: 80px; 
+        top: 130px; 
+        right: 30px;
+        opacity: 0.2;
+        border-radius: 90%;
+        background-color: white;
+    }
+    #mobileCheckoutPublicSite { display: none; }
+    #logoutAccount 
+    { 
+        position: fixed; 
+        display: block; 
+        height: auto; 
+        width: auto; 
+        bottom: -8px;
+        right: 30px;
+        font-size: 40px;
+        opacity: 0.2;
+    }
     #settingsAccount:hover { opacity: 1; }
+    #logoutAccount:hover { opacity: 1; }
+    #logoutAccount:active { opacity: 1; }
+    #logoutAccountText { margin: 0px; padding: 0px; cursor: default; }
     #dataObjModal 
     { 
         position: fixed; 
@@ -4740,10 +4837,10 @@ export default {
     #editAccountNavPosition { display: flex; margin: 0px; padding: 20px 0px 20px 14px; overflow-x: scroll; border-top: 1px solid #ffffff1f; border-bottom: 1px solid #ffffff1f; }
     #editAccountNavIconSize { display: flex; margin: 0px; padding: 20px 0px 20px 14px; overflow-x: scroll; border-bottom: 1px solid #ffffff1f; }
     #editAccountTextStyle { display: flex; margin: 0px; padding: 20px 0px 20px 14px; overflow-x: scroll; border-top: 1px solid #ffffff1f; border-bottom: 1px solid #ffffff1f; }
-    #editAccountTextSize { display: flex; margin: 0px; padding: 20px 0px 20px 14px; overflow-x: scroll;border-bottom: 1px solid #ffffff1f; }
+    /* #editAccountTextSize { display: flex; margin: 0px; padding: 20px 0px 20px 14px; overflow-x: scroll;border-bottom: 1px solid #ffffff1f; } */
     #editAccountSiteAccess { display: flex; margin: 0px; padding: 20px 0px 20px 14px; overflow-x: scroll; border-top: 1px solid #ffffff1f; border-bottom: 1px solid #ffffff1f; }
-    #editAccountSitePasswordProtected { display: flex; margin: 0px; padding: 20px 0px 20px 14px; overflow-x: scroll; border-bottom: 1px solid #ffffff1f; }
-    #editAccountIndexPage { display: flex; margin: 0px; padding: 20px 0px 20px 14px; overflow-x: scroll; border-bottom: 1px solid #ffffff1f; }
+    #editAccountSitePasswordProtected { display: block; margin: 0px; padding: 20px 0px 20px 14px; overflow-x: scroll; border-bottom: 1px solid #ffffff1f; }
+    /* #editAccountIndexPage { display: flex; margin: 0px; padding: 20px 0px 20px 14px; overflow-x: scroll; border-bottom: 1px solid #ffffff1f; } */
     #editAccountFullscreenButton { display: flex; margin: 0px; padding: 20px 0px 20px 14px; overflow-x: scroll; border-top: 1px solid #ffffff1f; border-bottom: 1px solid #ffffff1f; }
     #editAccountSearchButton { display: flex; margin: 0px; padding: 20px 0px 20px 14px; overflow-x: scroll; border-bottom: 1px solid #ffffff1f; }
     #editAccountContactButton { display: flex; margin: 0px; padding: 20px 0px 20px 14px; overflow-x: scroll; border-bottom: 1px solid #ffffff1f; }
@@ -5355,7 +5452,8 @@ export default {
     }
     .editAccountColors 
     { 
-        display: block; 
+        display: flex;
+        flex-direction: row; 
         padding: 0px; 
         font-size: 20px; 
         font-weight: bold; 
@@ -5384,7 +5482,17 @@ export default {
         border-bottom: 1px solid #1D212E;
         background-color: #910000; 
     }
-    .editAccountText { margin: 0px 0px 0px 16px; font-size: 22px; font-weight: bold; vertical-align: baseline; text-shadow: 0px 1px black; }
+    .editAccountText 
+    { 
+        display: inline-block;
+        width: 43%; 
+        margin: 16px; 
+        font-size: 22px; 
+        font-weight: bold;
+        text-shadow: 0px 1px black;
+        white-space: nowrap;
+        overflow-x: scroll;
+    }
     .editAccountInputColor 
     { 
         width: 43%; 
@@ -5523,12 +5631,12 @@ export default {
         #editAccountNavIconType { padding: 12px 24px 12px 24px; }
         #editAccountNavIconSize { padding: 12px 24px 12px 24px; }
         #editAccountTextStyle { padding: 12px 24px 12px 24px; }
-        #editAccountTextSize { padding: 12px 24px 12px 24px; }
+        /* #editAccountTextSize { padding: 12px 24px 12px 24px; } */
         #editAccountSiteAccess { padding: 12px 24px 12px 24px; }
         #editAccountSitePasswordProtected { padding: 12px 24px 12px 24px; }
         #editAccountStartPage { padding: 12px 24px 12px 24px; }
         #editAcountEndPage { padding: 12px 24px 12px 24px; }
-        #editAccountIndexPage { padding: 12px 24px 12px 24px; }
+        /* #editAccountIndexPage { padding: 12px 24px 12px 24px; } */
         #editAccountFullscreenButton { padding: 12px 24px 12px 24px; }
         #editAccountSearchButton { padding: 12px 24px 12px 24px; }
         #editAccountContactButton { padding: 12px 24px 12px 24px; }
@@ -5538,7 +5646,6 @@ export default {
         #editAccountLoadingScreen { padding: 12px 24px 12px 24px; }
         #editAccountTitleCredentials { padding-bottom: 16px; }
         #settingsAccountText { display: block; }
-
         #settingsAccount 
         { 
             height: auto; 
@@ -5588,6 +5695,22 @@ export default {
         #buttonSaveUpdateCategories { width: 80vw; }
         #buttonSaveUpdateSettings { width: 80vw; }
         #editAccountDanger { width: 80vw; margin: auto; }
+        #logoutAccount { top: initial; bottom: -8px; left: 16px; right: initial; }
+        #checkoutPublicSite { display: none; }
+        #mobileCheckoutPublicSite 
+        {
+            position: fixed; 
+            display: block; 
+            height: 40px; 
+            width: 40px;
+            top: initial;
+            bottom: 11px;
+            left: initial;
+            right: 12px;
+            opacity: 0.2;
+            border-radius: 90%;
+            background-color: white;
+        }
 
         .section { margin: 0px 6px 0px 6px; padding: 20px; background-color: transparent; }
         .category { margin: 0px 10px 0px 10px ; padding: 0px; font-size: 24px; font-weight: normal; }
@@ -5599,7 +5722,7 @@ export default {
         .editItemDelete { margin: 6px 12px 0px 12px; }
         .editAddRow { margin: 6px 12px 0px 12px; }
         .editAccountColors { display: flex; }
-        .editAccountText { width: 40%; padding-top: 13px; white-space: nowrap; overflow-x: scroll; }
+        .editAccountText { width: 40%; white-space: nowrap; overflow-x: scroll; }
         .editAccountInputColor { width: 40%; font-size: 20px; }
         .editAccountInputText { font-size: 20px; padding: 14px 24px 14px 24px; }
         .editAccountText { font-size: 20px; }

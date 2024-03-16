@@ -180,14 +180,18 @@
                     <!-- {{item.pos}}: {{item.title}} -->
                 </div>
                 
-                <p class="selectSection" v-on:click="setRoutePath('end')">End</p>
+                <p id="selectedSectionPageEnd" class="selectSection" v-on:click="setRoutePath('end')">End</p>
             </div>
         </div>
 
 
         <!-- modal: navigator categories -->
         <div id="categoryNavigatorModal" v-if="frontendCategories">
-            <p class="navigatorModalTitle" v-if="sortFrontendCategories(frontendCategories)[0]">{{sortFrontendCategories(frontendCategories)[0].section}}</p> <!-- Categories · {{currentSection}} -->
+            <div hidden>{{categoryNavigatorModalTitleObj = sortFrontendCategories(frontendCategories)[0]}}</div>
+
+            <p class="navigatorModalTitle" v-if="categoryNavigatorModalTitleObj">{{categoryNavigatorModalTitleObj.section}}</p>
+            <p class="navigatorModalTitle" v-else>Categories</p>
+             <!-- Categories · {{currentSection}} -->
             <!-- <p class="navigatorModalTitle">Categories · {{frontendCategoriesSelected.length}}</p> -->
 
             <div class="categoryNavigatorModalItems">
@@ -230,24 +234,6 @@
                     <img src="/iconContactCountry.png" class="contactDetailThumbnail" />
                     <p class="contactDetailText">{{frontendContact.country}}</p>
                 </div>
-            </div>
-            
-            <!-- privacy policy -->
-            <div id="infoPrivacyPolicy">
-                <p id="infoPrivacyPolicyTitle" class="modalTitle">Privacy Policy</p>
-                <p class="privacyPolicyItem">Collects Account Data: <span class="yes">Yes</span></p>
-                <p class="privacyPolicyItem">Collects Personal Data: <span class="yes">Yes</span></p>
-                <p class="privacyPolicyItem">Collects Device Data: <span class="no">No</span></p>
-                <p class="privacyPolicyItem">Collects Metrics Data: <span class="no">No</span></p>
-                <p class="privacyPolicyItem">Collects Diagnostics Data: <span class="no">No</span></p>
-                <p class="privacyPolicyItem">Collects Location Data: <span class="no">No</span></p>
-                <p class="privacyPolicyItem">Collects Financial Data: <span class="no">No</span></p>
-                <p class="privacyPolicyItem">Collects Messages Data: <span class="no">No</span></p>
-                <p class="privacyPolicyItem">Collects Media Data: <span class="no">No</span></p>
-                <p class="privacyPolicyItem">Uses Cookies: <span class="yes">Yes</span></p>
-                <p class="privacyPolicyItem">Uses Local Storage: <span class="yes">Yes</span></p>
-                <p class="privacyPolicyItem">Links to Other Websites: <span class="yes">Yes</span></p>
-                <p class="privacyPolicyItem">Policy Might Change: <span class="yes">Yes</span></p>
             </div>
 
             <!-- keybinds -->
@@ -297,6 +283,23 @@
                     <span class="infoItemKeybindNameNotSingleKey">Esc</span>
                     <span class="dotKeybindItem">·</span>
                     <span class="infoItemKeybindDescription">Close Windows</span>
+                </p>
+
+                <p id="infoKeybindsTitle" class="modalTitle">Mousebinds</p>
+                <p class="infoItemMousebind">
+                    <span class="infoItemKeybindNameNotSingleKey">Click Scroll</span>
+                    <span class="dotKeybindItem">·</span>
+                    <span class="infoItemKeybindDescription">Slideshow</span>
+                </p>
+                <p class="infoItemMousebind">
+                    <span class="infoItemKeybindNameNotSingleKey">Click Side 1</span>
+                    <span class="dotKeybindItem">·</span>
+                    <span class="infoItemKeybindDescription">Next Slide</span>
+                </p>
+                <p class="infoItemMousebind">
+                    <span class="infoItemKeybindNameNotSingleKey">Click Side 2</span>
+                    <span class="dotKeybindItem">·</span>
+                    <span class="infoItemKeybindDescription">Prev Slide</span>
                 </p>
             </div>
         </div>
@@ -492,7 +495,7 @@
         </div>
 
 
-        <!-- mobile -->
+        <!-- mobile only -->
         <div id="mobilePortraitExitSlideshow" v-on:click="slideshowModeExit()">
             <p id="mobilePortraitExitSlideshowText" v-on:click="">Press to Exit</p>
         </div>
@@ -639,7 +642,7 @@ export default {
     //event listener: mouse click
     document.addEventListener('mouseup', function(e) {
         //debugging
-        console.log(e)
+        // console.log(e)
 
         //e.button 0 = left click
         //e.button 1 = middle click
@@ -704,6 +707,9 @@ export default {
 
     function loadSectionCategories(data, routeSection, routeCategory)
     {   
+        //null check
+        if(data == null || data == undefined || data == "") { return }
+        
         //elements
         let settingsCategoriesIcon = document.getElementById("settingsCategoriesIcon")
         let frontendData = document.getElementById("frontendData")
@@ -725,7 +731,7 @@ export default {
         //set array categories
         for(let c in frontendCategories.value)
         {
-            if(frontendCategories.value[c].section == data.title) { arrayCategories.push(frontendCategories.value[c]) }
+            if(frontendCategories.value[c].section.toLowerCase() == data.title.toLowerCase()) { arrayCategories.push(frontendCategories.value[c]) }
         }
 
         //set first category
@@ -737,7 +743,7 @@ export default {
         else if(firstCategory == "") { return }
         
         //update elements
-        if(frontendData) { frontendData.style.display = "none" }       
+        if(frontendData) { frontendData.style.display = "none" }    
         if(settingsCategoriesIcon) { settingsCategoriesIcon.style.display = "block" }
         if(frontendCategoriesList) { frontendCategoriesList.scrollTo(0,0) }
         if(selectedSectionElement) { selectedSectionElement.style.opacity = "1" }
@@ -824,11 +830,13 @@ export default {
         //update elements
         setTimeout(() => {
             selectedCategoryTitle = document.getElementById("selectedCategoryTitle")
+            
             if(frontendDataElement) { frontendDataElement.style.display = "block" }
             if(addNewDataRow) { addNewDataRow.style.display = "block" }
             if(selectedCategoryTitle) { selectedCategoryTitle.innerText = category.replaceAll("-", " ") }
             if(frontendDataRows) { frontendDataRows.scrollTo(0,0) }
             if(categoryUnderlay) { categoryUnderlay.style.opacity = "0.49" }
+            
             undisplayModals()
         }, 20)
     }
@@ -957,7 +965,10 @@ export default {
         //add category data to array
         for(let c in data)
         {
-            if(data[c].section == selectedSection) { categories.push(data[c]) }
+            let sectionInData = data[c].section.toString().toLowerCase()
+            let sectionSelected = selectedSection.toString().toLowerCase()
+
+            if(sectionInData == sectionSelected) { categories.push(data[c]) }
         }
 
         //sort categories by position
@@ -1131,7 +1142,10 @@ export default {
         //set next category data
         for(let item in selectedSectionCategories)
         {
-            if(selectedSection == selectedSectionCategories[item].section && selectedSectionCategories[item].pos == selectedCategoryPos)
+            let sectionSelected = selectedSection.toLowerCase()
+            let sectionInCategory = selectedSectionCategories[item].section.toLowerCase()
+
+            if(sectionSelected == sectionInCategory && selectedSectionCategories[item].pos == selectedCategoryPos)
             {   
                 //set variables
                 currentCategoryPos = selectedSectionCategories[item].pos
@@ -1172,7 +1186,10 @@ export default {
         //set previous category data
         for(let item in selectedSectionCategories)
         {
-            if(selectedSection == selectedSectionCategories[item].section && selectedSectionCategories[item].pos == selectedCategoryPos)
+            let sectionSelected = selectedSection.toLowerCase()
+            let sectionInCategory = selectedSectionCategories[item].section.toLowerCase()
+
+            if(sectionSelected == sectionInCategory && selectedSectionCategories[item].pos == selectedCategoryPos)
             {   
                 //set variables
                 currentCategoryPos = selectedSectionCategories[item].pos
@@ -1352,15 +1369,16 @@ export default {
         //elements
         let loadingScreen = document.getElementById("loadingScreen")
         let buttonSelectSections = document.getElementById("buttonSelectSections")
-        let buttonStartElement = document.getElementById("buttonStart")
-        // let componentFrontend = document.getElementById("componentFrontend")
-        // let frontendSectionsElement = document.getElementById("frontendSections")
-        // let selectedCategoryTitle = document.getElementById("selectedCategoryTitle")
-        // let frontendSectionsList = document.getElementById("frontendSectionsList")
-        // let frontendDataRows = document.getElementById("frontendDataRows")
-        // let buttonIndexElement = document.getElementById("buttonIndex")
-        // let buttonEndElement = document.getElementById("buttonEnd")
-        // let sectionButtons = document.getElementsByClassName("section")
+        let buttonStartElement = ""
+        let selectedSectionPageEnd = ""
+        let componentFrontend = document.getElementById("componentFrontend")
+        let frontendSectionsElement = document.getElementById("frontendSections")
+        let selectedCategoryTitle = document.getElementById("selectedCategoryTitle")
+        let frontendSectionsList = document.getElementById("frontendSectionsList")
+        let frontendDataRows = document.getElementById("frontendDataRows")
+        let buttonIndexElement = document.getElementById("buttonIndex")
+        let buttonEndElement = document.getElementById("buttonEnd")
+        let sectionButtons = document.getElementsByClassName("section")
 
         //variables
         let navIconSizeHeight = ""
@@ -1399,7 +1417,7 @@ export default {
         if(settings.loadingScreen == "true")
         { 
             loadingScreen.style.display = "block"
-            setTimeout(() => { loadingScreen.style.display = "none"}, 3000)
+            setTimeout(() => { loadingScreen.style.display = "none"}, 1000)
         }
 
         //set route
@@ -1408,7 +1426,11 @@ export default {
         //set styling
         setTimeout(() => {
             //set pages
-            if(settings.pageStart == "true") { buttonStartElement.style.display = "block" }
+            if(settings.pageStart == "true") { setTimeout(() => { document.getElementById("buttonStart").style.display = "block" }, 100) }
+            if(settings.pageEnd == "true" ) { setTimeout(() => { document.getElementById("selectedSectionPageEnd").style.display = "block" }, 100) }
+
+            //set extras
+            if(settings.modeSlideshow == "true" && window.screen.width > 1000) { buttonSlideshowMode.style.display = "block" }
 
             //set nav buttons
             if(settings.buttonAbout == "true") { buttonAbout.style.display = "block" }
@@ -1416,8 +1438,6 @@ export default {
             if(settings.buttonFullscreen == "true") { buttonFullscreen.style.display = "block" }
             if(settings.buttonSearch == "true") { buttonSearch.style.display = "block" }
             if(buttonSelectSections ) { buttonSelectSections.style.display = "block" }
-
-            if(settings.modeSlideshow == "false") { buttonSlideshowMode.style.display = "none" }
 
             //set nav icons
             if(settings.navIconSize == "small") { navIconSizeHeight = "20px"; navIconSizeWidth = "20px"}
@@ -1696,10 +1716,18 @@ export default {
         firstSection = sortFrontendSections(frontendSections.value)[0]
 
         //set section obj
-        for(let item in frontendSections.value)
+        if(route.section)
         {
-            if(route.section && route.section.toLowerCase() == frontendSections.value[item].title.toLowerCase()) 
-            { sectionObj = frontendSections.value[item] }
+            for(let item in frontendSections.value)
+            {
+                let sectionInUrl = route.section.toLowerCase().replaceAll("-", " ")
+                let sectionInDatabase = frontendSections.value[item].title.toLowerCase()
+    
+                if(sectionInUrl == sectionInDatabase) 
+                { 
+                    sectionObj = frontendSections.value[item] 
+                }
+            }
         }
 
         //load route
@@ -1769,7 +1797,6 @@ export default {
     function loadNextSection()
     {
         //variables
-        let sectionObj = ""
         let nextSectionObj = ""
         let totalSections = frontendSections.value.length - 1
         let id = ""
@@ -1777,10 +1804,8 @@ export default {
         //set section id
         for(let item in frontendSections.value)
         {
-            sectionObj = frontendSections.value[item]
-            
             if(item >= totalSections) { id = 0; break }
-            else if(selectedSection == sectionObj.title) { id = parseInt(item) + 1; break }
+            else if(selectedSection.toLowerCase() == frontendSections.value[item].title.toLowerCase()) { id = parseInt(item) + 1; break }
         }
 
         //set next section data
@@ -1797,7 +1822,6 @@ export default {
     function loadPreviousSection()
     {   
         //variables
-        let sectionObj = ""
         let previousSectionObj = ""
         let totalSections = frontendSections.value.length - 1
         let id = ""
@@ -1808,9 +1832,7 @@ export default {
         {
             for(let item in frontendSections.value)
             {
-                sectionObj = frontendSections.value[item]
-                
-                if(selectedSection.toLowerCase() == sectionObj.title.toLowerCase()) { id = parseInt(item) - 1; break }
+                if(selectedSection.toLowerCase() == frontendSections.value[item].title.toLowerCase()) { id = parseInt(item) - 1; break }
             }
         }
 
@@ -2795,7 +2817,7 @@ export default {
     #buttonFullscreen { display: none; background-image: url('/iconFullscreen.png'); background-size: contain; background-repeat: no-repeat; }
     #buttonSearch { display: none; background-image: url('/iconSearch.png'); background-size: contain; background-repeat: no-repeat; }
     #buttonStart { display: none; background-image: url('/iconStart.png'); background-size: contain; background-repeat: no-repeat; }
-    #buttonSlideshowMode { display: block; background-image: url('/iconSlideshow.png'); background-size: contain; background-repeat: no-repeat; }
+    #buttonSlideshowMode { display: none; background-image: url('/iconSlideshow.png'); background-size: contain; background-repeat: no-repeat; }
     /* #buttonIndex { display: none; background-image: url('/iconIndex.png'); background-size: contain; background-repeat: no-repeat; } */
     /* #buttonEnd { display: none; } */
     #buttonSelectSections { display: none; background-image: url('/iconSection.png'); background-size: contain; background-repeat: no-repeat; }
@@ -2974,7 +2996,7 @@ export default {
     #infoAboutTitle { margin: 0px 0px 12px 0px; }
     #infoContactTitle { margin: 60px 0px 0px 0px; }
     #infoKeybindsTitle { margin: 60px 0px 12px 0px; }
-    #infoPrivacyPolicyTitle { margin: 60px 0px 12px 0px; }
+    /* #infoPrivacyPolicyTitle { margin: 60px 0px 12px 0px; } */
     #contactEmail { margin: 12px 0px 20px 22%; }
     #contactName { margin: 0px 0px 20px 22%; }
     #contactPhone { margin: 0px 0px 20px 22%; }
@@ -3030,6 +3052,7 @@ export default {
     #mobilePortraitExitSlideshowText { display: none; }
     #mobileLandscapeNavArrows { display: none; }
     #mobileExitSlideshow { display: none; }
+    #selectedSectionPageEnd { display: none; }
 
 
     /*** classes ***/
@@ -3322,7 +3345,7 @@ export default {
     .contactDetailText 
     { 
         display: inline-block; 
-        margin: 0px 0px 0px 22px; 
+        margin: 0px 0px 0px 22px;
         padding: 0px; 
         font-weight: bold; 
         font-size: 20px; 
@@ -3450,15 +3473,14 @@ export default {
     .searchHitCategory { display: block; white-space: nowrap; opacity: 0.2; }
     .searchResultDataType { opacity: 0.6; }
     .infoItem { margin: 0px; margin: 0px; padding: 0px; font-weight: bold; font-size: 20px; opacity: 0.7; }
-    .privacyPolicyItem { margin: 0px; margin: 6px 0px 6px 27%; padding: 0px; font-weight: bold; font-size: 20px; opacity: 0.7; text-align: left }
+    /* .privacyPolicyItem { margin: 0px; margin: 6px 0px 6px 27%; padding: 0px; font-weight: bold; font-size: 20px; opacity: 0.7; text-align: left } */
     .infoItemKeybind { margin: 0px; margin: 16px 0px 16px 28%; padding: 0px; font-weight: bold; font-size: 20px; opacity: 0.7; text-align: left; }
+    .infoItemMousebind { font-weight: bold; font-size: 20px; opacity: 0.7; text-align: center; }
     .timelineText { display: inline-block; padding: 3px 0px 0px 10px; opacity: 0.7; }
     .timelineYear { display: inline-block; white-space: nowrap; }
     .infoItemKeybindName { display: inline-block; font-size: 36px; }
     .infoItemKeybindNameNotSingleKey { display: inline-block; font-size: 26px; vertical-align: super; }
     .infoItemKeybindDescription { display: inline-block; vertical-align: super; font-size: 24px; opacity: 0.9; }
-    .no { color: red; }
-    .yes { color: lightgreen; }
     .slideshowImage { height: 600px; width: auto; user-select: none; user-drag: none; -webkit-user-drag: none; border: 1px solid rgba(255, 255, 255, 0.1); }
     .slideshowImageDescription 
     { 
@@ -3486,7 +3508,7 @@ export default {
     /*** mobile ***/
     @media screen and (max-width: 1000px) and (orientation: portrait)
     {
-        #frontendSections { bottom: 0px; height: auto; width: 100vw; margin: 0px; padding: 0px; }
+        #frontendSections { bottom: 0px; height: auto; width: auto; margin: 0px; padding: 0px; }
         #frontendSectionsList { flex-direction: row; height: auto; justify-content: center; } 
         #frontendCategories { width: 80vw; top: 3vh; left: 0%; margin: 0px 10vw 0px 10vw; }
         #frontendData { width: 80vw; left: 0%; margin: 0px 10vw 0px 10vw; }

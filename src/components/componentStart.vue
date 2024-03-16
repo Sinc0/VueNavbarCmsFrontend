@@ -39,11 +39,31 @@
 
         <!-- modal: about -->
         <div id="about">
-            <p class="aboutTextItem">This CMS is made to learn about Vue, Python, Databases</p>
-            <p class="aboutTextItem">Examples: </p>
-            <p class="aboutTextItem">#1</p>
-            <p class="aboutTextItem">#2</p>
-            <p class="aboutTextItem">#3</p>
+            <!-- why -->
+            <p id="aboutWhyTitle" class="aboutTitle">Why?</p>
+            <p class="aboutText">This a student project made to learn about Vue, Python, Databases</p>
+
+            <!-- examples -->
+            <p id="aboutExamplesTitle" class="aboutTitle">Examples</p>
+            <p class="aboutText">#1</p>
+            <p class="aboutText">#2</p>
+            <p class="aboutText">#3</p>
+
+            <!-- privacy policy -->
+            <p id="aboutPrivacyPolicyTitle" class="aboutTitle">Privacy Policy</p>
+            <p class="aboutText">Collects Account Data: <span class="yes">Yes</span></p>
+            <p class="aboutText">Collects Personal Data: <span class="yes">Yes</span></p>
+            <p class="aboutText">Collects Device Data: <span class="no">No</span></p>
+            <p class="aboutText">Collects Metrics Data: <span class="no">No</span></p>
+            <p class="aboutText">Collects Diagnostics Data: <span class="no">No</span></p>
+            <p class="aboutText">Collects Location Data: <span class="no">No</span></p>
+            <p class="aboutText">Collects Financial Data: <span class="no">No</span></p>
+            <p class="aboutText">Collects Messages Data: <span class="no">No</span></p>
+            <p class="aboutText">Collects Media Data: <span class="no">No</span></p>
+            <p class="aboutText">Uses Cookies: <span class="yes">Yes</span></p>
+            <p class="aboutText">Uses Local Storage: <span class="yes">Yes</span></p>
+            <p class="aboutText">Links to Other Websites: <span class="yes">Yes</span></p>
+            <p class="aboutText">Policy Might Change: <span class="yes">Yes</span></p>
         </div>
     </div>
 </template>
@@ -177,42 +197,6 @@ export default {
 
         })
     }
-
-    async function logout()
-    {   
-        // let username = localStorage.getItem("cms-account")
-        // let token = localStorage.getItem("cms-token")
-        // let lastLogin = localStorage.getItem("cms-last-login")
-        // let obj = JSON.stringify({ "username": username, "token": token, "lastLogin": lastLogin })
-
-        // //add user to db
-        // await fetch(BACKEND_API + "/user-sign-out", {method: 'post', body: obj})
-        // .then((response) => { return response.json() })
-        // .then((data) => {
-        //     //debugging
-        //     console.log(data)
-
-        //     //logout successful
-        //     if(data.status == "user login successful") 
-        //     { 
-        //         //set local storage
-        //         localStorage.setItem("cms-account", "")
-        //         localStorage.setItem("cms-token", "")
-        //         localStorage.setItem("cms-last-login", "")
-
-        //         //redirect
-        //         // router.push("/")
-        //     }
-
-        //     //login failed
-        //     else if(data.status == "user login failed") 
-        //     { 
-                
-        //     }
-
-        // })
-    }
-
 
     async function register()
     {   
@@ -377,8 +361,8 @@ export default {
       displaySelectedMenu,
       login,
       register,
-      logout,
       showPasswordCharacters
+    //   logout,
     }
 
 
@@ -386,14 +370,12 @@ export default {
 }
 </script>
 
-<style>
-/* :root {
-    --honeyColor: #1D212E;
-    --honeyBorderColor: hsla(294, 100%, 34%, 0.2);
-    --size: 30px;
-} */
-</style>
+
 <style scoped>
+    /*** scrollbars ***/
+    #about::-webkit-scrollbar { height: 0px; width: 0px; }
+
+
     /*** elements ***/
     input 
     { 
@@ -415,6 +397,11 @@ export default {
         width: 100vw; 
         color: white;
         background: black;
+        /* :root {
+            --honeyColor: #1D212E;
+            --honeyBorderColor: hsla(294, 100%, 34%, 0.2);
+            --size: 30px;
+        } */
         /* background-image: linear-gradient(to right, rgba(0,0,0, 0.8) 0 100%), url('/componentStartBackgroundImage.jpg'); */
         /* background-size: cover; */
         /* background: linear-gradient(to right, rgba(0,0,0, 0.7) 0 100%),
@@ -446,11 +433,13 @@ export default {
     }
     #about 
     { 
-        display: none; 
+        display: none;
+        max-height: 84vh;
         width: 24vw; 
         margin: auto; 
         margin-bottom: 20px; 
-        padding: 0px; 
+        padding: 0px;
+        overflow-y: scroll;
         background-color: transparent; 
     }
     #menu 
@@ -547,6 +536,7 @@ export default {
 
 
     /*** classes ***/
+    .aboutTitle { margin: 60px 0px 12px 0px; font-size: 28px; font-weight: bold; }
     .inputRegister { display: block; padding: 16px; width: -webkit-fill-available; font-size: 22px; font-weight: bold; }
     .inputLogin { display: block; padding: 16px; width: -webkit-fill-available; font-size: 22px; font-weight: bold; }
     .dot { margin: 0px 10px 0px 10px; opacity: 0.1; }
@@ -573,8 +563,11 @@ export default {
     }
     .buttonLogin:active { opacity: 1; }
     .menuCategory { font-size: 26px; opacity: 0.2; color: white }
-    .aboutTextItem { font-size: 24px; font-weight: bold; user-select: none; opacity: 0.6; color: #9d00ad; }
+    .aboutTextItem { font-size: 24px; font-weight: bold; user-select: none; opacity: 0.6; color: white; /* #9d00ad */ }
     .inputOverlayImg { position: relative; display: inline-block; height: 40px; width: 40px; }
+    .aboutText { margin: 0px; margin: 6px 0px 6px 0px; padding: 0px; font-weight: bold; font-size: 20px; opacity: 0.7; text-align: center }
+    .no { color: red; }
+    .yes { color: lightgreen; }
 
 
     /*** mobile ***/
