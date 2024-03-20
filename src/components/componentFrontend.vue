@@ -4,10 +4,6 @@
         <div hidden id="routerCurrentPathElement" v-if="router">{{router.currentRoute.value.fullPath}}</div>
         
 
-        <!-- category underlay -->
-        <div id="categoryUnderlay" v-on:click="categoryUnderlaySetOpacity('0.49')"></div>
-
-
         <!-- sections nav bar -->
         <div id="frontendSections">
             <div id="frontendSectionsList">
@@ -17,14 +13,15 @@
                 <div id="buttonFullscreen" class="section" v-on:click="fullscreen()"></div>
                 <div id="buttonSearch" class="section" v-on:click="loadSearchModal()">ㅤ</div>
                 <div id="buttonSlideshowMode" class="section" v-on:click="slideshowMode()"></div>
-                <!-- <div id="buttonContact" class="section" v-on:click="loadContactModal()">ㅤ</div> -->
-                <!-- <div id="buttonIndex" class="section" v-on:click="setRoutePath('index')">ㅤ</div> -->
-                <!-- <div id="buttonEnd" class="section" v-on:click="setRoutePath('end')">Eㅤ</div> -->
             </div>
         </div>
 
 
-        <!-- selected category -->
+        <!-- category underlay -->
+        <div id="categoryUnderlay" v-on:click="categoryUnderlaySetOpacity('0.49')"></div>
+
+
+        <!-- category title -->
         <div id="frontendCategories" v-if="frontendCategories">
             <div id="selectedCategoryTitle" v-on:click.left="loadCategoryNavigatorModal()" v-on:click.middle="loadNextCategory()">
             </div>
@@ -34,12 +31,13 @@
         <!-- data -->
         <div id="frontendData">
 
-            <!-- select data row -->
+            <!-- rows -->
             <div id="frontendDataRows">
                 <div v-bind:id="'data' + data.pos" v-for="data in sortFrontendDataSelected(frontendDataSelected)">
                     
                     <!-- multiline -->
                     <div class="dataMultiline" v-if="data.type == 'multiline' && data.hidden == 'false'">
+                        
                         <!-- title -->
                         <div id="frontendDataTitleMultiline" class="frontendDataTitle">{{data.title}}</div>
 
@@ -51,6 +49,7 @@
                     
                     <!-- singleline -->
                     <div class="dataSingleline" v-else-if="data.type == 'singleline' && data.hidden == 'false'">
+                        
                         <!-- variables -->
                         <div hidden>{{singlelineData = loadDataData(data)}}</div>
 
@@ -63,6 +62,7 @@
 
                     <!-- timeline -->
                     <div class="dataTimeline" v-else-if="data.type == 'timeline' && data.hidden == 'false'">
+                        
                         <!-- variables -->
                         <div hidden>{{timelineData = loadDataData(data)}}</div>
 
@@ -80,6 +80,7 @@
 
                     <!-- linklist -->
                     <div class="dataLinklist" v-else-if="data.type == 'linklist' && data.hidden == 'false'">
+                        
                         <!-- title -->
                         <div id="frontendDataTitleLinklist" class="frontendDataTitle">{{data.title}}</div>
 
@@ -91,17 +92,19 @@
 
                     <!-- textlist -->
                     <div class="dataTextlist" v-else-if="data.type == 'textlist' && data.hidden == 'false'">
+                        
                         <!-- title -->
                         <div id="frontendDataTitleTextlist" class="frontendDataTitle">{{data.title}}</div>
 
+                        <!-- data -->
                         <div class="frontendDataData" v-for="item in loadDataData(data)">
-                            <!-- <div class="">{{item}}</div> -->
                             <div class="textlist">•⠀{{item.text}}</div>
                         </div>
                     </div>
 
                     <!-- galleryImages -->
                     <div class="imageGallery" v-else-if="data.type == 'galleryImages' && data.hidden == 'false'">
+                        
                         <!-- variables -->
                         <div hidden>{{galleryData = loadDataData(data)}}</div>
                         <div hidden>{{firstGalleryImage = loadDataData(data)[0]}}</div>
@@ -128,27 +131,9 @@
         <div id="pageStart" class="extraPage">
             <!-- title -->
             <div id="pageStartTitle" v-if="frontendSettings">{{frontendSettings.pageStartTitle}}</div>
+
+            <!-- text -->
             <div id="pageStartText" v-if="frontendSettings">{{frontendSettings.pageStartText}}</div>
-        </div>
-
-
-        <!-- extra page: index -->
-        <div id="pageIndex" class="extraPage">
-            <!-- <p class="pageTitle">Index</p> -->
-
-            <div id="pageIndexSections" v-if="frontendSections && frontendCategories">
-                <div class="pageIndexSection" v-for="item in frontendSections">
-                    <p class="indexSection">{{item.title}}</p>
-                    <!-- <p class="indexSection">{{item.pos}}. {{item.title}}</p> -->
-
-                    <div v-for="c in frontendCategories">
-                        <p class="indexCategory" v-if="item.title == c.section" v-on:click="loadCategoryData(c.section, c.title, c.pos)">
-                            · {{c.title}}
-                            <!-- {{indexCategoryAsLetter(c.pos)}}. {{c.title}} -->
-                        </p>
-                    </div>
-                </div>
-            </div>
         </div>
 
 
@@ -166,18 +151,13 @@
 
         <!-- modal: navigator sections -->
         <div id="sectionNavigatorModal" v-if="frontendSections">
-            <p class="navigatorModalTitle">Sections</p>
-            <!-- <p class="navigatorModalTitle">{{capitalizeString(router.currentRoute.value.params.domain)}}</p> -->
-            <!-- <p class="navigatorModalTitle">Sections · {{frontendSections.length}}</p> -->
+            <!-- title -->
+            <p class="navigatorModalTitle">Sections</p> <!-- {{capitalizeString(router.currentRoute.value.params.domain)}} -->
 
+            <!-- sections -->
             <div class="sectionNavigatorModalItems">
-                <!-- <p class="selectSection" v-on:click="setRoutePath('start')">· Start</p> -->
-                <!-- <p class="selectSection" v-on:click="setRoutePath('index')">· Index</p> -->
-                
                 <div id="" v-for="(item, index) in sortFrontendSections(frontendSections)">
                     <div v-if="item.hidden == 'false'" class="selectSection" v-on:click="setRoutePath(item.title)">{{item.title}}</div>
-                    <!-- {{index + 1}} · {{item.title}} -->
-                    <!-- {{item.pos}}: {{item.title}} -->
                 </div>
                 
                 <p id="selectedSectionPageEnd" class="selectSection" v-on:click="setRoutePath('end')">End</p>
@@ -187,17 +167,20 @@
 
         <!-- modal: navigator categories -->
         <div id="categoryNavigatorModal" v-if="frontendCategories">
+
+            <!-- variables -->
             <div hidden>{{categoryNavigatorModalTitleObj = sortFrontendCategories(frontendCategories)[0]}}</div>
 
+            <!-- title -->
             <p class="navigatorModalTitle" v-if="categoryNavigatorModalTitleObj">{{categoryNavigatorModalTitleObj.section}}</p>
             <p class="navigatorModalTitle" v-else>Categories</p>
-             <!-- Categories · {{currentSection}} -->
-            <!-- <p class="navigatorModalTitle">Categories · {{frontendCategoriesSelected.length}}</p> -->
-
+            
+            <!-- categories -->
             <div class="categoryNavigatorModalItems">
                 <div id="" v-for="(item, index) in sortFrontendCategories(frontendCategories)">
-                    <div id="" v-if="item.hidden == 'false'" class="category" v-on:click="setRoutePath(item.section + '/' + item.title)">{{item.title}}</div>
-                    <!-- {{index + 1}} · {{item.title}} -->
+                    <div id="" v-if="item.hidden == 'false'" class="category" v-on:click="setRoutePath(item.section + '/' + item.title)">
+                        {{item.title}}
+                    </div>
                 </div>
             </div>
         </div>
@@ -216,22 +199,22 @@
             <div id="infoContactDetails" v-if="frontendContact">
                 <p id="infoContactTitle" class="modalTitle">Contact</p>
                 <div id="contactEmail" class="contactCategory" v-if="frontendContact.email">
-                    <img src="/iconContactEmail.png" class="contactDetailThumbnail" />
+                    <img src="/images/iconContactEmail.png" class="contactDetailThumbnail" />
                     <p class="contactDetailText">{{frontendContact.email}}</p>
                 </div>
 
                 <div id="contactName" class="contactCategory" v-if="frontendContact.name">
-                    <img src="/iconContactName.png" class="contactDetailThumbnail" />
+                    <img src="/images/iconContactName.png" class="contactDetailThumbnail" />
                     <p class="contactDetailText">{{frontendContact.name}}</p>
                 </div>
                 
                 <div id="contactPhone" class="contactCategory" v-if="frontendContact.phone">
-                    <img src="/iconContactPhone.png" class="contactDetailThumbnail" />
+                    <img src="/images/iconContactPhone.png" class="contactDetailThumbnail" />
                     <p class="contactDetailText">{{frontendContact.phone}}</p>
                 </div>
                 
                 <div id="contactCountry" class="contactCategory" v-if="frontendContact.country">
-                    <img src="/iconContactCountry.png" class="contactDetailThumbnail" />
+                    <img src="/images/iconContactCountry.png" class="contactDetailThumbnail" />
                     <p class="contactDetailText">{{frontendContact.country}}</p>
                 </div>
             </div>
@@ -305,44 +288,25 @@
         </div>
 
 
-        <!-- modal: contact -->
-        <div id="contactModal" v-if="frontendContact">
-            <p id="contactTitle" class="modalTitle">Contact</p>
-            
-            <div id="contactEmail" class="contactCategory" v-if="frontendContact.email">
-                <img src="/iconContactEmail.png" class="contactDetailThumbnail" />
-                <p class="contactDetailText">{{frontendContact.email}}</p>
-            </div>
-
-            <div id="contactName" class="contactCategory" v-if="frontendContact.name">
-                <img src="/iconContactName.png" class="contactDetailThumbnail" />
-                <p class="contactDetailText">{{frontendContact.name}}</p>
-            </div>
-            
-            <div id="contactPhone" class="contactCategory" v-if="frontendContact.phone">
-                <img src="/iconContactPhone.png" class="contactDetailThumbnail" />
-                <p class="contactDetailText">{{frontendContact.phone}}</p>
-            </div>
-            
-            <div id="contactCountry" class="contactCategory" v-if="frontendContact.country">
-                <img src="/iconContactCountry.png" class="contactDetailThumbnail" />
-                <p class="contactDetailText">{{frontendContact.country}}</p>
-            </div>
-        </div>
-
-
         <!-- modal: password protected -->
         <div id="sitePasswordProtectedModal">
-            <!-- <p>Site is Password Protected</p> -->
+            
+            <!-- enter password -->
             <input hidden id="passwordProtectedDomainName" value="" />
             <input id="passwordProtectedPasswordInput" type="password" placeholder="Enter Password..." @keyup.enter="fetchProtectedDomain()" />
+
+            <!-- confirm password -->
             <input id="passwordProtectedPasswordButton" type="button" value="Enter" v-on:click="fetchProtectedDomain()" />
+            
+            <!-- status message -->
             <p id="passwordProtectedStatusMessage">Status Message</p>
         </div>
 
 
         <!-- modal: loading screen -->
-        <div id="loadingScreen"><img src="/loadingAnimation.gif" /></div>
+        <div id="loadingScreen">
+            <img src="/images/loadingAnimation.gif" />
+        </div>
 
 
         <!-- modal: search -->
@@ -351,31 +315,35 @@
             <!-- search result categories -->
             <div id="searchModalHitsCategories" v-if="frontendSearchResults">
                 
-                <!-- search results: all -->
+                <!-- all -->
                 <div id="searchHitCategoryAll" class="searchHitCategory" v-on:click="selectSearchHitsCategory('all')">
                     All ({{frontendSearchResults.length}})
                 </div>
+                
                 <div class="dotSearchCategory"> · </div>
 
-                <!-- search results: images -->
+                <!-- images -->
                 <div id="searchHitCategoryImages" class="searchHitCategory" v-on:click="selectSearchHitsCategory('images')">
                     Images ({{filterSearchResults('images', frontendSearchResults).length}})
                 </div>
+                
                 <div class="dotSearchCategory"> · </div>
 
-                <!-- search results: texts -->
+                <!-- texts -->
                 <div id="searchHitCategoryTexts" class="searchHitCategory" v-on:click="selectSearchHitsCategory('texts')">
                     Others ({{filterSearchResults('texts', frontendSearchResults).length}})
                 </div>
+                
                 <div class="dotSearchCategory"> · </div>
 
-                <!-- search results: sections -->
+                <!-- sections -->
                 <div id="searchHitCategorySections" class="searchHitCategory" v-on:click="selectSearchHitsCategory('sections')">
                     Sections ({{filterSearchResults('sections', frontendSearchResults).length}})
                 </div>
+                
                 <div class="dotSearchCategory"> · </div>
 
-                <!-- search results: categories -->
+                <!-- categories -->
                 <div id="searchHitCategoryCategories" class="searchHitCategory" v-on:click="selectSearchHitsCategory('categories')">
                     Categories ({{filterSearchResults('categories', frontendSearchResults).length}})
                 </div>
@@ -453,8 +421,6 @@
                 
                 <div id="" class="" v-else-if="frontendSlideshowPage && frontendSlideshowPage.type != 'singleline' && frontendSlideshowPage.type != 'galleryImages'" v-for="row in JSON.parse(frontendSlideshowPage.data)">
                     <div id="" class="slideshowDataItem">
-                        <!-- {{row}} -->
-    
                         <!-- mutliline -->
                         <div id="" v-if="frontendSlideshowPage.type == 'multiline'">
                             <div class="slideshowItemMultiline">{{row.text}}</div>
@@ -481,17 +447,11 @@
     
                 <div id="" v-else-if="frontendSlideshowPage && frontendSlideshowPage.type == 'galleryImages'">
                     <div hidden>{{slideshowImageObjectData = JSON.parse(frontendSlideshowPage.data)}}</div>
-                    <!-- {{frontendSlideshowPage}} -->
                     
                     <img class="slideshowImage" v-bind:src="slideshowImageObjectData.image" />
                     <p class="slideshowImageDescription">{{slideshowImageObjectData.description}}</p>
                 </div>
             </div>
-
-            <!-- debugging -->
-            <!-- <p id="" v-if="frontendSlideshowPage">{{frontendSlideshowPage.section}}</p> -->
-            <!-- <p id="" v-if="frontendSlideshowPage">{{frontendSlideshowPage.category}}</p> -->
-            <!-- <p id="" v-if="frontendSlideshowPage">{{frontendSlideshowPage}}</p> -->
         </div>
 
 
@@ -518,16 +478,18 @@
 import {useStore} from 'vuex'
 import {computed, onMounted, onUpdated, toRaw} from 'vue'
 import {useRouter} from 'vue-router'
+import configs from '/configs.json'
 
 export default {
   setup() {
+
     //vue
     const store = useStore()
     const router = useRouter()
 
 
     //variables
-    const BACKEND_API = "http://127.0.0.1:8000"
+    const BACKEND_API = configs.REST_API || "http://127.0.0.1:8000"
     const frontendSections = computed(() => { return store.getters['storage/frontendSections']})
     const frontendCategories = computed(() => { return store.getters['storage/frontendCategories']})
     const frontendData = computed(() => { return store.getters['storage/frontendData']})
@@ -564,26 +526,17 @@ export default {
         let routePreviousPath = router.options.history.state.back
         let currentRouteString = router.currentRoute.value.fullPath
 
-        //debugging
-        // console.log(routeParams)
-        // console.log(routePreviousPath)
-        // console.log(routeCurrentPath)
-        // console.log(routerCurrentPathElement)
-
         //check slideshow status
         if(slideshowModeActive == "true") { slideshowModal.style.display = "block"; return }
         
         //load route
         if(routeCurrentPath != routePreviousPath) { handleRouting(routeParams) }
-
     })
 
 
     //event listener: keyboard
     document.addEventListener('keyup', function(e) { 
-        //debugging
-        // console.log(e)
-
+        
         //slideshow
         if(slideshowModeActive == "true")
         {
@@ -622,7 +575,7 @@ export default {
     })
     
 
-    //event listener: default browser context menu
+    //event listener: right click context menu
     document.addEventListener('contextmenu', function(e) {
         e.preventDefault() //prevent default browser right click window
     })
@@ -630,6 +583,7 @@ export default {
 
     //event listener: mouse scroll
     document.addEventListener('wheel', function(e) {
+        
         //elements 
         let searchModalHitsCategories = document.getElementById("searchModalHitsCategories")
         
@@ -641,14 +595,13 @@ export default {
 
     //event listener: mouse click
     document.addEventListener('mouseup', function(e) {
-        //debugging
-        // console.log(e)
-
-        //e.button 0 = left click
-        //e.button 1 = middle click
-        //e.button 2 = right click
-        //e.button 3 = side-back click
-        //e.button 4 = side-front click
+        
+        //clarification
+        // e.button 0 = left click
+        // e.button 1 = middle click
+        // e.button 2 = right click
+        // e.button 3 = side-back click
+        // e.button 4 = side-front click
 
         //slideshow
         if(slideshowModeActive == "true")
@@ -669,10 +622,6 @@ export default {
     //functions
     async function fetchDomain()
     {   
-        //debugging
-        // console.log(router.currentRoute.value)
-        // console.log(router.currentRoute.value.fullPath)
-
         //variables
         let route = router.currentRoute.value.params
         let routeDomain = route.domain || ""
@@ -684,6 +633,7 @@ export default {
         await fetch(BACKEND_API + "/domain-specific", {method: 'post', body: obj})
         .then((response) => { return response.json() })
         .then((data) => {
+
             //debugging
             console.log(data)
 
@@ -717,9 +667,6 @@ export default {
         let selectedSectionElement = document.getElementById("section#" + data.pos)
         let pageStart = document.getElementById("pageStart")
         let pageEnd = document.getElementById("pageEnd")
-        // let pageIndex = document.getElementById("pageIndex")
-        // let categoryElements = document.getElementsByClassName("category")
-        // let sectionElements = document.getElementsByClassName("section")
 
         //variables
         let arrayCategories = []
@@ -731,7 +678,8 @@ export default {
         //set array categories
         for(let c in frontendCategories.value)
         {
-            if(frontendCategories.value[c].section.toLowerCase() == data.title.toLowerCase()) { arrayCategories.push(frontendCategories.value[c]) }
+            if(frontendCategories.value[c].section.toLowerCase() == data.title.toLowerCase()) 
+            { arrayCategories.push(frontendCategories.value[c]) }
         }
 
         //set first category
@@ -842,24 +790,6 @@ export default {
     }
 
 
-    // function loadDataType(data)
-    // {   
-    //     //variables
-    //     let value = ""
-
-    //     //parse json
-    //     try { data = JSON.parse(data) } 
-    //     catch (error) { }
-        
-    //     //set data type
-    //     if(data.type == undefined) { value = "null" }
-    //     else { value = data.title }
-
-    //     //return value
-    //     return value
-    // }
-
-
     function loadDataData(data)
     {
         //variables
@@ -884,37 +814,8 @@ export default {
             else if(data.type == "galleryImages") { value = JSON.parse(value) }
         }
 
-        //debuggin
-        // console.log(value)
-        
         return value
     }   
-
-
-    // function loadDataInputs(data, type)
-    // {   
-    //     //variables
-    //     let arrayData = []
-
-    //     //set data
-    //     data = data.toString()
-    //     data = data.replace("data,", "")
-    //     data = data.replaceAll("'", "\"")
-    //     data = JSON.parse(data)
-        
-    //     //type: gallery images
-    //     if(type == "galleryImages")
-    //     {
-    //         for(let item in data) { arrayData.push(data[item]) }
-
-    //         arrayData = arrayData.sort((a, b) => { return a.pos - b.pos })
-
-    //         return arrayData
-    //     }
-
-    //     //type: others
-    //     else { return data }
-    // }
 
 
     function sortFrontendDataSelected(data)
@@ -934,17 +835,6 @@ export default {
 
     function sortFrontendDataSlideshow(data)
     {
-        //variables
-        // let rows = []
-
-        //add data rows to array
-        // for(let c in data) { rows.push(JSON.parse(data[c])) }
-
-        //sort data rows by position
-        // let x = data.sort((a, b) => {
-        //     return a.section < b.section 
-        // })
-
         let x = data.sort(function (x, y) {
             let a = x.section.toLowerCase(),
                 b = y.section.toLowerCase();
@@ -952,7 +842,6 @@ export default {
             return a == b ? 0 : a > b ? 1 : -1;
         });
 
-        //return value
         return x
     }
 
@@ -1073,29 +962,6 @@ export default {
     }
 
 
-    // function loadContactModal()
-    // {
-    //     //debugging
-    //     console.log("loadContactModal")
-
-    //     //elements
-    //     let contactModal = document.getElementById("contactModal")
-    //     let underlayModal = document.getElementById("underlayModal")
-        
-    //     //update elements
-    //     if(contactModal.style.display == "none" || contactModal.style.display == "")
-    //     {
-    //         contactModal.style.display = "block"
-    //         underlayModal.style.display = "block"
-    //     }
-    //     else if(contactModal.style.display == "block")
-    //     {
-    //         contactModal.style.display = "none"
-            
-    //     }
-    // }
-
-
     function undisplayModals()
     {
         //elements
@@ -1103,7 +969,6 @@ export default {
         let categoryNavigatorModal = document.getElementById("categoryNavigatorModal")
         let sectionNavigatorModal = document.getElementById("sectionNavigatorModal")
         let aboutModal = document.getElementById("aboutModal")
-        let contactModal = document.getElementById("contactModal")
         let mobileNavigatorModal = document.getElementById("mobileNavigatorModal")
         let searchModal = document.getElementById("searchModal")
         // let slideshowModal = document.getElementById("slideshowModal")
@@ -1112,7 +977,6 @@ export default {
         if(underlayModal) { underlayModal.style.display = "none" }
         if(categoryNavigatorModal) { categoryNavigatorModal.style.display = "none" }
         if(aboutModal) { aboutModal.style.display = "none" }
-        if(contactModal) { contactModal.style.display = "none" }
         if(sectionNavigatorModal) { sectionNavigatorModal.style.display = "none" }
         if(mobileNavigatorModal) { mobileNavigatorModal.style.display = "none" }
         if(searchModal) { searchModal.style.display = "none" }
@@ -1212,10 +1076,6 @@ export default {
 
     function nextImageGalleryItem(imageGalleryId, imageGalleryData)
     {
-        //debugging
-        // console.log("nextImageGalleryItem")
-        // console.log("currentImage: " + currentImagePos)
-
         //elements
         let nextImage = document.getElementById("imageGallery#" + imageGalleryId)
         let galleryImagePos = document.getElementById("galleryImagePos#" + imageGalleryId)
@@ -1253,10 +1113,6 @@ export default {
 
     function previousImageGalleryItem(imageGalleryId, imageGalleryData)
     {
-        //debugging
-        // console.log("previousImageGalleryItem")
-        // console.log("currentImage: " + currentImagePos)
-
         //elements
         let previousImage = document.getElementById("imageGallery#" + imageGalleryId)
         let galleryImagePos = document.getElementById("galleryImagePos#" + imageGalleryId)
@@ -1324,8 +1180,6 @@ export default {
 
     async function fetchProtectedDomain()
     {
-        console.log("fetchProtectedDomain")
-        
         //elements
         let passwordProtectedDomainName = document.getElementById("passwordProtectedDomainName")
         let passwordProtectedPasswordInput = document.getElementById("passwordProtectedPasswordInput")
@@ -1364,6 +1218,7 @@ export default {
 
     function setDomainData(data)
     {   
+        //debugging
         console.log(data.settings)
 
         //elements
@@ -1548,7 +1403,6 @@ export default {
         let sectionNavigatorModal = document.getElementById("sectionNavigatorModal")
         let mobileNavigatorModal = document.getElementById("mobileNavigatorModal")
         let aboutModal = document.getElementById("aboutModal")
-        let contactModal = document.getElementById("contactModal")
         let searchModal = document.getElementById("searchModal")
         // let sectionElements = document.getElementsByClassName("section")
         // let categoryElements = document.getElementsByClassName("category")
@@ -1566,50 +1420,10 @@ export default {
         if(sectionNavigatorModal) { sectionNavigatorModal.style.display = "none" }
         if(mobileNavigatorModal) { mobileNavigatorModal.style.display = "none" }
         if(aboutModal) { aboutModal.style.display = "none" }
-        if(contactModal) { contactModal.style.display = "none" }
         if(searchModal) { searchModal.style.display = "none" }
         buttonStart.style.opacity = "1"
         // buttonIndex.style.opacity = "1"
     }
-
-
-    // function indexCategoryAsLetter(value)
-    // {   
-    //     //variables
-    //     let letter = ""
-
-    //     //set letter
-    //     if(value == '1') { letter = "A" }
-    //     else if(value == '2') { letter = "B" }
-    //     else if(value == '3') { letter = "C" }
-    //     else if(value == '4') { letter = "D" }
-    //     else if(value == '5') { letter = "E" }
-    //     else if(value == '6') { letter = "F" }
-    //     else if(value == '7') { letter = "G" }
-    //     else if(value == '8') { letter = "H" }
-    //     else if(value == '9') { letter = "I" }
-    //     else if(value == '10') { letter = "J" }
-    //     else if(value == '11') { letter = "K" }
-    //     else if(value == '12') { letter = "L" }
-    //     else if(value == '13') { letter = "M" }
-    //     else if(value == '14') { letter = "N" }
-    //     else if(value == '15') { letter = "O" }
-    //     else if(value == '16') { letter = "P" }
-    //     else if(value == '17') { letter = "Q" }
-    //     else if(value == '18') { letter = "R" }
-    //     else if(value == '19') { letter = "S" }
-    //     else if(value == '20') { letter = "T" }
-    //     else if(value == '21') { letter = "U" }
-    //     else if(value == '22') { letter = "V" }
-    //     else if(value == '23') { letter = "W" }
-    //     else if(value == '24') { letter = "X" }
-    //     else if(value == '25') { letter = "Y" }
-    //     else if(value == '26') { letter = "Z" }
-    //     else { letter = value }
-
-    //     //return value
-    //     return letter
-    // }
 
 
     function fullscreen()
@@ -1760,13 +1574,6 @@ export default {
 
                 rowDivId = splitRoute[1].split("-")[0].toString().replace("row", "")
                 rowDivImage = splitRoute[1].split("-")[1].toString().replace("image", "")
-                
-                //debugging
-                // console.log("rowDivId: " + rowDivId)
-                // console.log("rowDivImagePos: " + rowDivImage)
-                // console.log("itemType: " + itemType)
-                // console.log("searchItemSpecified: " + searchItemSpecified)
-                // console.log(searchItemObj)
                 
                 loadSectionCategories(sectionObj, route.section , route.category)
 
@@ -2025,13 +1832,6 @@ export default {
             }
         }
 
-        //debugging
-        // console.log(sectionHitsObjects)
-        // console.log(categoryHitsObjects)
-        // console.log(dataHitsObjects)
-        // console.log("searchResults")
-        // console.log(searchResults)
-
         //save to vuex
         store.dispatch('storage/actionSetFrontendSearchString', searchString)
         store.dispatch('storage/actionSetFrontendSearchResults', searchResults)
@@ -2054,14 +1854,13 @@ export default {
         else if(type == 'images') { results = array.slice().filter((item) => { return item.searchResultType == 'image'}) }
         else if(type == 'texts') { results = array.slice().filter((item) => { return item.searchResultType == 'text'}) }
 
-        //return value
         return results
     }
 
 
     function selectSearchHitsCategory(type)
     {   
-        //debuggin
+        //debugging
         console.log("selectSearchHitsCategory: " + type)
 
         //elements
@@ -2127,12 +1926,8 @@ export default {
 
     function preloadGalleryImages()
     {
-        console.log("preloadGalleryImages")
-        // console.log(frontendData)
-
         for(let item in frontendData.value)
         {
-            // console.log(frontendData.value[item].rows)
             for(let r in frontendData.value[item].rows)
             {
                 let rObj = JSON.parse(frontendData.value[item].rows[r])
@@ -2140,11 +1935,9 @@ export default {
                 if(rObj.type == 'galleryImages') 
                 {
                     let gallery = JSON.parse(rObj.data.replaceAll("'", "\""))
-                    // console.log(gallery)
 
                     for(let i in gallery)
                     {
-                        // console.log(gallery[i].image)
                         let newImg = new Image;
                         newImg.src = gallery[i].image
                     }
@@ -2156,12 +1949,9 @@ export default {
 
     function slideshowMode()
     {
-        console.log("slideshowMode")
-
         //elements
         let slideshowModal = ""
         let mobileLandscapeStartSlideshow = document.getElementById("mobileLandscapeStartSlideshow")
-        // let slideshowTitle = document.getElementById("slideshowTitle")
         
         //variables
         let totalSections = frontendSections.value.length
@@ -2188,14 +1978,6 @@ export default {
             sectionsByPos.push(sectionsSorted[s].title)
         }
         
-        //debugging
-        // console.log("slideshowMode Totals")
-        // console.log("sections: " + totalSections)
-        // console.log("categories: " + totalCategories)
-        // console.log(sectionsByPos)
-        // console.log(frontendData.value)
-        // console.log(dataSorted)
-        
         //handle data rows
         for(let item in dataSorted)
         {
@@ -2214,7 +1996,6 @@ export default {
 
                 for(let b in categoriesSorted)
                 {
-                    // console.log(categoriesSorted[b])
                     let cItem = categoriesSorted[b]
                     let cSection = cItem.section.toLowerCase()
                     let cTitle = cItem.title.toLowerCase()
@@ -2228,13 +2009,10 @@ export default {
 
                 if(r.hidden == "false" && r.type != 'galleryImages') 
                 { 
-                    // console.log(r)
                     dataRowsInOrder.push(r) 
                 }
                 else if(r.hidden == "false" && r.type == 'galleryImages') 
                 {   
-                    // console.log(r)
-                    // console.log(JSON.parse(r.data))
                     let imageObjects = JSON.parse(r.data)
 
                     for(let x in imageObjects)
@@ -2252,11 +2030,7 @@ export default {
                     }
                 }
             }
-            
-            // console.log(dataSorted[item])
-            // console.log(section + "/" + category + " - " + obj.rows.length)
         }
-        // console.log(dataRowsInOrder)
         
         //add slides to array
         for(let item in sectionsByPos)
@@ -2342,8 +2116,6 @@ export default {
 
     function slideshowModeNext()
     {
-        console.log("slideshowModeNext")
-
         //elements
         let slideshowModal = document.getElementById("slideshowModal")
         let slidesCurrentPageNumber = document.getElementById("slidesCurrentPageNumber")
@@ -2357,10 +2129,6 @@ export default {
 
         //null check
         if(slidesCurrentPage > (totalSlides - 1)) { slidesCurrentPage = 0 }
-
-        //debugging
-        // console.log("slidesCurrentPage: " + slidesCurrentPage)
-        // console.log(slides[slidesCurrentPage])
 
         //update elements
         slidesCurrentPageNumber.innerText = slidesCurrentPage + "/" + (totalSlides - 1)
@@ -2381,8 +2149,6 @@ export default {
 
     function slideshowModePrevious()
     {
-        console.log("slideshowModePrevious")
-
         //elements
         let slideshowModal = document.getElementById("slideshowModal")
         let slidesCurrentPageNumber = document.getElementById("slidesCurrentPageNumber")
@@ -2396,10 +2162,6 @@ export default {
 
         //null check
         if(slidesCurrentPage < 0) { slidesCurrentPage = (totalSlides - 1) }
-
-        //debugging
-        // console.log("slidesCurrentPage: " + slidesCurrentPage)
-        // console.log(slides[slidesCurrentPage])
 
         //update elements
         slidesCurrentPageNumber.innerText = slidesCurrentPage + "/" + (totalSlides - 1)
@@ -2443,17 +2205,6 @@ export default {
         }, 400)
     }
 
-    
-    // function displayLoadingScreen()
-    // {
-    //     //elements
-    //     let loadingScreen = document.getElementById("loadingScreen")
-
-    //     //update elements
-    //     loadingScreen.style.display = "block"
-    //     document.body.style.overflow = 'hidden' //hide scrollbar
-    // }
-
 
     return {
         //variables
@@ -2467,7 +2218,6 @@ export default {
         frontendSearchString,
         frontendSlideshowPage,
         router,
-        // frontendCategoriesSelected,
 
         //functions
         loadSectionCategories,
@@ -2491,7 +2241,6 @@ export default {
         previousImageGalleryItem,
         fetchProtectedDomain,
         displayExtraPage,
-        // indexCategoryAsLetter,
         fullscreen,
         displayMobileNavigator,
         setRoutePath,
@@ -2505,13 +2254,11 @@ export default {
         slideshowModeNext,
         slideshowModePrevious,
         slideshowModeExit,
-        // loadDataType,
-        // loadDataInputs,
-        // loadContactModal,
     }
   }
 }
 </script>
+
 
 <style>
     :root {
@@ -2741,30 +2488,6 @@ export default {
         /* border: 3px solid var(--colorText); */
         /* background-color: #1D212E; */
     }
-    #contactModal 
-    {
-        position: fixed;
-        display: none;
-        max-height: 60vh;
-        width: 20vw;
-        top: 20%;
-        left: 36%;
-        /* top: 50%; */
-        /* left: 50%; */
-        /* transform: translate(-50%, -50%); */
-        margin: 0px;
-        padding: 40px;
-        z-index: 2;
-        -webkit-user-select: none;
-        -moz-user-select: none;
-        -ms-user-select: none;
-        user-select: none;
-        overflow-y: scroll;
-        opacity: 1;
-        /* transform: translate(-40%, -50%); */
-        border: 3px solid var(--colorText);
-        background-color: #1D212E;
-    }
     #searchModal 
     {
         position: fixed;
@@ -2812,15 +2535,15 @@ export default {
         border-style: none;
         background-color: white; 
     }
-    #buttonAbout { display: none; background-image: url('/iconInfo.png'); background-size: contain; background-repeat: no-repeat; }
-    #buttonContact {  display: none; background-image: url('/iconContactInfo.png'); background-size: contain; background-repeat: no-repeat; }
-    #buttonFullscreen { display: none; background-image: url('/iconFullscreen.png'); background-size: contain; background-repeat: no-repeat; }
-    #buttonSearch { display: none; background-image: url('/iconSearch.png'); background-size: contain; background-repeat: no-repeat; }
-    #buttonStart { display: none; background-image: url('/iconStart.png'); background-size: contain; background-repeat: no-repeat; }
-    #buttonSlideshowMode { display: none; background-image: url('/iconSlideshow.png'); background-size: contain; background-repeat: no-repeat; }
-    /* #buttonIndex { display: none; background-image: url('/iconIndex.png'); background-size: contain; background-repeat: no-repeat; } */
+    #buttonAbout { display: none; background-image: url('/images/iconInfo.png'); background-size: contain; background-repeat: no-repeat; }
+    #buttonContact {  display: none; background-image: url('/images/iconContactInfo.png'); background-size: contain; background-repeat: no-repeat; }
+    #buttonFullscreen { display: none; background-image: url('/images/iconFullscreen.png'); background-size: contain; background-repeat: no-repeat; }
+    #buttonSearch { display: none; background-image: url('/images/iconSearch.png'); background-size: contain; background-repeat: no-repeat; }
+    #buttonStart { display: none; background-image: url('/images/iconStart.png'); background-size: contain; background-repeat: no-repeat; }
+    #buttonSlideshowMode { display: none; background-image: url('/images/iconSlideshow.png'); background-size: contain; background-repeat: no-repeat; }
+    /* #buttonIndex { display: none; background-image: url('/images/iconIndex.png'); background-size: contain; background-repeat: no-repeat; } */
     /* #buttonEnd { display: none; } */
-    #buttonSelectSections { display: none; background-image: url('/iconSection.png'); background-size: contain; background-repeat: no-repeat; }
+    #buttonSelectSections { display: none; background-image: url('/images/iconSection.png'); background-size: contain; background-repeat: no-repeat; }
     #sitePasswordProtectedModal 
     { 
         display: none; 

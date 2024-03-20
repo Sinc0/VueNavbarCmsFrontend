@@ -4,6 +4,7 @@ import { createStore } from 'vuex'
 export default createStore({
   modules: { storage: { namespaced: true,
       
+      
       state: 
       {
         //standalone
@@ -43,6 +44,7 @@ export default createStore({
         frontendSlideshowPage: null,
       },
       
+
       getters: 
       {
         sections(state) { return state.sections },
@@ -76,6 +78,7 @@ export default createStore({
         frontendSearchString(state) { return state.frontendSearchString },
         frontendSlideshowPage(state) { return state.frontendSlideshowPage },
       },
+
 
       mutations: 
       {      
@@ -111,6 +114,7 @@ export default createStore({
         mutationSetFrontendSlideshowPage(state, value) { state.frontendSlideshowPage = value },
       },
 
+      
       actions: 
       {   
         actionSetSections({commit}, value) { commit('mutationSetSections', value) },

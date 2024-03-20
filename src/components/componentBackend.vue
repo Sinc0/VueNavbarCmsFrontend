@@ -1,10 +1,14 @@
 <template>
     <div id="componentBackend">
+        
         <!-- sections -->
         <div id="backendSections" v-if="backendSections">
             <div id="backendSectionsList">
                 <!-- select section -->
-                <div v-bind:id="'section#' + section.pos" class="section" v-for="section in sortBackendSections(backendSections)" v-on:click="loadSectionCategories(section)" v-bind:title="section.title">
+                <div v-bind:id="'section#' + section.pos" class="section" 
+                    v-for="section in sortBackendSections(backendSections)" 
+                    v-on:click="loadSectionCategories(section)" 
+                    v-bind:title="section.title">
                     {{section.pos}}
                 </div>
             </div>
@@ -14,7 +18,9 @@
         <!-- categories -->
         <div id="backendCategories" v-if="backendCategoriesSelected">
             <!-- edit category -->
-            <div id=""><img id="settingsCategoriesIcon" src="/iconSettingsCategories.png" v-on:click="editCategoriesModal(backendCategories)" /></div>
+            <div id="">
+                <img id="settingsCategoriesIcon" src="/images/iconSettingsCategories.png" v-on:click="editCategoriesModal(backendCategories)" />
+            </div>
 
             <!-- select category -->
             <div id="backendCategoriesList">
@@ -46,7 +52,9 @@
             <!-- header -->
             <p id="dataObjModalHeader" class="dataObjHeader">&lt{{backendDataObjModal.type}}></p>
             
+            <!-- rows -->
             <div class="dataObjRow" v-for="(row, index) in Object.entries(backendDataObjModal)">
+                
                 <!-- obj: variables -->
                 <div hidden>{{rowData = row.toString().split(",")}}</div>
                 <div hidden v-if="backendDataSelected">{{dataTotalRows = (backendDataSelected.length + 1)}}</div>
@@ -92,15 +100,13 @@
                             <input id="inputAddGalleryImage" class="inputAddGalleryImage" maxlength="1000" v-bind:value="''" placeholder="URL ..." />
                             <input id="buttonAddGalleryImage" class="buttonAddGalleryImage" type="button" value="+" v-on:click="imageGalleryAddImg()" />
                         </div>
-                            <div id="dataObjModalEditImages">
-                                <!-- <input id="labelEditImagePosition" disabled value="position" /> -->
-                                    <input id="buttonDeleteImage" type="button" value="━" v-on:click="imageGalleryRemoveImg()" />
-                                    <input id="inputImagePosition" disabled type="number" min="1" max="1000" value="" placeholder="Position" />
-                                    <input id="buttonEditPosition" type="button" value="⬅" v-on:click="imageGalleryUpdateImagePos('up')" />
-                                    <input id="buttonEditPosition" type="button" value="➡" v-on:click="imageGalleryUpdateImagePos('down')" />
-                                <!-- <div id="dataObjModalEditButtons"> -->
-                                <!-- </div> -->
-                            </div>
+
+                        <div id="dataObjModalEditImages">
+                            <input id="buttonDeleteImage" type="button" value="━" v-on:click="imageGalleryRemoveImg()" />
+                            <input id="inputImagePosition" disabled type="number" min="1" max="1000" value="" placeholder="Position" />
+                            <input id="buttonEditPosition" type="button" value="⬅" v-on:click="imageGalleryUpdateImagePos('up')" />
+                            <input id="buttonEditPosition" type="button" value="➡" v-on:click="imageGalleryUpdateImagePos('down')" />
+                        </div>
 
                         <div id="dataObjModalPreviewImages">
                             <img v-bind:id="'previewImage#' + obj.pos" class="dataObjModalPreviewImage" v-for="(obj, index) in loadDataInputs(row, 'galleryImages').reverse()" v-bind:src="obj.image" v-bind:title="obj.image" v-on:click="selectPreviewImage(obj.pos, obj.description)"/>
@@ -209,12 +215,6 @@
                         </div>
                     </div>
                 </div>
-
-                <!-- debugging -->
-                <!-- <div id="">
-                    <p class="dataObjModalRowTitle">{{rowData[0]}}</p>
-                    <input class="dataObjModalRowInput" maxlength="100" v-bind:value="row" />
-                </div> -->
             </div>
             
             <!-- input errors -->
@@ -242,15 +242,6 @@
         <!-- modal: underlay -->
         <div id="underlayModal" v-on:click="undisplayModals()">
         </div>
-
-
-        <!-- modal: select add type -->
-        <!-- <div id="addSelectTypeModal">
-            <label id="addNewTypeTitle">Add</label>
-            <input type="button" class="buttonAddNewType" value="New Section" v-on:click="" />
-            <input type="button" class="buttonAddNewType" value="New Category" v-on:click="" />
-            <input type="button" class="buttonAddNewType" value="New Row" v-on:click="addNewDataRow('')" />
-        </div> -->
 
 
         <!-- modal: add row -->
@@ -284,11 +275,13 @@
                 <input id="inputCategoryDelete" class="editItemDelete" type="button" value="━" v-on:click="editCategory('','delete')" />
                 <input id="inputCategoryAddRow" class="editAddRow" type="button" value="+" v-on:click="editCategory('','add')" />
                 
-                <img id="inputCategoryHiddenToggleShow" src="/iconShow.png" v-on:click="editCategory('','hidden')" />
-                <img id="inputCategoryHiddenToggleHidden" src="/iconHidden.png" v-on:click="editCategory('','show')" />
+                <img id="inputCategoryHiddenToggleShow" src="/images/iconShow.png" v-on:click="editCategory('','hidden')" />
+                <img id="inputCategoryHiddenToggleHidden" src="/images/iconHidden.png" v-on:click="editCategory('','show')" />
+                
                 <input hidden id="inputCategoryHidden" class="editHideRow" type="checkbox" value="" />
             </div>
 
+            <!-- category background url -->
             <input id="inputCategorySettingsBackgroundImageUrl" class="" type="text"  placeholder="Background Image URL" maxlength="1000" />
 
             <!-- confirm update categories -->
@@ -328,8 +321,8 @@
                 <input id="inputSectionDelete" class="editItemDelete" type="button" value="━" v-on:click="editSection('','delete')" />
                 <input id="inputSectionAddRow" class="editAddRow" type="button" value="+" v-on:click="editSection('','add')" />
                 
-                <img id="inputSectionHiddenToggleShow" src="/iconShow.png" v-on:click="editSection('','hidden')" />
-                <img id="inputSectionHiddenToggleHidden" src="/iconHidden.png" v-on:click="editSection('','show')" />
+                <img id="inputSectionHiddenToggleShow" src="/images/iconShow.png" v-on:click="editSection('','hidden')" />
+                <img id="inputSectionHiddenToggleHidden" src="/images/iconHidden.png" v-on:click="editSection('','show')" />
                 <input hidden id="inputSectionHidden" class="editHideRow" type="checkbox" value="" />
             </div>
 
@@ -355,11 +348,12 @@
         <div id="editAccountModal">
             
             <!-- account credentials -->
-            <label id="editAccountTitleCredentials" class="editAccountTitle">Credentials</label>
-
             <div id="editAccountCredentials" class="editAccountSection" v-if="backendAccountCredentials">
                 <!-- variables -->
                 <div hidden>{{accountCredentials = sortAccountCredentials(backendAccountCredentials)}}</div>
+                
+                <!-- title -->
+                <label id="editAccountTitleCredentials" class="editAccountTitle">Credentials</label>
                 
                 <!-- inputs -->
                 <input id="editAccountUsername" class="editAccountInputText" type="text" placeholder="Username" v-bind:value="accountCredentials.username" maxlength="20" />
@@ -369,23 +363,25 @@
                 <input id="editAccountPhone" class="editAccountInputText" type="text" placeholder="Phone" v-bind:value="accountCredentials.phone" maxlength="20" />
                 <input id="editAccountCountry" class="editAccountInputText" type="text" placeholder="Country" v-bind:value="accountCredentials.country" maxlength="20" />
                 <input id="editAccountPassword" class="editAccountInputText" type="button" value="Change Password" v-on:click="editAccount('password', '', 'true')" maxlength="20" />
+                
                 <div id="editAccountChangePassword">
                     <input id="editAccountPasswordOld" class="editAccountInputText" type="password" placeholder="Old Password" maxlength="20" />
-                    <img id="editAccountPasswordImgShow" src="/iconShow.png" v-on:click="showPasswordInputs()" />
-                    <img id="editAccountPasswordImgHide" src="/iconHidden.png" v-on:click="hidePasswordInputs()" />
+                    <img id="editAccountPasswordImgShow" src="/images/iconShow.png" v-on:click="showPasswordInputs()" />
+                    <img id="editAccountPasswordImgHide" src="/images/iconHidden.png" v-on:click="hidePasswordInputs()" />
                     <input id="editAccountPasswordNew" class="editAccountInputText" type="password" placeholder="New Password" maxlength="20" />
                     <input id="editAccountPasswordNewAgain" class="editAccountInputText" type="password" placeholder="New Password Again" />
                     <input id="editAccountPasswordConfirm" class="editAccountInputText" type="button" value="Confirm New Password" maxlength="20" />
                 </div>
-                <!-- <input class="editAccountInputText" type="button" value="Update Credentials" /> -->
             </div>
             
             <!-- account settings -->
             <div id="editAccountSettings" v-if="backendAccountSettings">
 
                 <!-- edit: account colors -->
-                <label class="editAccountTitle">Colors</label>
                 <div id="editAccountColors" class="editAccountSection">
+                    
+                    <!-- title -->
+                    <label class="editAccountTitle">Colors</label>
     
                     <!-- color: section background -->
                     <div id="" class="editAccountColors">
@@ -424,12 +420,11 @@
                     </div>
                 </div>
 
-                <!-- account toggles -->
-                <!-- <label class="editAccountTitle">Options</label> -->
-                
                 <!-- edit: account nav -->
-                <label class="editAccountTitle">Nav</label>
                 <div id="editAccountNav" class="editAccountSection">
+
+                    <!-- title -->
+                    <label class="editAccountTitle">Nav</label>
                     
                     <!-- toggle: nav position -->
                     <div id="editAccountNavPosition">
@@ -445,8 +440,6 @@
                         <label class="editAccountToggle">Icon Type:</label>
                         <button id="editAccountNavSquare" class="editAccountToggleButton" v-on:click="editAccount('navIconType', 'square', 'true')">Square</button>
                         <button id="editAccountNavRounded" class="editAccountToggleButton" v-on:click="editAccount('navIconType', 'rounded', 'true')">Rounded</button>
-                        <!-- <button id="editAccountNavThumbnails" class="editAccountToggleButton" v-on:click="editAccount('navIconType', 'thumbnails', 'true')">Thumbnails</button> -->
-                        <!-- <button id="editAccountNavNumbers" class="editAccountToggleButton" v-on:click="editAccount('navIconType', 'numbers', 'true')">Numbers</button> -->
                     </div>
     
                     <!-- toggle: nav icon size -->
@@ -459,8 +452,10 @@
                 </div>
                 
                 <!-- edit: account text -->
-                <label class="editAccountTitle">Text</label>
                 <div id="editAccountText" class="editAccountSection">
+
+                    <!-- title -->
+                    <label class="editAccountTitle">Text</label>
 
                     <!-- toggle: text weight -->
                     <div id="editAccountTextStyle">
@@ -468,19 +463,13 @@
                         <button id="editAccountTextNormal" class="editAccountToggleButton" v-on:click="editAccount('textStyle', 'normal', 'true')">Normal</button>
                         <button id="editAccountTextBold" class="editAccountToggleButton" v-on:click="editAccount('textStyle', 'bold', 'true')">Bold</button>
                     </div>
-    
-                    <!-- toggle: text size -->
-                    <!-- <div id="editAccountTextSize">
-                        <label class="editAccountToggle">Size:</label>
-                        <button id="editAccountTextSmall" class="editAccountToggleButton" v-on:click="editAccount('textSize', 'small', 'true')">Small</button>
-                        <button id="editAccountTextMedium" class="editAccountToggleButton" v-on:click="editAccount('textSize', 'medium', 'true')">Medium</button>
-                        <button id="editAccountTextLarge" class="editAccountToggleButton" v-on:click="editAccount('textSize', 'large', 'true')">Large</button>
-                    </div> -->
                 </div>
 
                 <!-- edit: account privacy -->
-                <label class="editAccountTitle">Privacy</label>
                 <div id="editAccountPrivacy" class="editAccountSection">
+
+                    <!-- title -->
+                    <label class="editAccountTitle">Privacy</label>
 
                     <!-- toggle: access -->
                     <div id="editAccountSiteAccess">
@@ -491,24 +480,21 @@
     
                     <!-- toggle: password protected -->
                     <div id="editAccountSitePasswordProtected">
-                        <!-- <input id="editAccountPasswordProtectedToggle" class="editAccountRadioButton" type="radio" v-on:click="editAccount('passwordProtected', '', 'true')" /> -->
-                        <!-- <label class="editAccountText">Password Protected</label> -->
                         <label class="editAccountToggle">Password Protected:</label>
                         <button id="editAccountSitePasswordProtectedYes" class="editAccountToggleButton" v-on:click="editAccount('sitePasswordProtected', 'true', 'true')">Yes</button>
                         <button id="editAccountSitePasswordProtectedNo" class="editAccountToggleButton" v-on:click="editAccount('sitePasswordProtected', 'false', 'true')">No</button>
                         <input id="editAccountPasswordProtectedPassword" class="editAccountInputText" type="text" placeholder="Site Password" maxlength="20" />
-                        <!-- <input id="editAccountPasswordProtectedPasswordConfirm" class="editAccountInputText" type="text" placeholder="Password Confirm" /> -->
                     </div>
                 </div>
 
                 <!-- edit: account pages -->
-                <label class="editAccountTitle">Pages</label>
                 <div id="editAccountPages" class="editAccountSection">
+
+                    <!-- title -->
+                    <label class="editAccountTitle">Pages</label>
 
                     <!-- toggle: start page -->
                     <div id="editAccountStartPage">
-                        <!-- <input id="editAccountStartPageToggle" class="editAccountRadioButton" type="radio" /> -->
-                        <!-- <label class="editAccountText">Start Page</label> -->
                         <label class="editAccountToggle">Start:</label>
                         <button id="editAccountStartPageYes" class="editAccountToggleButton" v-on:click="editAccount('pageStart', 'true', 'true')">Yes</button>
                         <button id="editAccountStartPageNo" class="editAccountToggleButton" v-on:click="editAccount('pageStart', 'false', 'true')">No</button>
@@ -519,8 +505,6 @@
                     
                     <!-- toggle: end page -->
                     <div id="editAcountEndPage">
-                        <!-- <input id="editAcountEndPageToggle" class="editAccountRadioButton" type="radio" /> -->
-                        <!-- <label class="editAccountText">End Page</label> -->
                         <label class="editAccountToggle">End:</label>
                         <button id="editAcountEndPageYes" class="editAccountToggleButton" v-on:click="editAccount('pageEnd', 'true', 'true')">Yes</button>
                         <button id="editAcountEndPageNo" class="editAccountToggleButton" v-on:click="editAccount('pageEnd', 'false', 'true')">No</button>
@@ -528,25 +512,16 @@
                         <input id="editAccountEndPageText" class="editAccountInputText" type="text" placeholder="End Text" maxlength="100" />
                         <input id="editAccountEndPageBackgroundImage" class="editAccountInputText" type="text" placeholder="End Background Image Url" maxlength="1000" />
                     </div>
-                    
-                    <!-- toggle: index page -->
-                    <!-- <div id="editAccountIndexPage">
-                        <input id="editAccountIndexPageToggle" class="editAccountRadioButton" type="radio" />
-                        <label class="editAccountText">Index Page</label>
-                        <label class="editAccountToggle">Index:</label>
-                        <button id="editAccountIndexPageYes" class="editAccountToggleButton" v-on:click="editAccount('pageIndex', 'true', 'true')">Yes</button>
-                        <button id="editAccountIndexPageNo" class="editAccountToggleButton" v-on:click="editAccount('pageIndex', 'false', 'true')">No</button>
-                    </div> -->
                 </div>
 
                 <!-- edit: account buttons -->
-                <label class="editAccountTitle">Buttons</label>
                 <div id="editAccountButtons" class="editAccountSection">
+
+                    <!-- title -->
+                    <label class="editAccountTitle">Buttons</label>
 
                     <!-- toggle: fullscreen button -->
                     <div id="editAccountFullscreenButton">
-                        <!-- <input id="editAccountFullscreenButtonToggle" class="editAccountRadioButton" type="radio" /> -->
-                        <!-- <label class="editAccountText">Fullscreen Button</label> -->
                         <label class="editAccountToggle">Fullscreen:</label>
                         <button id="editAccountFullscreenButtonYes" class="editAccountToggleButton" v-on:click="editAccount('buttonFullscreen', 'true', 'true')">Yes</button>
                         <button id="editAccountFullscreenButtonNo" class="editAccountToggleButton" v-on:click="editAccount('buttonFullscreen', 'false', 'true')">No</button>
@@ -554,8 +529,6 @@
     
                     <!-- toggle: search button -->
                     <div id="editAccountSearchButton">
-                        <!-- <input id="editAccountSearchButtonToggle" class="editAccountRadioButton" type="radio" /> -->
-                        <!-- <label class="editAccountText">Search Button</label> -->
                         <label class="editAccountToggle">Search:</label>
                         <button id="editAccountSearchButtonYes" class="editAccountToggleButton" v-on:click="editAccount('buttonSearch', 'true', 'true')">Yes</button>
                         <button id="editAccountSearchButtonNo" class="editAccountToggleButton" v-on:click="editAccount('buttonSearch', 'false', 'true')">No</button>
@@ -563,8 +536,6 @@
     
                     <!-- toggle: contact button -->
                     <div id="editAccountContactButton">
-                        <!-- <input id="editAccountContactButtonToggle" class="editAccountRadioButton" type="radio" /> -->
-                        <!-- <label class="editAccountText">Contact Button?</label> -->
                         <label class="editAccountToggle">Contact:</label>
                         <button id="editAccountContactButtonYes" class="editAccountToggleButton" v-on:click="editAccount('buttonContact', 'true', 'true')">Yes</button>
                         <button id="editAccountContactButtonNo" class="editAccountToggleButton" v-on:click="editAccount('buttonContact', 'false', 'true')">No</button>
@@ -572,8 +543,6 @@
     
                     <!-- toggle: about button -->
                     <div id="editAccountAboutButton">
-                        <!-- <input id="editAccountAboutButtonToggle" class="editAccountRadioButton" type="radio" /> -->
-                        <!-- <label class="editAccountText">About Button?</label> -->
                         <label class="editAccountToggle">About:</label>
                         <button id="editAccountAboutButtonYes" class="editAccountToggleButton" v-on:click="editAccount('buttonAbout', 'true', 'true')">Yes</button>
                         <button id="editAccountAboutButtonNo" class="editAccountToggleButton" v-on:click="editAccount('buttonAbout', 'false', 'true')">No</button>
@@ -582,13 +551,13 @@
                 </div>
 
                 <!-- edit: account extras -->
-                <label class="editAccountTitle">Extra</label>
                 <div id="editAccountExtras" class="editAccountSection">
+                    
+                    <!-- title -->
+                    <label class="editAccountTitle">Extra</label>
 
                     <!-- toggle: slideshow mode -->
                     <div id="editAccountSlideshowMode">
-                        <!-- <input id="editAccountExtrasToggle" class="editAccountRadioButton" type="radio" /> -->
-                        <!-- <label class="editAccountText">Slideshow Mode</label> -->
                         <label class="editAccountToggle">Slideshow Mode:</label>
                         <button id="editAccountSlideshowModeYes" class="editAccountToggleButton" v-on:click="editAccount('modeSlideshow', 'true', 'true')">Yes</button>
                         <button id="editAccountSlideshowModeNo" class="editAccountToggleButton" v-on:click="editAccount('modeSlideshow', 'false', 'true')">No</button>
@@ -596,8 +565,6 @@
                     
                     <!-- toggle: section background image -->
                     <div id="editAccountSectionBackgroundImage">
-                        <!-- <input id="editAccountSectionBackgroundImageToggle" class="editAccountRadioButton" type="radio" /> -->
-                        <!-- <label class="editAccountText">Section Background Image</label> -->
                         <label class="editAccountToggle">Section Background Image:</label>
                         <button id="editAccountSectionBackgroundImageYes" class="editAccountToggleButton" v-on:click="editAccount('sectionBackgroundImage', 'true', 'true')">Yes</button>
                         <button id="editAccountSectionBackgroundImageNo" class="editAccountToggleButton" v-on:click="editAccount('sectionBackgroundImage', 'false', 'true')">No</button>
@@ -606,19 +573,19 @@
     
                     <!-- toggle: loading screen -->
                     <div id="editAccountLoadingScreen">
-                        <!-- <input id="editAccountLoadingScreenToggle" class="editAccountRadioButton" type="radio" /> -->
-                        <!-- <label class="editAccountText">Loading Screen</label> -->
                         <label class="editAccountToggle">Loading Screen:</label>
                         <button id="editAccountLoadingScreenYes" class="editAccountToggleButton" v-on:click="editAccount('loadingScreen', 'true', 'true')">Yes</button>
                         <button id="editAccountLoadingScreenNo" class="editAccountToggleButton" v-on:click="editAccount('loadingScreen', 'false', 'true')">No</button>
-                        <!-- <input id="editAccountLoadingScreenUrl" class="editAccountInputText" type="text" placeholder="Gif Url" maxlength="1000"/> -->
                     </div>
                 </div>
             </div>
 
             <!-- edit account: danger -->
-            <label class="editAccountTitle">Danger</label>
             <div id="editAccountDanger" class="editAccountSection">
+                
+                <!-- title -->
+                <label class="editAccountTitle">Danger</label>
+
                 <input id="editAccountDangerReset" type="button" class="editAccountInputDanger" value="Reset Account" v-on:click="dangerAccount('display', 'reset')">
                 <input id="editAccountDangerDelete" type="button" class="editAccountInputDanger" value="Delete Account" v-on:click="dangerAccount('display', 'delete')">
                 
@@ -631,8 +598,11 @@
             </div>
 
             <!-- account: info -->
-            <label class="editAccountTitle">Account</label>
             <div id="editAccountInfo" class="editAccountSection" v-if="backendAccountLoginInfo">
+            
+                <!-- title -->
+                <label class="editAccountTitle">Account</label>
+
                 <!-- account status -->
                 <label class="accountInfoItem">
                     <span class="accountInfoTitle">Status: </span> 
@@ -650,10 +620,6 @@
                     <span class="accountInfoTitle">Created At: </span> 
                     <span class="accountInfoText">{{backendAccountLoginInfo.createdAt}}</span>
                 </label>
-
-                <!-- <label class="accountInfoItem" v-if="backendSections">Total Sections: {{backendSections.length}}</label> -->
-                <!-- <label class="accountInfoItem" v-if="backendCategories">Total Categories: {{backendCategories.length}}</label> -->
-                <!-- <label class="accountInfoItem">Total Rows: </label> -->
             </div>
 
             <p id="updateStatusMessageUpdateSettings"></p>
@@ -664,7 +630,6 @@
 
             <!-- edit account: confirm save button -->
             <div id="confirmChangesUpdateSettings">
-                <!-- <input class="editAccountInputText" type="text" placeholder="Password" /> -->
                 <button id="buttonSaveUpdateSettings" v-on:click="saveChangesSettings()">Confirm Save</button>
             </div>
         </div>
@@ -672,7 +637,7 @@
 
         <!-- button: edit sections -->
         <div id="" v-if="backendSections">
-            <img id="settingsSectionsIcon" src="/iconSettingsSections.png" v-on:click="editSectionsModal(backendSections)"/>
+            <img id="settingsSectionsIcon" src="/images/iconSettingsSections.png" v-on:click="editSectionsModal(backendSections)"/>
         </div>
 
 
@@ -701,18 +666,20 @@
 
 <script>
 import {useStore} from 'vuex'
-import {computed, onMounted, onUpdated, resolveDirective, toRaw} from 'vue'
+import {computed, onMounted, onUpdated, toRaw} from 'vue'
 import {useRouter} from 'vue-router'
+import configs from '/configs.json'
 
 export default {
   setup() {
+
     //vue
     const store = useStore()
     const router = useRouter()
 
 
     //variables
-    const BACKEND_API = "http://127.0.0.1:8000"
+    const BACKEND_API = configs.REST_API || "http://127.0.0.1:8000"
     const backendSections = computed(() => { return store.getters['storage/backendSections']})
     const backendCategories = computed(() => { return store.getters['storage/backendCategories']})
     const backendData = computed(() => { return store.getters['storage/backendData']})
@@ -732,12 +699,8 @@ export default {
     var selectedDataPos = ""
     var oldImagePos = ""
     var oldDataPos = ""
-    var oldMultilinePos = ""
-    var oldTimelinePos = ""
     var newImagePos = ""
     var newDataPos = ""
-    var newMultilinePos = ""
-    var newTimelinePos = ""
     var oldPos = ""
     var newPos = ""
     var oldCategoryPos = ""
@@ -753,13 +716,19 @@ export default {
 
     //event listeners
     document.addEventListener('wheel', function(e) {
+        
         //elements 
         let backendCategoriesList = document.getElementById("backendCategoriesList")
-        // let dataObjModalPreviewImages = document.getElementById("dataObjModalPreviewImages")
 
-        //categories horizontal scroll
-        if (e.deltaY > 0) { if(backendCategoriesList != null) { backendCategoriesList.scrollLeft += 60; } }
-        else { if(backendCategoriesList != null) { backendCategoriesList.scrollLeft -= 60; } }
+        //horizontal scroll for categories
+        if(e.deltaY > 0 && backendCategoriesList != null) 
+        { 
+            backendCategoriesList.scrollLeft += 60;
+        }
+        else if(backendCategoriesList != null) 
+        { 
+            backendCategoriesList.scrollLeft -= 60;
+        }
     })
     
 
@@ -776,6 +745,7 @@ export default {
         await fetch(BACKEND_API + "/user-specific", {method: 'post', body: obj})
         .then((response) => { return response.json() })
         .then((data) => {
+            
             //debugging
             console.log(data)
 
@@ -832,13 +802,11 @@ export default {
         store.dispatch('storage/actionSetBackendCategoriesSelected', arrayCategories)
 
         //update elements
-        for(let item in sectionElements)
-        {
+        for(let item in sectionElements) {
             let element = document.getElementById(sectionElements[item].id)
             if(element) { element.style.opacity = "0.2" }
         }
-        for(let item in categoryElements)
-        {
+        for(let item in categoryElements) {
             let element = document.getElementById(categoryElements[item].id)
             if(element) { element.style.opacity = "1" }
         }
@@ -851,12 +819,6 @@ export default {
 
     function loadCategoryData(section, category, position)
     {   
-        //debugging
-        // console.log(category)
-        // console.log("Section: " + section)
-        // console.log("Category: " + category)
-        // console.log(backendData.value)
-
         //elements
         let selectCategoryElement = document.getElementById("category#" + position)
         let backendDataElement = document.getElementById("backendData")
@@ -907,20 +869,8 @@ export default {
         if(data.type == undefined) { value = "null" }
 
         //set data row text
-        else 
-        { 
-            value = "Row " + data.pos + " · " + "<" + data.type + ">"
-            // if(data.title == "") { data.title = "no title" }
-            // value = data.pos + " " + data.title + " " + "<" + data.type + ">" 
-            // value = data.pos + " · " + "<" + data.type + ">" 
-            // value = "<> · " + data.pos + " · " + "<" + data.type + ">" 
-            // value = data.pos + " · " + "<" + data.type + ">" 
-            // value = "Row " + data.pos + " · " + "<" + data.type + ">" 
-            // value = "Row " + data.pos + " · " + data.title + " · " + "<" + data.type + ">" 
-            // value = data.title + " · " + "(" + data.type.toUpperCase() + ")" 
-        }
+        else { value = "Row " + data.pos + " · " + "<" + data.type + ">" }
 
-        //return value
         return value
     }
 
@@ -1010,7 +960,6 @@ export default {
         let dataObjModal = document.getElementById("dataObjModal")
         let underlayModal = document.getElementById("underlayModal")
         let addDataRowModal = document.getElementById("addDataRowModal")
-        let addSelectTypeModal = document.getElementById("addSelectTypeModal")
         let editCategoriesModal = document.getElementById("editCategoriesModal")
         let editSectionsModal = document.getElementById("editSectionsModal")
         let editAccountModal = document.getElementById("editAccountModal")
@@ -1019,7 +968,6 @@ export default {
         if(dataObjModal) { dataObjModal.style.display = "none" }
         if(addDataRowModal) { addDataRowModal.style.display = "none" }
         if(underlayModal) { underlayModal.style.display = "none" }
-        if(addSelectTypeModal) { addSelectTypeModal.style.display = "none" }
         if(editCategoriesModal) { editCategoriesModal.style.display = "none" }
         if(editSectionsModal) { editSectionsModal.style.display = "none" }
         if(editAccountModal) { editAccountModal.style.display = "none" }
@@ -1052,11 +1000,6 @@ export default {
 
         //type: others
         else { return data }
-        // else if(type == "multiline") { return data }
-        // else if(type == "timeline") { return data }
-        // else if(type == "singleline") { return data }
-        // else if(type == "linklist") { return data }
-        // else if(type == "textlist") { return data }
     }
 
 
@@ -1088,8 +1031,6 @@ export default {
             { 
                 console.log(rowDataItem[c])
                 rowDataItem.splice(c, 1)
-                // if(rowDataItem.length == 1) { rowDataItem.splice(0, 1) }
-                // else if(rowDataItem.length > 1) { rowDataItem.splice((imagePos - 1), 1)}
             }
         }
         
@@ -1273,7 +1214,8 @@ export default {
 
     function imageGalleryUpdateImageDescription()
     {   
-        console.log("imageGalleryUpdateImageDescription")
+        //debugging
+        // console.log("imageGalleryUpdateImageDescription")
 
         //elements
         let inputImageDescription = document.getElementById("inputImageDescription")
@@ -1382,16 +1324,11 @@ export default {
         //check invalid inputs
         if(dataObjPosition.value < 0 || dataObjPosition.value > dataTotalRows || dataObjPosition.value == "") 
         { 
-            //debugging
-            // console.log("dataObjPosition: " + dataObjPosition.value)
-            // console.log("isNew: " + isNew)
-
             //update elements
             dataObjPosition.style.backgroundColor = "red"
             dataObjModalErrorMessage.style.display = "block"
             dataObjModalErrorMessage.innerText = "Position Invalid"
             
-            //return value
             return
         }
         
@@ -1407,26 +1344,15 @@ export default {
             //remove item from backend data
             for(let item in backendData.value)
             {
-                // console.log(backendData.value[item])
-                
                 if(selectedSection == backendData.value[item].section && selectedCategory == backendData.value[item].category)
                 { 
-                    // console.log(backendData.value[item])
-
                     for(let r in backendData.value[item].rows)
                     {
-                        // console.log(JSON.parse(backendData.value[item].rows[r]).pos)
-                        // console.log(r)
-                        // console.log(JSON.parse(backendData.value[item].rows[r]))
-                        
                         if(pos == JSON.parse(backendData.value[item].rows[r]).pos) 
                         { 
-                            // console.log(JSON.parse(backendData.value[item].rows[r])) 
                             backendData.value[item].rows.splice((pos - 1), 1)
                         }
                     }
-                    
-                    // console.log(toRaw(backendData.value[item].rows))
                 }
             }
             
@@ -1460,12 +1386,12 @@ export default {
             {
                 if(selectedSection == backendData.value[item].section && selectedCategory == backendData.value[item].category)
                 {
-                    // console.log(backendData.value[item].rows)
                     backendData.value[item].rows = rowsArray
                 }
             }
 
-            console.log(backendData.value)
+            //debuggin
+            // console.log(backendData.value)
 
             //save vuex
             store.dispatch('storage/actionSetBackendDataSelected', rowsArray)
@@ -1509,7 +1435,6 @@ export default {
                         for(let r in backendData.value[item].rows)
                         {   
                             let rowItem = JSON.parse(backendData.value[item].rows[r])
-                            // console.log(rowItem)
 
                             if(rowItem.pos == newItem.pos)
                             {
@@ -1555,10 +1480,6 @@ export default {
                             let rowsData = []
                             let itemHolder  = ""
 
-                            //debugging
-                            // console.log("lastItemPos: " + lastItemPos)
-                            // console.log("newDataPos: " + newDataPos)
-
                             //add data rows to array
                             for(let r in backendData.value[item].rows) { rowsData.push(JSON.parse(backendData.value[item].rows[r])) }
                             
@@ -1581,12 +1502,6 @@ export default {
                             //update selected backend data rows
                             backendData.value[item].rows = rowsData
                             
-                            //debugging
-                            // console.log(backendData.value[item].rows)
-                            // console.log(rowsData)
-                            // console.log(backendData.value)
-                            // console.log(backendDataSelected.value)
-
                             //save vuex
                             store.dispatch('storage/actionSetBackendData', backendData.value)
                             store.dispatch('storage/actionSetBackendDataSelected', rowsData)
@@ -1616,29 +1531,9 @@ export default {
 
                         //save vuex
                         store.dispatch('storage/actionSetBackendData', backendData.value)
-                        // store.dispatch('storage/actionSetBackendDataSelected', '')
                     }
                 }
             }
-    
-            //sort row positions
-            // for(let item in backendData.value)
-            // {
-            //     if(selectedSection == backendData.value[item].section && selectedCategory == backendData.value[item].category)
-            //     {
-            //         //add row data to array
-            //         for(let r in backendData.value[item].rows) { rowsArray.push(JSON.parse(backendData.value[item].rows[r])) }
-    
-            //         //sort rows by position
-            //         rowsArray = rowsArray.sort((a, b) => { return a.pos - b.pos })
-    
-            //         //stringify rows data in array
-            //         for(let r in rowsArray) { rowsArray[r] = JSON.stringify(rowsArray[r]) } /* rowsArray[r].pos = (parseInt(r) + 1).toString() */ 
-    
-            //         //update backend data
-            //         backendData.value[item].rows = rowsArray
-            //     }
-            // }
     
             //reload data obj modal
             loadDataObjModal(JSON.parse(localStorage.getItem("cms-edit-row")), isNew)
@@ -1666,6 +1561,7 @@ export default {
         await fetch(BACKEND_API + "/user-update-data", {method: 'post', body: obj})
         .then((response) => { return response.json() })
         .then((data) => {
+
             //debugging
             // console.log(data)
 
@@ -1722,6 +1618,7 @@ export default {
         await fetch(BACKEND_API + "/user-update-categories", {method: 'post', body: obj})
         .then((response) => { return response.json() })
         .then((data) => {
+
             //debugging
             // console.log(data)
 
@@ -1788,6 +1685,7 @@ export default {
         await fetch(BACKEND_API + "/user-update-sections", {method: 'post', body: obj})
         .then((response) => { return response.json() })
         .then((data) => {
+
             //debugging
             // console.log(data)
 
@@ -1972,7 +1870,6 @@ export default {
 
             //check forbidden characters
             dataObjModalText.value = dataObjModalText.value.replaceAll("'", "’") //replaceAll("'", "´")
-            // dataObjModalText.value = dataObjModalText.value.replaceAll("\"", "´")
             
             //variables
             let newText = ""
@@ -2153,7 +2050,6 @@ export default {
         console.log("addNewDataRow")
 
         //elements
-        let addSelectTypeModal = document.getElementById("addSelectTypeModal")
         let addDataRowModal = document.getElementById("addDataRowModal")
         let underlayModal = document.getElementById("underlayModal")
         let dataObjNew = ""
@@ -2172,7 +2068,6 @@ export default {
         setTimeout(() => { dataObjNew = document.getElementById("dataObjNew"); if(dataObjNew) { dataObjNew.checked = true }}, 20)
 
         //update elements
-        if(addSelectTypeModal) { addSelectTypeModal.style.display = "none" }
         if(type == "") { addDataRowModal.style.display = "block"; underlayModal.style.display = "block" }
         else if(type != "") { addDataRowModal.style.display = "none" }
         if(type == "imageGallery") { loadDataObjModal(newObjImageGallery, true) }
@@ -2181,21 +2076,6 @@ export default {
         else if(type == "singleline") { loadDataObjModal(newObjSingleline, true) }
         else if(type == "linklist") { loadDataObjModal(newObjLinklist, true) }
         else if(type == "textlist") { loadDataObjModal(newObjTextlist, true) }
-    }
-
-
-    function addNewType(type)
-    {
-        //debugging
-        console.log("addNewType")
-
-        //elements
-        let addSelectTypeModal = document.getElementById("addSelectTypeModal")
-        let underlayModal = document.getElementById("underlayModal")
-        
-        //update elements
-        addSelectTypeModal.style.display = "block"
-        underlayModal.style.display = "block"
     }
 
 
@@ -2243,10 +2123,12 @@ export default {
         let confirmChangesCheckboxUpdateSections = document.getElementById("confirmChangesCheckboxUpdateSections")
         let editSectionObjects = document.getElementsByClassName("editSectionObj")
 
-        sections = sections.sort((a, b) => { return a.pos - b.pos })
-
+        //variables
         let categories = backendCategories.value.sort((a, b) => { return a.pos - b.pos })
         let data = backendData.value
+
+        //sort sections by pos
+        sections = sections.sort((a, b) => { return a.pos - b.pos })
 
         //set local storage
         localStorage.setItem("cms-edit-section", JSON.stringify(sections))
@@ -2271,8 +2153,8 @@ export default {
     function editCategory(category, type)
     {
         //debugging
-        console.log("editCategory: " + type)
-        console.log(category)
+        // console.log("editCategory: " + type)
+        // console.log(category)
         
         //elements
         let editCategoryObj = ""
@@ -2457,9 +2339,6 @@ export default {
             { 
                 if(lsCategories[item].section == selectedSection && oldCategoryPos == lsCategories[item].pos) 
                 { 
-                    //set hidden
-                    // if(inputCategoryHidden.checked == true) { lsCategories[item].hidden = "true" }
-                    // else if(inputCategoryHidden.checked == false) { lsCategories[item].hidden = "false" }
                     lsCategories[item].hidden = "false"
                     inputCategoryHidden.checked = false
 
@@ -2492,9 +2371,6 @@ export default {
             //count section categories
             for(let item in lsCategories) { if(lsCategories[item].section == selectedSection) { sectionCategoriesLength++ } }
 
-            //debugging
-            // console.log("sectionCategoriesLength: " + sectionCategoriesLength)
-            
             //update data positions
             for(let item in lsCategories) 
             { 
@@ -2648,7 +2524,6 @@ export default {
         let lsCategories = JSON.parse(localStorage.getItem('cms-edit-category'))
         let lsData = JSON.parse(localStorage.getItem("cms-edit-data"))
         let selectedElement = ""
-        // let newTitle = ""
         
         //variables
         let isChanged = false
@@ -2657,7 +2532,6 @@ export default {
         let selectedSection = toRaw(section).title
         let lsCategoriesNew = []
         let backendDataNew = ""
-        // console.log(selectedSection.title)
 
         //type: CLICK
         if(type == "click") 
@@ -2754,14 +2628,10 @@ export default {
                 { 
                     //set element
                     selectedElement = document.getElementById("buttonSectionSettingsTitle#" + lsSections[item].pos)
-                    // lsSections = JSON.parse(localStorage.getItem('cms-edit-section'))
-                    // lsCategories = JSON.parse(localStorage.getItem('cms-edit-category'))
                     
                     //set old title
-                    // let oldTitle = lsSections[item].oldTitle
                     let oldTitle = lsSections[item].title
                     lsSections[item].oldTitle = oldTitle
-                    // if(oldTitle == null) { lsSections[item].oldTitle = lsSections[item].title; oldTitle = lsSections[item].title }
                     
                     //set new title
                     let newTitle = selectedElement.value
@@ -2772,11 +2642,8 @@ export default {
                     {
                         if(oldTitle == lsCategories[item].section) 
                         { 
-                            // console.log(lsCategories[item].section)
                             lsCategories[item].section = newTitle 
                         }
-
-                        // lsCategoriesNew.push(lsCategories[item])
                     }
 
                     //set data new section
@@ -2784,7 +2651,6 @@ export default {
                     {
                         if(oldTitle == lsData[item].section)
                         {
-                            // console.log(lsData[item].section)
                             lsData[item].section = newTitle
                         }
                     }
@@ -2865,9 +2731,6 @@ export default {
             //count section categories
             sectionSectionsLength = lsSections.length + 1
 
-            //debugging
-            // console.log("sectionSectionsLength: " + sectionSectionsLength)
-            
             //update data positions
             for(let item in lsSections) 
             { 
@@ -2886,18 +2749,6 @@ export default {
             }
 
             lsCategories = lsCategoriesNew
-            // console.log(lsCategories)
-            // console.log(lsCategoriesNew)
-
-            // let backendDataTemp = toRaw(backendData.value)
-            // let backendDataNew = []
-            // for(let item in backendDataTemp)
-            // {
-            //     if(sectionTitle != backendDataTemp[item].section) { backendDataNew.push(backendDataTemp[item] )}
-            // }
-            // console.log(backendDataTemp)
-            // console.log(backendDataNew)
-            // console.log(backendDataSelected.value)
             
             //reload edit categories modal
             editSectionsModal(lsSections)
@@ -3064,10 +2915,12 @@ export default {
 
     function confirmCheckboxUpdateCategories()
     {
+        //elements
         let confirmChangesCheckboxUpdateCategories = document.getElementById("confirmChangesCheckboxUpdateCategories")
         let buttonSaveUpdateCategories = document.getElementById("buttonSaveUpdateCategories")
         let checkboxSaveUpdateCategories = document.getElementById("checkboxSaveUpdateCategories")
 
+        //update elements
         if(checkboxSaveUpdateCategories.checked == true) 
         { 
             confirmChangesCheckboxUpdateCategories.style.display = "block"
@@ -3096,23 +2949,18 @@ export default {
         {
             newBackendData.push({category: ls[item].title, oldTitle: ls[item].oldTitle, rows: '', section: ls[item].section})            
         }
-        // console.log(newBackendData)
 
         //add old rows data
         for(let item in backendData.value)
         {
-            // console.log(backendData.value[item])
-            
             for(let c in newBackendData)
             {
                 if(backendData.value[item].section == newBackendData[c].section && backendData.value[item].category == newBackendData[c].oldTitle) 
                 { 
-                    // console.log(backendData.value[item])
                     newBackendData[c].rows = ""
                 }
                 else if(backendData.value[item].section == newBackendData[c].section && backendData.value[item].category == newBackendData[c].category) 
                 { 
-                    // console.log(backendData.value[item])
                     newBackendData[c].rows = toRaw(backendData.value[item].rows)
                 }
             }
@@ -3124,8 +2972,6 @@ export default {
         {
             if(newBackendData[c].oldTitle != undefined) 
             { 
-                // console.log(newBackendData[c])
-
                 for(let i in backendData.value)
                 {
                     if(backendData.value[i].section == newBackendData[c].section && backendData.value[i].category == newBackendData[c].oldTitle)
@@ -3142,7 +2988,6 @@ export default {
             if(newBackendData[c].rows == "") 
             { 
                 newBackendData[c].rows = ""
-                //["{\"pos\":\"1\",\"hidden\":\"false\",\"type\":\"singleline\",\"title\":\"Example Title\",\"data\":\"this is a singleline text example\"}"] 
             }
         }
         
@@ -3157,8 +3002,6 @@ export default {
         {
             if(ls[i].oldTitle != "") { delete ls[i].oldTitle }
         }
-        // console.log(newBackendData)
-        // console.log(toRaw(ls))
 
         //reload edit categories modal
         editCategoriesModal(ls)
@@ -3183,14 +3026,7 @@ export default {
         for(let item in lsSections)
         {
             newBackendSections.push(lsSections[item])
-            // newBackendSections.push({
-            //     category: lsSections[item].title, 
-            //     oldTitle: lsSections[item].oldTitle, 
-            //     rows: '', 
-            //     section: lsSections[item].section
-            // })
         }
-        // console.log(newBackendSections)
 
         //reload edit sections modal
         editSectionsModal(lsSections)
@@ -3250,7 +3086,6 @@ export default {
         
         //set local storage
         localStorage.setItem("cms-edit-settings", JSON.stringify(settings))
-        // localStorage.setItem("cms-edit-credentials", JSON.stringify(credentials))
 
         //update elements
         editAccountModal.style.display = "block"
@@ -3451,13 +3286,9 @@ export default {
 
             editAccountNavSquare.style.color = "white"; editAccountNavSquare.style.opacity = "0.2"
             editAccountNavRounded.style.color = "white"; editAccountNavRounded.style.opacity = "0.2"
-            // editAccountNavThumbnails.style.color = "white"; editAccountNavThumbnails.style.opacity = "0.2"
-            // editAccountNavNumbers.style.color = "white"; editAccountNavNumbers.style.opacity = "0.2"
 
             if(value == "square") { editAccountNavSquare.style.color = "#822c8b"; editAccountNavSquare.style.opacity = "1" }
             else if(value == "rounded") { editAccountNavRounded.style.color = "#822c8b"; editAccountNavRounded.style.opacity = "1" }
-            // else if(value == "thumbnails") { editAccountNavThumbnails.style.color = "#822c8b"; editAccountNavThumbnails.style.opacity = "1" }
-            // else if(value == "numbers") { editAccountNavNumbers.style.color = "#822c8b"; editAccountNavNumbers.style.opacity = "1" }
         }
 
         else if(type == "navIconSize") 
@@ -3816,7 +3647,6 @@ export default {
         let editAccountPasswordProtectedPassword = document.getElementById("editAccountPasswordProtectedPassword")
         let editAccountAboutText = document.getElementById("editAccountAboutText")
         let editAccountSectionBackgroundImageUrl = document.getElementById("editAccountSectionBackgroundImageUrl")
-        // let editAccountLoadingScreenUrl = document.getElementById("editAccountLoadingScreenUrl")
 
         //variables
         let credentials = {
@@ -4021,31 +3851,31 @@ export default {
         let userInfo = {"username": lsAccount, "lastLogin": lsLastLogin, "token": lsToken }
         let obj = {"userInfo": userInfo, "password": editAccountDangerConfirmText.value}
         let defaultSettings = {
-            "buttonAbout": "false",
-            "buttonAboutText": "",
-            "buttonContact": "false",
-            "buttonFullscreen": "false",
-            "buttonSearch": "false",
+            "buttonAbout": "true",
+            "buttonAboutText": "this is a text example",
+            "buttonContact": "true",
+            "buttonFullscreen": "true",
+            "buttonSearch": "true",
             "colorLoadingScreen": "#000000",
-            "colorNavBackground": "#000000",
-            "colorNavIcons": "#000000",
+            "colorNavBackground": "transparent",
+            "colorNavIcons": "transparent",
             "colorNavIconsText": "#000000",
-            "colorSectionBackground": "#000000",
-            "colorText": "#000000",
-            "loadingScreen": "false",
+            "colorSectionBackground": "red",
+            "colorText": "#ffffff",
+            "loadingScreen": "true",
             "loadingScreenUrl": "",
-            "modeSlideshow": "false",
-            "navIconSize": "medium",
-            "navIconType": "numbers",
+            "modeSlideshow": "true",
+            "navIconSize": "small",
+            "navIconType": "rounded",
             "navPosition": "left",
-            "pageEnd": "false",
-            "pageEndText": "",
-            "pageEndTitle": "",
+            "pageEnd": "true",
+            "pageEndText": "this is a end text example",
+            "pageEndTitle": "End",
             "pageEndBackgroundImage": "",
             "pageIndex": "false",
-            "pageStart": "false",
-            "pageStartText": "",
-            "pageStartTitle": "",
+            "pageStart": "true",
+            "pageStartText": "this is a start text example",
+            "pageStartTitle": "Start",
             "pageStartBackgroundImage": "",
             "sectionBackgroundImage": "false",
             "sectionBackgroundImageUrl": "",
@@ -4056,11 +3886,11 @@ export default {
             "textStyle": "normal"
         }
         let defaultCredentials = {
-            "country": "",
+            "country": "country",
             "domain": "",
-            "email": "",
-            "name": "",
-            "phone": "",
+            "email": "example@email.com",
+            "name": "name",
+            "phone": "+123456789",
             "username": lsAccount
         }
         
@@ -4087,12 +3917,11 @@ export default {
         //reset account
         else if(action == 'account' && type == 'reset') 
         {
-            console.log("password: " + editAccountDangerConfirmText.value)
-
             //update user categories
             await fetch(BACKEND_API + "/user-reset", {method: 'post', body: JSON.stringify(obj)})
             .then((response) => { return response.json() })
             .then((data) => {
+
                 //debugging
                 console.log(data)
 
@@ -4140,13 +3969,13 @@ export default {
             await fetch(BACKEND_API + "/user-delete", {method: 'post', body: JSON.stringify(obj)})
             .then((response) => { return response.json() })
             .then((data) => {
+
                 //debugging
                 console.log(data)
 
                 //set update successful message
                 if(data.status == "delete user successful") 
                 { 
-                    // setTimeout(() => {undisplayModals()}, 1000)
                     window.localStorage.clear()
                     router.push("/")
                 }
@@ -4212,8 +4041,6 @@ export default {
         value = value.replaceAll("'","’")  
         value = value.replaceAll("\\", "")
         value = value.replaceAll("/", "")
-        // value = value.replaceAll("'", "´")
-        // value = value.replaceAll("'", "\"")
         
         return value
     }
@@ -4240,7 +4067,6 @@ export default {
                 if(valueString[item] == allowedCharacters[c]) { totalForbiddenCharacters-- ; break }
             }
         }
-        // console.log("totalForbiddenCharacters: " + totalForbiddenCharacters)
 
         //return value
         if(totalForbiddenCharacters == 0) { return false }
@@ -4255,38 +4081,6 @@ export default {
 
         //redirect to start
         router.push("/")
-
-        // let username = localStorage.getItem("cms-account")
-        // let token = localStorage.getItem("cms-token")
-        // let lastLogin = localStorage.getItem("cms-last-login")
-        // let obj = JSON.stringify({ "username": username, "token": token, "lastLogin": lastLogin })
-
-        // //add user to db
-        // await fetch(BACKEND_API + "/user-sign-out", {method: 'post', body: obj})
-        // .then((response) => { return response.json() })
-        // .then((data) => {
-        //     //debugging
-        //     console.log(data)
-
-        //     //logout successful
-        //     if(data.status == "user logout successful") 
-        //     { 
-        //         //set local storage
-        //         localStorage.setItem("cms-account", "")
-        //         localStorage.setItem("cms-token", "")
-        //         localStorage.setItem("cms-last-login", "")
-
-        //         //redirect
-        //         // router.push("/")
-        //     }
-
-        //     //login failed
-        //     else if(data.status == "user logout failed") 
-        //     { 
-                
-        //     }
-
-        // })
     }
 
 
@@ -4326,7 +4120,6 @@ export default {
         imageGalleryUpdateImagePos,
         selectPreviewImage,
         addNewDataRow,
-        addNewType,
         editCategoriesModal,
         editSectionsModal,
         editAccountModal,
@@ -4685,24 +4478,6 @@ export default {
         max-height: 60vh; 
         width: 22vw; 
         left: 37%; 
-        top: 11%; 
-        margin: 0px;
-        padding: 60px;
-        z-index: 2;
-        user-select: none;
-        overflow-y: scroll;
-        opacity: 1;
-        /* transform: translate(-40%, -50%); */
-        border: 3px solid #822c8b; 
-        background-color: #1D212E; /* #822c8b */ /* #2c9b2c */
-    }
-    #addSelectTypeModal
-    {
-        position: fixed; 
-        display: none; 
-        max-height: 60vh; 
-        width: 22vw; 
-        left: 36%; 
         top: 11%; 
         margin: 0px;
         padding: 60px;
@@ -5438,7 +5213,7 @@ export default {
     }
     .editCategoryObj { display: flex; border-bottom: 1px solid white; }
     .editSectionObj { display: flex; border-bottom: 1px solid white; }  
-    .editAccountTitle { display: block; padding: 84px 0px 20px 0px; font-size: 26px; font-weight: bold; text-shadow: 0px 1px black; }
+    .editAccountTitle { display: block; padding: 84px 0px 20px 0px; font-size: 26px; font-weight: bold; text-align: center; text-shadow: 0px 1px black; }
     .editAccountSection { display: block; margin: 0px; text-align: left; border: 0px solid white; background-color: #1D212E; }
     .accountInfoItem 
     { 

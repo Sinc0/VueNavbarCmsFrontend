@@ -4,12 +4,14 @@
         <!-- menu categories -->
         <div id="menu">
             <span id="menuCategoryLogin" class="menuCategory" v-on:click="displaySelectedMenu('login')">Login</span>
+            
             <span class="dot"> • </span>
+            
             <span id="menuCategoryRegister" class="menuCategory" v-on:click="displaySelectedMenu('register')">Register</span>
+            
             <span class="dot"> • </span>
+            
             <span id="menuCategoryAbout" class="menuCategory" v-on:click="displaySelectedMenu('about')">About</span>
-            <!-- <span class="menuCategory" v-on:click="displaySelectedMenu('info')">Info</span> -->
-            <!-- <span class="dot"> • </spa n> -->
         </div>
 
         <!-- modal: register -->
@@ -21,7 +23,7 @@
             <input required id="registerPassword" class="inputRegister" type="password" placeholder="password" maxlength="10" />
             <input required id="registerConfirmPassword" class="inputRegister" type="password" placeholder="password again" maxlength="10" />
             <div id="registerPasswordOverlayImages">
-                <img id="iconShowRegister" class="inputOverlayImg" src="/iconHidden.png" v-on:click="showPasswordCharacters()" />
+                <img id="iconShowRegister" class="inputOverlayImg" src="/images/iconHidden.png" v-on:click="showPasswordCharacters()" />
             </div>
             <input required id="registerButton" class="buttonRegister" type="button" value="Confirm" v-on:click="register()" />
         </div>
@@ -32,13 +34,14 @@
             <input required id="loginUsername" class="inputLogin" type="text" placeholder="username" maxlength="10" />
             <input required id="loginPassword" class="inputLogin" type="password" placeholder="password" maxlength="10" />
             <div id="registerLoginOverlayImages">
-                <img id="iconShowLogin" class="inputOverlayImg" src="/iconHidden.png" v-on:click="showPasswordCharacters()" />
+                <img id="iconShowLogin" class="inputOverlayImg" src="/images/iconHidden.png" v-on:click="showPasswordCharacters()" />
             </div>
             <input required id="loginButton" class="buttonLogin" type="button" value="Confirm" v-on:click="login()" />
         </div>
 
         <!-- modal: about -->
         <div id="about">
+
             <!-- why -->
             <p id="aboutWhyTitle" class="aboutTitle">Why?</p>
             <p class="aboutText">This a student project made to learn about Vue, Python, Databases</p>
@@ -72,11 +75,12 @@
 <script>
 import {onMounted, onUpdated} from 'vue'
 import router from '../router'
+import configs from '/configs.json'
 
 export default {
   setup() {
     //variables
-    const BACKEND_API = "http://127.0.0.1:8000"
+    const BACKEND_API = configs.REST_API || "http://127.0.0.1:8000"
 
 
     //lifecycle hooks
@@ -103,10 +107,8 @@ export default {
         menuCategoryLogin.style.opacity = "0.2"
         menuCategoryRegister.style.opacity = "0.2"
         menuCategoryAbout.style.opacity = "0.2"
-        // info.style.display = "none"
 
         //check type
-        // if(type == "info") { }
         if(type == "about") 
         { 
             menuCategoryAbout.style.opacity = "1"
@@ -178,9 +180,6 @@ export default {
                 localStorage.setItem("cms-token", data.token)
                 localStorage.setItem("cms-last-login", data.lastLogin)
 
-                //set vuex
-                // store.dispatch('storage/actionSetAccountLoginInfo', {"account": data.account, "token": data.token, "lastLogin": data.lastLogin})
-                
                 //update elements
                 loginErrorMessage.style.color = "#00ff00"
                 loginErrorMessage.innerText = "login successful"
@@ -222,30 +221,6 @@ export default {
 
         //disable register button
         registerButton.disabled = true; setTimeout(() => { registerButton.disabled = false }, 1000)
-
-        //forbidden character check
-        // if(username == "") { isInvalid = true }
-        // else if(username.includes(" ")) { isInvalid = true }
-        // else if(username.includes(".")) { isInvalid = true }
-        // else if(username.includes(",")) { isInvalid = true }
-        // else if(username.includes("<")) { isInvalid = true }
-        // else if(username.includes(">")) { isInvalid = true }
-        // else if(username.includes(";")) { isInvalid = true }
-        // else if(username.includes(":")) { isInvalid = true }
-        // else if(username.includes("/")) { isInvalid = true }
-        // else if(username.includes("\\")) { isInvalid = true }
-        // else if(username.includes("!")) { isInvalid = true }
-        // else if(username.includes("@")) { isInvalid = true }
-        // else if(username.includes("null")) { isInvalid = true }
-        
-        //username is invalid
-        // if(isInvalid == true)
-        // {
-        //     registerErrorMessage.innerText = "username is invalid";
-        //     registerInfoUsername.style.display = "none"
-        //     registerInfoPassword.style.display = "none"
-        //     return
-        // }
 
         //passwords does not match
         if(confirmPassword != password) 
@@ -316,9 +291,6 @@ export default {
 
     function showPasswordCharacters()
     {
-        //debugging
-        console.log("showPasswordCharacters")
-
         //elements
         let loginPassword = document.getElementById("loginPassword")
         let registerPassword = document.getElementById("registerPassword")
@@ -330,12 +302,12 @@ export default {
         if(loginPassword.type == "text")
         {
             loginPassword.type = "password"
-            iconShowLogin.src = "/iconHidden.png"
+            iconShowLogin.src = "/images/iconHidden.png"
         }
         else if(loginPassword.type == "password")
         {
             loginPassword.type = "text"
-            iconShowLogin.src = "/iconShow.png"
+            iconShowLogin.src = "/images/iconShow.png"
         }
 
         //register
@@ -343,29 +315,24 @@ export default {
         {
             registerPassword.type = "password"
             registerConfirmPassword.type = "password"
-            iconShowRegister.src = "/iconHidden.png"
+            iconShowRegister.src = "/images/iconHidden.png"
         }
         else if(registerPassword.type == "password")
         {
             registerPassword.type = "text"
             registerConfirmPassword.type = "text"
-            iconShowRegister.src = "/iconShow.png"
+            iconShowRegister.src = "/images/iconShow.png"
         }
     }
 
 
     return {
-      //variables
-
       //functions
       displaySelectedMenu,
       login,
       register,
       showPasswordCharacters
-    //   logout,
     }
-
-
   }
 }
 </script>
@@ -402,7 +369,7 @@ export default {
             --honeyBorderColor: hsla(294, 100%, 34%, 0.2);
             --size: 30px;
         } */
-        /* background-image: linear-gradient(to right, rgba(0,0,0, 0.8) 0 100%), url('/componentStartBackgroundImage.jpg'); */
+        /* background-image: linear-gradient(to right, rgba(0,0,0, 0.8) 0 100%), url('/images/componentStartBackgroundImage.jpg'); */
         /* background-size: cover; */
         /* background: linear-gradient(to right, rgba(0,0,0, 0.7) 0 100%),
                     radial-gradient(circle farthest-side at 0% 50%, var(--honeyColor) 23.5%,transparent 0)calc(var(--size)*0.7) var(--size),

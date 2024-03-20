@@ -10,19 +10,13 @@ const routes = [
   { path: '/', name: 'start-1', component: viewStart },
   { path: '/start', name: 'start-2', component: viewStart },
   { path: '/backend', name: 'backend', component: viewBackend },
-  
   { path: '/:domain/', name: 'frontend-1', component: viewFrontend },
   { path: '/:domain/:section', name: 'frontend-2', component: viewFrontend },
   { path: '/:domain/:section/:category', name: 'frontend-3', component: viewFrontend },
-  // { path: '/frontend', name: 'frontend', component: viewFrontend },
-
   { path :'/:pathMatch(.*)*', name: 'error', component: viewStart }
 ]
 
 
-//set router
-const router = createRouter({ history: createWebHistory(process.env.BASE_URL), routes})
-
-
 //exports
+const router = createRouter({ history: createWebHistory(process.env.BASE_URL), routes})
 export default router
