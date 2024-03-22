@@ -113,8 +113,8 @@
                         <!-- title -->
                         <div id="frontendDataTitleImageGallery" class="frontendDataTitle" v-if="data.title != ''">{{data.title}}</div>
 
+                        <!-- image -->
                         <div class="frontendDataData">
-                            <!-- first gallery image -->
                             <p v-bind:id="'galleryImagePos#' + data.pos" class="galleryImagePos">{{firstGalleryImage.pos}}/{{totalImgs}}</p>
                             <img v-bind:id="'imageGallery#' + data.pos" class="galleryImageSource" v-bind:src='firstGalleryImage.image' v-bind:alt='(firstGalleryImage.pos - 1)' v-on:click.left="nextImageGalleryItem(data.pos, data.data)" v-on:click.right="previousImageGalleryItem(data.pos, data.data)" />
                             <p v-bind:id="'galleryImageDescription#' + data.pos" class="galleryImageDescription" v-if="totalImgs == 1 && firstGalleryImage.description == ''"></p>
@@ -152,7 +152,8 @@
         <!-- modal: navigator sections -->
         <div id="sectionNavigatorModal" v-if="frontendSections">
             <!-- title -->
-            <p class="navigatorModalTitle">Sections</p> <!-- {{capitalizeString(router.currentRoute.value.params.domain)}} -->
+            <p class="navigatorModalTitle">Sections</p>
+            <!-- <p class="navigatorModalTitle">{{capitalizeString(router.currentRoute.value.params.domain)}}</p> -->
 
             <!-- sections -->
             <div class="sectionNavigatorModalItems">
@@ -198,6 +199,7 @@
             <!-- contact -->
             <div id="infoContactDetails" v-if="frontendContact">
                 <p id="infoContactTitle" class="modalTitle">Contact</p>
+
                 <div id="contactEmail" class="contactCategory" v-if="frontendContact.email">
                     <img src="/images/iconContactEmail.png" class="contactDetailThumbnail" />
                     <p class="contactDetailText">{{frontendContact.email}}</p>
@@ -219,8 +221,10 @@
                 </div>
             </div>
 
-            <!-- keybinds -->
-            <div id="infoKeybinds">
+            <!-- bindings -->
+            <div id="infoBindings">
+
+                <!-- keybinds -->
                 <p id="infoKeybindsTitle" class="modalTitle">Keybinds</p>
                 <p class="infoItemKeybind">
                     <span class="infoItemKeybindName">⬆</span>
@@ -268,21 +272,22 @@
                     <span class="infoItemKeybindDescription">Close Windows</span>
                 </p>
 
-                <p id="infoKeybindsTitle" class="modalTitle">Mousebinds</p>
+                <!-- mousebinds -->
+                <p id="infoMousebindsTitle" class="modalTitle">Mousebinds</p>
                 <p class="infoItemMousebind">
-                    <span class="infoItemKeybindNameNotSingleKey">Click Scroll</span>
-                    <span class="dotKeybindItem">·</span>
-                    <span class="infoItemKeybindDescription">Slideshow</span>
+                    <span class="infoItemMousebindName">Click Scroll</span>
+                    <span class="dotMousebindItem">·</span>
+                    <span class="infoItemMousebindDescription">Slideshow</span>
                 </p>
                 <p class="infoItemMousebind">
-                    <span class="infoItemKeybindNameNotSingleKey">Click Side 1</span>
-                    <span class="dotKeybindItem">·</span>
-                    <span class="infoItemKeybindDescription">Next Slide</span>
+                    <span class="infoItemMousebindName">Click Side 1</span>
+                    <span class="dotMousebindItem">·</span>
+                    <span class="infoItemMousebindDescription">Next Slide</span>
                 </p>
                 <p class="infoItemMousebind">
-                    <span class="infoItemKeybindNameNotSingleKey">Click Side 2</span>
-                    <span class="dotKeybindItem">·</span>
-                    <span class="infoItemKeybindDescription">Prev Slide</span>
+                    <span class="infoItemMousebindName">Click Side 2</span>
+                    <span class="dotMousebindItem">·</span>
+                    <span class="infoItemMousebindDescription">Prev Slide</span>
                 </p>
             </div>
         </div>
@@ -444,7 +449,8 @@
                         </div>
                     </div>
                 </div>
-    
+
+                <!-- gallery images -->
                 <div id="" v-else-if="frontendSlideshowPage && frontendSlideshowPage.type == 'galleryImages'">
                     <div hidden>{{slideshowImageObjectData = JSON.parse(frontendSlideshowPage.data)}}</div>
                     
@@ -520,11 +526,11 @@ export default {
         console.log("componentFrontend updated")
         
         //variables
-        let routerCurrentPathElement = document.getElementById("routerCurrentPathElement").innerText
         let routeParams = router.currentRoute.value.params
         let routeCurrentPath = router.currentRoute.value.fullPath
         let routePreviousPath = router.options.history.state.back
-        let currentRouteString = router.currentRoute.value.fullPath
+        // let currentRouteString = router.currentRoute.value.fullPath
+        // let routerCurrentPathElemkent = document.getElementById("routerCurrentPathElement").innerText
 
         //check slideshow status
         if(slideshowModeActive == "true") { slideshowModal.style.display = "block"; return }
@@ -588,8 +594,8 @@ export default {
         let searchModalHitsCategories = document.getElementById("searchModalHitsCategories")
         
         //categories horizontal scroll
-        if (e.deltaY > 0) { if(searchModalHitsCategories != null) { searchModalHitsCategories.scrollLeft += 60; } }
-        else { if(searchModalHitsCategories != null) { searchModalHitsCategories.scrollLeft -= 60; } }
+        if (e.deltaY > 0) { if(searchModalHitsCategories != null) { searchModalHitsCategories.scrollLeft += 60 } }
+        else { if(searchModalHitsCategories != null) { searchModalHitsCategories.scrollLeft -= 60 } }
     })
 
 
@@ -709,14 +715,14 @@ export default {
     function loadCategoryData(section, category, position)
     {   
         //elements
-        let selectCategoryElement = document.getElementById("category#" + position)
         let frontendDataElement = document.getElementById("frontendData")
         let addNewDataRow = document.getElementById("addNewDataRow")
         let selectedCategoryTitle = document.getElementById("selectedCategoryTitle")
         let frontendDataRows = document.getElementById("frontendDataRows")
-        let componentFrontend = document.getElementById("componentFrontend")
         let categoryUnderlay = document.getElementById("categoryUnderlay")
-        let categories = document.getElementsByClassName("category")
+        // let componentFrontend = document.getElementById("componentFrontend")
+        // let selectCategoryElement = document.getElementById("category#" + position)
+        // let categories = document.getElementsByClassName("category")
         
         //variables
         let arrayData = ""
@@ -835,12 +841,13 @@ export default {
 
     function sortFrontendDataSlideshow(data)
     {
+        //sort data by section name
         let x = data.sort(function (x, y) {
             let a = x.section.toLowerCase(),
                 b = y.section.toLowerCase();
 
             return a == b ? 0 : a > b ? 1 : -1;
-        });
+        })
 
         return x
     }
@@ -863,7 +870,6 @@ export default {
         //sort categories by position
         categories = categories.sort((a, b) => { return a.pos - b.pos })
 
-        //return value
         return categories
     }
 
@@ -882,7 +888,6 @@ export default {
         //sort sections by position
         sections = sections.sort((a, b) => { return a.pos - b.pos })
 
-        //return value
         return sections
     }
 
@@ -981,7 +986,7 @@ export default {
         if(mobileNavigatorModal) { mobileNavigatorModal.style.display = "none" }
         if(searchModal) { searchModal.style.display = "none" }
         // if(slideshowModal) { slideshowModal.style.display = "none" }
-        document.documentElement.style.cursor = 'auto';
+        document.documentElement.style.cursor = 'auto'
         selectedElement = ""
     }
     
@@ -1224,16 +1229,16 @@ export default {
         //elements
         let loadingScreen = document.getElementById("loadingScreen")
         let buttonSelectSections = document.getElementById("buttonSelectSections")
-        let buttonStartElement = ""
-        let selectedSectionPageEnd = ""
-        let componentFrontend = document.getElementById("componentFrontend")
-        let frontendSectionsElement = document.getElementById("frontendSections")
-        let selectedCategoryTitle = document.getElementById("selectedCategoryTitle")
-        let frontendSectionsList = document.getElementById("frontendSectionsList")
-        let frontendDataRows = document.getElementById("frontendDataRows")
-        let buttonIndexElement = document.getElementById("buttonIndex")
-        let buttonEndElement = document.getElementById("buttonEnd")
-        let sectionButtons = document.getElementsByClassName("section")
+        // let buttonStartElement = ""
+        // let selectedSectionPageEnd = ""
+        // let componentFrontend = document.getElementById("componentFrontend")
+        // let frontendSectionsElement = document.getElementById("frontendSections")
+        // let selectedCategoryTitle = document.getElementById("selectedCategoryTitle")
+        // let frontendSectionsList = document.getElementById("frontendSectionsList")
+        // let frontendDataRows = document.getElementById("frontendDataRows")
+        // let buttonIndexElement = document.getElementById("buttonIndex")
+        // let buttonEndElement = document.getElementById("buttonEnd")
+        // let sectionButtons = document.getElementsByClassName("section")
 
         //variables
         let navIconSizeHeight = ""
@@ -1361,30 +1366,30 @@ export default {
             //set CSS variables
             document.documentElement.style.setProperty("--backgroundPageStart", "linear-gradient(to right, rgba(0,0,0, 0.49) 0 100%), url('" + settings.pageStartBackgroundImage + ")")
             document.documentElement.style.setProperty("--backgroundPageEnd", "linear-gradient(to right, rgba(0,0,0, 0.49) 0 100%), url('" +  settings.pageEndBackgroundImage + ")")
-            document.documentElement.style.setProperty("--navTop", navTop);
-            document.documentElement.style.setProperty("--navBottom", navBottom);
-            document.documentElement.style.setProperty("--navLeft", navLeft);
-            document.documentElement.style.setProperty("--navRight", navRight);
+            document.documentElement.style.setProperty("--navTop", navTop)
+            document.documentElement.style.setProperty("--navBottom", navBottom)
+            document.documentElement.style.setProperty("--navLeft", navLeft)
+            document.documentElement.style.setProperty("--navRight", navRight)
             document.documentElement.style.setProperty("--navIconSizeHeight", navIconSizeHeight)
             document.documentElement.style.setProperty("--navIconSizeWidth", navIconSizeWidth)
             document.documentElement.style.setProperty("--navIconTypeBorderRadius", navIconTypeBorderRadius)
-            document.documentElement.style.setProperty("--frontendDataRowsHeight", frontendDataRowsMaxHeight);
-            document.documentElement.style.setProperty("--frontendSectionsHeight", frontendSectionsHeight);
-            document.documentElement.style.setProperty("--frontendSectionsWidth", frontendSectionsWidth);
-            document.documentElement.style.setProperty("--frontendSectionsFlexDirection", frontendSectionsFlexDirection);
-            document.documentElement.style.setProperty("--frontendSectionsPadding", frontendSectionsPadding);
-            document.documentElement.style.setProperty("--frontendSectionsMargin", frontendSectionsMargin);
-            document.documentElement.style.setProperty("--frontendSectionsListHeight", frontendSectionsListHeight);
-            document.documentElement.style.setProperty("--frontendSectionsListDisplay", frontendSectionsListDisplay);
-            document.documentElement.style.setProperty("--frontendSectionsListFlexDirection", frontendSectionsListFlexDirection);
-            document.documentElement.style.setProperty("--frontendCategoriesTop", frontendCategoriesTop);
-            document.documentElement.style.setProperty("--frontendDataTop", frontendDataTop);
-            document.documentElement.style.setProperty("--frontendDataRowsMaxHeight", frontendDataRowsMaxHeight);
+            document.documentElement.style.setProperty("--frontendDataRowsHeight", frontendDataRowsMaxHeight)
+            document.documentElement.style.setProperty("--frontendSectionsHeight", frontendSectionsHeight)
+            document.documentElement.style.setProperty("--frontendSectionsWidth", frontendSectionsWidth)
+            document.documentElement.style.setProperty("--frontendSectionsFlexDirection", frontendSectionsFlexDirection)
+            document.documentElement.style.setProperty("--frontendSectionsPadding", frontendSectionsPadding)
+            document.documentElement.style.setProperty("--frontendSectionsMargin", frontendSectionsMargin)
+            document.documentElement.style.setProperty("--frontendSectionsListHeight", frontendSectionsListHeight)
+            document.documentElement.style.setProperty("--frontendSectionsListDisplay", frontendSectionsListDisplay)
+            document.documentElement.style.setProperty("--frontendSectionsListFlexDirection", frontendSectionsListFlexDirection)
+            document.documentElement.style.setProperty("--frontendCategoriesTop", frontendCategoriesTop)
+            document.documentElement.style.setProperty("--frontendDataTop", frontendDataTop)
+            document.documentElement.style.setProperty("--frontendDataRowsMaxHeight", frontendDataRowsMaxHeight)
             document.documentElement.style.setProperty("--colorLoadingScreen", settings.colorLoadingScreen)
             document.documentElement.style.setProperty("--colorNavBackground", settings.colorNavBackground)
             document.documentElement.style.setProperty("--colorNavIcons", settings.colorNavIcons)
             document.documentElement.style.setProperty("--colorNavIconsText", settings.colorNavIconsText)
-            document.documentElement.style.setProperty("--colorText", settings.colorText); // document.documentElement.style.cssText = "--colorText: green"; // document.documentElement.setAttribute("style", "--colorText: green");
+            document.documentElement.style.setProperty("--colorText", settings.colorText)
             document.documentElement.style.setProperty("--colorSectionBackground", settings.colorSectionBackground)
         }, 100)
 
@@ -1656,6 +1661,7 @@ export default {
 
     function capitalizeString(value)
     {   
+        //set value
         value = value.replaceAll("-", " ")
 
         //variables
@@ -1938,7 +1944,7 @@ export default {
 
                     for(let i in gallery)
                     {
-                        let newImg = new Image;
+                        let newImg = new Image
                         newImg.src = gallery[i].image
                     }
                 }
@@ -2103,7 +2109,7 @@ export default {
             slideshowModal.style.backgroundImage = "linear-gradient(to right, rgba(0,0,0, 0.4) 0 100%), url('" + slides[slidesCurrentPage].backgroundImage + "')"
             slideshowModal.style.backgroundSize = "cover"
             slideshowModal.style.display = "block"
-            document.documentElement.style.cursor = 'none';
+            document.documentElement.style.cursor = 'none'
         }, 100)
         
         //set slideshow status
@@ -2191,7 +2197,7 @@ export default {
             slideshowModal.style.display = "none"
             mobileLandscapeStartSlideshow.style.display = "initial"
             mobilePortraitExitSlideshow.style.display = "none"
-            document.documentElement.style.cursor = 'auto';
+            document.documentElement.style.cursor = 'auto'
 
             //set globals
             slideshowModeActive = "false"
@@ -2199,7 +2205,7 @@ export default {
             
             //exit browser fullscreen
             let doc = document.documentElement,
-            cancelFullscreen = (document.cancelFullScreen || document.webkitCancelFullScreen);
+            cancelFullscreen = (document.cancelFullScreen || document.webkitCancelFullScreen)
             cancelFullscreen.call(document)
             return 
         }, 400)
@@ -2719,6 +2725,7 @@ export default {
     #infoAboutTitle { margin: 0px 0px 12px 0px; }
     #infoContactTitle { margin: 60px 0px 0px 0px; }
     #infoKeybindsTitle { margin: 60px 0px 12px 0px; }
+    #infoMousebindsTitle { margin: 60px 0px 12px 0px; }
     /* #infoPrivacyPolicyTitle { margin: 60px 0px 12px 0px; } */
     #contactEmail { margin: 12px 0px 20px 22%; }
     #contactName { margin: 0px 0px 20px 22%; }
@@ -3192,18 +3199,21 @@ export default {
     }
     .dotSearchItem { display: inline-block; margin: 0px 8px 0px 8px; opacity: 0.4; }
     .dotKeybindItem { display: inline-block; margin: 0px 10px 0px 10px; opacity: 0.4; vertical-align: super; }
+    .dotMousebindItem { display: inline-block; margin: 0px 10px 0px 10px; opacity: 0.4; vertical-align: super; }
     .dotSearchCategory { display: inline-block; margin: 0px 8px 0px 8px; opacity: 0.2; }
     .searchHitCategory { display: block; white-space: nowrap; opacity: 0.2; }
     .searchResultDataType { opacity: 0.6; }
     .infoItem { margin: 0px; margin: 0px; padding: 0px; font-weight: bold; font-size: 20px; opacity: 0.7; }
     /* .privacyPolicyItem { margin: 0px; margin: 6px 0px 6px 27%; padding: 0px; font-weight: bold; font-size: 20px; opacity: 0.7; text-align: left } */
-    .infoItemKeybind { margin: 0px; margin: 16px 0px 16px 28%; padding: 0px; font-weight: bold; font-size: 20px; opacity: 0.7; text-align: left; }
-    .infoItemMousebind { font-weight: bold; font-size: 20px; opacity: 0.7; text-align: center; }
+    .infoItemKeybind { margin: 16px 0px 16px 28%; padding: 0px; font-weight: bold; font-size: 20px; opacity: 0.7; text-align: left; }
+    .infoItemMousebind { margin: 16px 0px 16px 0px; padding: 0px; font-weight: bold; font-size: 20px; opacity: 0.7; text-align: center; }
     .timelineText { display: inline-block; padding: 3px 0px 0px 10px; opacity: 0.7; }
     .timelineYear { display: inline-block; white-space: nowrap; }
     .infoItemKeybindName { display: inline-block; font-size: 36px; }
     .infoItemKeybindNameNotSingleKey { display: inline-block; font-size: 26px; vertical-align: super; }
+    .infoItemMousebindName { display: inline-block; font-size: 26px; vertical-align: super; }
     .infoItemKeybindDescription { display: inline-block; vertical-align: super; font-size: 24px; opacity: 0.9; }
+    .infoItemMousebindDescription { display: inline-block; vertical-align: super; font-size: 24px; opacity: 0.9; }
     .slideshowImage { height: 600px; width: auto; user-select: none; user-drag: none; -webkit-user-drag: none; border: 1px solid rgba(255, 255, 255, 0.1); }
     .slideshowImageDescription 
     { 
@@ -3251,7 +3261,7 @@ export default {
             border: 0px;
             background-color: transparent;
         }
-        #infoKeybinds { display: none; }
+        #infoBindings { display: none; }
         #contactEmail { margin: 12px 0px 20px 3%; }
         #contactName { margin: 0px 0px 20px 3%; }
         #contactPhone { margin: 0px 0px 20px 3%; }
