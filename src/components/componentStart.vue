@@ -342,13 +342,14 @@ export default {
         manifest = {
             name: 'Backend',
             short_name: 'Backend',
-            display: 'standalone',
+            display: 'fullscreen',
             theme_color: '#000000',
             background_color: '#000000',
             icons: [
                 { src: DEFAULT_DOMAIN + '/images/pwa/pwa-icon-192x192-blue.png', sizes: '192x192', type: 'image/png', purpose: "any" },
                 { src: DEFAULT_DOMAIN + '/images/pwa/pwa-icon-512x512-blue.png', sizes: '512x512', type: 'image/png', purpose: "any" },
             ],
+            description: '',
             start_url: window.location.href + "backend"
         }
         
@@ -576,7 +577,7 @@ export default {
     /*** mobile ***/
     @media screen and (max-width: 1000px) 
     {
-        #componentStart { overflow-x: hidden; }
+        #componentStart { overflow-y: hidden; overflow-x: hidden }
         #menu { width: 90vw; }
         #register { width: 80vw; }
         #login { width: 80vw; }

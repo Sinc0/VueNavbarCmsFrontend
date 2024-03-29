@@ -385,12 +385,12 @@
 
                     <div id="editAccountIconDefaultIcons">
                         <!-- <img class="editAccountIcon" src="/images/pwa/pwa-icon-192x192-blue.png" v-on:click="editIcon('blue')" /> -->
-                        <img class="editAccountIcon" src="/images/pwa/pwa-icon-192x192-original.png" v-on:click="editIcon('original')" />
-                        <img class="editAccountIcon" src="/images/pwa/pwa-icon-192x192-green.png" v-on:click="editIcon('green')" />
-                        <img class="editAccountIcon" src="/images/pwa/pwa-icon-192x192-red.png" v-on:click="editIcon('red')" />
-                        <img class="editAccountIcon" src="/images/pwa/pwa-icon-192x192-orange.png" v-on:click="editIcon('orange')" />
-                        <img class="editAccountIcon" src="/images/pwa/pwa-icon-192x192-violet.png" v-on:click="editIcon('violet')" />
-                        <img class="editAccountIcon" src="/images/pwa/pwa-icon-192x192-yellow.png" v-on:click="editIcon('yellow')" />
+                        <img id="iconOriginal" class="editAccountIcon" src="/images/pwa/pwa-icon-192x192-original.png" v-on:click="editIcon('original')" />
+                        <img id="iconGreen" class="editAccountIcon" src="/images/pwa/pwa-icon-192x192-green.png" v-on:click="editIcon('green')" />
+                        <img id="iconRed" class="editAccountIcon" src="/images/pwa/pwa-icon-192x192-red.png" v-on:click="editIcon('red')" />
+                        <img id="iconOrange" class="editAccountIcon" src="/images/pwa/pwa-icon-192x192-orange.png" v-on:click="editIcon('orange')" />
+                        <img id="iconViolet" class="editAccountIcon" src="/images/pwa/pwa-icon-192x192-violet.png" v-on:click="editIcon('violet')" />
+                        <img id="iconYellow" class="editAccountIcon" src="/images/pwa/pwa-icon-192x192-yellow.png" v-on:click="editIcon('yellow')" />
                     </div>
                     
                     <!-- <input id="editAccountIconInputDefault" class="editAccountInputText" type="button" value="Default" /> -->
@@ -3292,7 +3292,7 @@ export default {
         else if(type == "iconImage512x512") { editAccountIconInput512x512.value = value }
 
         //colors
-        else if(type == "colorNavBackground") { editAccountColorNavBackground.value = value  }
+        else if(type == "colorNavBackground") { editAccountColorNavBackground.value = value }
         else if(type == "colorNavIcons") { editAccountColorNavIcons.value = value }
         else if(type == "colorNavIconsText") { editAccountColorNavIconsText.value = value }
         else if(type == "colorText") { editAccountColorText.value = value }
@@ -4154,13 +4154,14 @@ export default {
         manifest = {
             name: 'Backend',
             short_name: 'Backend',
-            display: 'standalone',
+            display: 'fullscreen',
             theme_color: '#000000',
             background_color: '#000000',
             icons: [
                 { src: DEFAULT_DOMAIN + '/images/pwa/pwa-icon-192x192-blue.png', sizes: '192x192', type: 'image/png', purpose: "any" },
                 { src: DEFAULT_DOMAIN + '/images/pwa/pwa-icon-512x512-blue.png', sizes: '512x512', type: 'image/png', purpose: "any" },
             ],
+            description: '',
             start_url: window.location.href
         };
         
@@ -4179,12 +4180,27 @@ export default {
         //elements
         let editAccountIconInput192x192 = document.getElementById("editAccountIconInput192x192")
         let editAccountIconInput512x512 = document.getElementById("editAccountIconInput512x512")
+        let defaultIcons = document.getElementsByClassName("editAccountIcon")
+        let icon = document.getElementById("icon" + firstLetterToUpperCase(type))
+        
+        console.log(icon)
 
         //update elements
+        for(let item in defaultIcons)
+        {
+            let ele = document.getElementById(defaultIcons[item].id)
+            if(ele) { ele.style.opacity = "0.1" }
+        }
+        icon.style.opacity = "1"
         editAccountIconInput192x192.value = DEFAULT_DOMAIN + "/images/pwa/pwa-icon-192x192-" + type + ".png"
         editAccountIconInput512x512.value = DEFAULT_DOMAIN + "/images/pwa/pwa-icon-512x512-" + type + ".png"
     }
 
+    
+    function firstLetterToUpperCase(value)
+    {
+        return value.toString().substring(0, 1).toUpperCase() + value.substring(1).toLowerCase()
+    }
 
     return {
         //variables
@@ -5314,11 +5330,13 @@ export default {
     .editAccountSection { display: block; margin: 0px; text-align: left; border: 0px solid white; background-color: #1D212E; }
     .accountInfoItem 
     { 
-        display: block; 
+        display: flex;
+        flex-direction: row; 
         padding: 16px 18px 16px 18px; 
         font-size: 20px; 
         font-weight: bold;
         text-shadow: 0px 1px black;
+        overflow-x: scroll;
         border-bottom: 1px solid #ffffff1f; 
         background-color: #1D212E; 
     }
@@ -5392,7 +5410,7 @@ export default {
         background-color: #1D212E; 
     }
     .editAccountSelectedSetting { color: #822c8b; opacity: 1; }
-    .accountInfoTitle { font-size: 22px; }
+    .accountInfoTitle { font-size: 22px; white-space: nowrap;}
     .accountInfoText
     {     
         margin: 0px 0px 0px 10px;
@@ -5403,15 +5421,17 @@ export default {
         color: white;
         text-shadow: 0px 1px black;
         text-transform: capitalize;
+        white-space: nowrap;
         border: 0px solid white;
         background-color: #1D212E;
     }
-    .editAccountIcon { height: 100px; width: 100px; }
+    .editAccountIcon { height: 100px; width: 100px; opacity: 0.1; }
 
     
     /*** mobile ***/
     @media screen and (max-width: 1000px) 
     {   
+        #componentBackend { overflow-y: hidden; overflow-x: hidden }
         #backendSections 
         { 
             height: auto; 
@@ -5568,7 +5588,7 @@ export default {
         #buttonSaveUpdateCategories { width: 80vw; }
         #buttonSaveUpdateSettings { width: 80vw; }
         #editAccountDanger { width: 80vw; margin: auto; }
-        #logoutAccount { top: initial; bottom: -8px; left: 16px; right: initial; }
+        #logoutAccount { top: initial; bottom: 4px; left: 18px; right: initial; font-size: 49px; }
         #checkoutPublicSite { display: none; }
         #mobileCheckoutPublicSite 
         {

@@ -72,7 +72,7 @@
                         <!-- data -->
                         <div class="timelineDataObj frontendDataData" v-if="timelineData != ''" v-for="item in timelineData">
                             <div class="timeline">
-                                <span class="timelineYear">━━ {{item.year}} ━━🞂</span>
+                                <span class="timelineYear">━━  {{item.year}}  ━━ </span>
                                 <span class="timelineText">  {{item.text}}</span>
                             </div>
                         </div>
@@ -86,7 +86,7 @@
 
                         <!-- data -->
                         <div class="frontendDataData" v-for="item in loadDataData(data)">
-                            <a class="linklist" v-bind:href="item.link">⮩⠀{{item.text}}</a>
+                            <a class="linklist" v-bind:href="item.link">➡⠀{{item.text}}</a>
                         </div>
                     </div>
 
@@ -290,6 +290,11 @@
                     <span class="infoItemMousebindDescription">Prev Slide</span>
                 </p>
             </div>
+            
+            <div id="infoSlideshowMode" v-if="frontendContact">
+                <p id="infoSlideshowModeTitle" class="modalTitle">Slideshow Mode</p>
+                <p id="aboutText" class="infoItem">Rotate screen to activate</p>
+            </div>
         </div>
 
 
@@ -471,11 +476,11 @@
         </div>
 
         <div id="mobileLandscapeNavArrows">
-            <div id="mobileLandscapePreviousSlide" v-on:click="slideshowModePrevious()">⬅</div>
+            <div id="mobileLandscapePreviousSlide" v-on:click="slideshowModePrevious()">➡</div>
             <div id="mobileLandscapeNextSlide" v-on:click="slideshowModeNext()">➡</div>
         </div>
 
-        <div id="mobileExitSlideshow" v-on:click="slideshowModeExit()">x</div>
+        <div id="mobileExitSlideshow" v-on:click="slideshowModeExit()">•</div>
     </div>
 </template>
 
@@ -644,7 +649,7 @@ export default {
         .then((data) => {
 
             //debugging
-            console.log(data)
+            // console.log(data)
 
             //fetch domain successful
             if(data.status == "fetch specific domain successful") 
@@ -1370,8 +1375,8 @@ export default {
             }
             
             //set CSS variables
-            document.documentElement.style.setProperty("--backgroundPageStart", "linear-gradient(to right, rgba(0,0,0, 0.49) 0 100%), url('" + settings.pageStartBackgroundImage + ")")
-            document.documentElement.style.setProperty("--backgroundPageEnd", "linear-gradient(to right, rgba(0,0,0, 0.49) 0 100%), url('" +  settings.pageEndBackgroundImage + ")")
+            document.documentElement.style.setProperty("--backgroundPageStart", "linear-gradient(to right, rgba(0,0,0, 0.49) 0 100%), url('" + settings.pageStartBackgroundImage + "')")
+            document.documentElement.style.setProperty("--backgroundPageEnd", "linear-gradient(to right, rgba(0,0,0, 0.49) 0 100%), url('" +  settings.pageEndBackgroundImage + "')")
             document.documentElement.style.setProperty("--navTop", navTop)
             document.documentElement.style.setProperty("--navBottom", navBottom)
             document.documentElement.style.setProperty("--navLeft", navLeft)
@@ -1666,6 +1671,7 @@ export default {
 
     function capitalizeString(value)
     {   
+        console.log("capitalizeString")
         //set value
         value = value.replaceAll("-", " ")
 
@@ -1679,6 +1685,10 @@ export default {
             newValue += words[item].substring(0, 1).toUpperCase() + words[item].substring(1, words[item].length) + " "
         }
 
+        //remove last character whitespace
+        if(newValue.substring(newValue.length - 1, newValue.length) == " ") 
+        { newValue = newValue.substring(0, newValue.length - 1) }
+        
         return newValue
     }
 
@@ -2237,6 +2247,7 @@ export default {
                 { src: settings.iconImage192x192, sizes: '192x192', type: 'image/png', purpose: "any" },
                 { src: settings.iconImage512x512, sizes: '512x512', type: 'image/png', purpose: "any" },
             ],
+            description: '',
             start_url: window.location.href
         }
         
@@ -2821,6 +2832,7 @@ export default {
     #mobileLandscapeNavArrows { display: none; }
     #mobileExitSlideshow { display: none; }
     #selectedSectionPageEnd { display: none; }
+    #infoSlideshowMode { display: none; }
 
 
     /*** classes ***/
@@ -3296,9 +3308,12 @@ export default {
             left: 0%; 
             margin: 0px 10vw 0px 10vw;
             padding: 0px;
+            overflow-y: scroll;
             border: 0px;
             background-color: transparent;
         }
+        #infoSlideshowMode { display: block; }
+        #infoSlideshowModeTitle { display: block; margin: 60px 0px 6px 0px; }
         #infoBindings { display: none; }
         #contactEmail { margin: 12px 0px 20px 3%; }
         #contactName { margin: 0px 0px 20px 3%; }
@@ -3395,7 +3410,7 @@ export default {
             opacity: 0.09;
             color: white;
         }
-        #mobileLandscapePreviousSlide { margin-right: 10px; }
+        #mobileLandscapePreviousSlide { margin-top: 8px; margin-right: 10px; rotate: 180deg ;}
         #mobileExitSlideshow 
         { 
             position: fixed; 
