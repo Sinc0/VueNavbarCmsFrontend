@@ -201,22 +201,22 @@
                 <p id="infoContactTitle" class="modalTitle">Contact</p>
 
                 <div id="contactEmail" class="contactCategory" v-if="frontendContact.email">
-                    <img src="/images/iconContactEmail.png" class="contactDetailThumbnail" />
+                    <img src="/images/icons/iconContactEmail.png" class="contactDetailThumbnail" />
                     <p class="contactDetailText">{{frontendContact.email}}</p>
                 </div>
 
                 <div id="contactName" class="contactCategory" v-if="frontendContact.name">
-                    <img src="/images/iconContactName.png" class="contactDetailThumbnail" />
+                    <img src="/images/icons/iconContactName.png" class="contactDetailThumbnail" />
                     <p class="contactDetailText">{{frontendContact.name}}</p>
                 </div>
                 
                 <div id="contactPhone" class="contactCategory" v-if="frontendContact.phone">
-                    <img src="/images/iconContactPhone.png" class="contactDetailThumbnail" />
+                    <img src="/images/icons/iconContactPhone.png" class="contactDetailThumbnail" />
                     <p class="contactDetailText">{{frontendContact.phone}}</p>
                 </div>
                 
                 <div id="contactCountry" class="contactCategory" v-if="frontendContact.country">
-                    <img src="/images/iconContactCountry.png" class="contactDetailThumbnail" />
+                    <img src="/images/icons/iconContactCountry.png" class="contactDetailThumbnail" />
                     <p class="contactDetailText">{{frontendContact.country}}</p>
                 </div>
             </div>
@@ -471,8 +471,8 @@
         </div>
 
         <div id="mobileLandscapeNavArrows">
-            <div id="mobileLandscapePreviousSlide" v-on:click="slideshowModePrevious()">🞀</div>
-            <div id="mobileLandscapeNextSlide" v-on:click="slideshowModeNext()">🞂</div>
+            <div id="mobileLandscapePreviousSlide" v-on:click="slideshowModePrevious()">⬅</div>
+            <div id="mobileLandscapeNextSlide" v-on:click="slideshowModeNext()">➡</div>
         </div>
 
         <div id="mobileExitSlideshow" v-on:click="slideshowModeExit()">x</div>
@@ -495,7 +495,7 @@ export default {
 
 
     //variables
-    const BACKEND_API = configs.REST_API || "http://127.0.0.1:8000"
+    const BACKEND_API = configs.REST_API || "http://127.0.0.1:8000" 
     const frontendSections = computed(() => { return store.getters['storage/frontendSections']})
     const frontendCategories = computed(() => { return store.getters['storage/frontendCategories']})
     const frontendData = computed(() => { return store.getters['storage/frontendData']})
@@ -518,7 +518,10 @@ export default {
 
 
     //lifecycle hook: on mounted
-    onMounted(() => { console.log("componentFrontend mounted"); fetchDomain() })
+    onMounted(() => { 
+        console.log("componentFrontend mounted")
+        fetchDomain()
+    })
     
 
     //lifecycle hook: on updated
@@ -644,7 +647,10 @@ export default {
             console.log(data)
 
             //fetch domain successful
-            if(data.status == "fetch specific domain successful") { setDomainData(data) }
+            if(data.status == "fetch specific domain successful") 
+            { 
+                setDomainData(data).then(() => { generatePwaManifest()})
+            }
 
             //fetch domain failed
             if(data.status == "fetch specific domain failed") { router.push("/") }
@@ -1221,7 +1227,7 @@ export default {
     }
 
 
-    function setDomainData(data)
+    async function setDomainData(data)
     {   
         //debugging
         console.log(data.settings)
@@ -1269,7 +1275,7 @@ export default {
         store.dispatch('storage/actionSetFrontendCategories', data.categories)
         store.dispatch('storage/actionSetFrontendData', data.data)
         store.dispatch('storage/actionSetFrontendSettings', data.settings)
-
+        
         //set globals
         settings = data.settings
 
@@ -1510,7 +1516,6 @@ export default {
             
             if(searchStringNew == searchStringPrevious) 
             { 
-                console.log("search same")
                 searchModal.style.display = "block"
                 underlayModal.style.display = "block"
                 searchModalInput.value = searchStringNew
@@ -2116,7 +2121,7 @@ export default {
         slideshowModeActive = "true"
         
         //debugging
-        console.log(slides)
+        // console.log(slides)
     }
 
 
@@ -2209,6 +2214,39 @@ export default {
             cancelFullscreen.call(document)
             return 
         }, 400)
+    }
+
+
+    async function generatePwaManifest()
+    {
+        //debugging
+        console.log("generatePwaManifest")
+        
+        //variables
+        let manifest = ""
+        let link = ""
+        
+        //set manifest
+        manifest = {
+            name: capitalizeString(router.currentRoute.value.params.domain),
+            short_name: capitalizeString(router.currentRoute.value.params.domain),
+            display: 'standalone',
+            theme_color: '#000000',
+            background_color: '#000000',
+            icons: [
+                { src: settings.iconImage192x192, sizes: '192x192', type: 'image/png', purpose: "any" },
+                { src: settings.iconImage512x512, sizes: '512x512', type: 'image/png', purpose: "any" },
+            ],
+            start_url: window.location.href
+        }
+        
+        //create base64 file
+        link = document.createElement('link')
+        link.rel = 'manifest'
+        link.href = `data:application/json;base64,${btoa(JSON.stringify(manifest))}`
+        
+        //add file link to html header
+        document.head.appendChild(link)
     }
 
 
@@ -2541,15 +2579,15 @@ export default {
         border-style: none;
         background-color: white; 
     }
-    #buttonAbout { display: none; background-image: url('/images/iconInfo.png'); background-size: contain; background-repeat: no-repeat; }
-    #buttonContact {  display: none; background-image: url('/images/iconContactInfo.png'); background-size: contain; background-repeat: no-repeat; }
-    #buttonFullscreen { display: none; background-image: url('/images/iconFullscreen.png'); background-size: contain; background-repeat: no-repeat; }
-    #buttonSearch { display: none; background-image: url('/images/iconSearch.png'); background-size: contain; background-repeat: no-repeat; }
-    #buttonStart { display: none; background-image: url('/images/iconStart.png'); background-size: contain; background-repeat: no-repeat; }
-    #buttonSlideshowMode { display: none; background-image: url('/images/iconSlideshow.png'); background-size: contain; background-repeat: no-repeat; }
+    #buttonAbout { display: none; background-image: url('/images/icons/iconInfo.png'); background-size: contain; background-repeat: no-repeat; }
+    #buttonContact {  display: none; background-image: url('/images/icons/iconContactInfo.png'); background-size: contain; background-repeat: no-repeat; }
+    #buttonFullscreen { display: none; background-image: url('/images/icons/iconFullscreen.png'); background-size: contain; background-repeat: no-repeat; }
+    #buttonSearch { display: none; background-image: url('/images/icons/iconSearch.png'); background-size: contain; background-repeat: no-repeat; }
+    #buttonStart { display: none; background-image: url('/images/icons/iconStart.png'); background-size: contain; background-repeat: no-repeat; }
+    #buttonSlideshowMode { display: none; background-image: url('/images/icons/iconSlideshow.png'); background-size: contain; background-repeat: no-repeat; }
     /* #buttonIndex { display: none; background-image: url('/images/iconIndex.png'); background-size: contain; background-repeat: no-repeat; } */
     /* #buttonEnd { display: none; } */
-    #buttonSelectSections { display: none; background-image: url('/images/iconSection.png'); background-size: contain; background-repeat: no-repeat; }
+    #buttonSelectSections { display: none; background-image: url('/images/icons/iconSection.png'); background-size: contain; background-repeat: no-repeat; }
     #sitePasswordProtectedModal 
     { 
         display: none; 
@@ -3343,18 +3381,18 @@ export default {
         #slideshowSectionStart { font-size: 40px; margin: 42vh 0px 0px 0px; }
         #slideshowTitle { margin: 20px 0px 12px 0px; font-size: 34px; }
         #slideshowData { max-width: 90vw; max-height: 70vh; }
-        #slidesCurrentPageNumber { top: initial; bottom: -10px; left: 12px; right: initial; font-size: 20px; opacity: 0.04; }
+        #slidesCurrentPageNumber { top: initial; bottom: -16px; left: 10px; right: initial; font-size: 22px; opacity: 0.09; }
         #mobileLandscapeNavArrows 
         { 
             position: fixed;
             display: flex;
             flex-direction: row;
             width: fill-content;
-            bottom: -12px;
+            bottom: -6px;
             right: 12px;
             z-index: 10;
-            font-size: 40px;
-            opacity: 0.04;
+            font-size: 49px;
+            opacity: 0.09;
             color: white;
         }
         #mobileLandscapePreviousSlide { margin-right: 10px; }
@@ -3362,12 +3400,12 @@ export default {
         { 
             position: fixed; 
             display: block; 
-            top: 0px;
+            top: -2px;
             left: 6px; 
-            font-size: 30px;
+            font-size: 34px;
             font-weight: bold; 
             z-index: 10;
-            opacity: 0.04;
+            opacity: 0.09;
             color: white; 
         }
 

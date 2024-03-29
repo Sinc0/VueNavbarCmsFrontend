@@ -23,7 +23,7 @@
             <input required id="registerPassword" class="inputRegister" type="password" placeholder="password" maxlength="10" />
             <input required id="registerConfirmPassword" class="inputRegister" type="password" placeholder="password again" maxlength="10" />
             <div id="registerPasswordOverlayImages">
-                <img id="iconShowRegister" class="inputOverlayImg" src="/images/iconHidden.png" v-on:click="showPasswordCharacters()" />
+                <img id="iconShowRegister" class="inputOverlayImg" src="/images/icons/iconHidden.png" v-on:click="showPasswordCharacters()" />
             </div>
             <input required id="registerButton" class="buttonRegister" type="button" value="Confirm" v-on:click="register()" />
         </div>
@@ -34,7 +34,7 @@
             <input required id="loginUsername" class="inputLogin" type="text" placeholder="username" maxlength="10" />
             <input required id="loginPassword" class="inputLogin" type="password" placeholder="password" maxlength="10" />
             <div id="registerLoginOverlayImages">
-                <img id="iconShowLogin" class="inputOverlayImg" src="/images/iconHidden.png" v-on:click="showPasswordCharacters()" />
+                <img id="iconShowLogin" class="inputOverlayImg" src="/images/icons/iconHidden.png" v-on:click="showPasswordCharacters()" />
             </div>
             <input required id="loginButton" class="buttonLogin" type="button" value="Confirm" v-on:click="login()" />
         </div>
@@ -81,14 +81,20 @@ export default {
   setup() {
     //variables
     const BACKEND_API = configs.REST_API || "http://127.0.0.1:8000"
+    const DEFAULT_DOMAIN = configs.DEFAULT_DOMAIN || "http://127.0.0.1:8000"
+    const DEFAULT_TITLE = configs.DEFAULT_TITLE || ""
 
 
     //lifecycle hooks
-    onMounted(() => { console.log("componentStart mounted") })
+    onMounted(() => 
+    { 
+        console.log("componentStart mounted")
+        document.title = DEFAULT_TITLE
+        generatePwaManifest()
+    })
     onUpdated(() => { console.log("componentStart updated") })
 
 
-    //functions
     function displaySelectedMenu(type)
     {
         //elements
@@ -302,12 +308,12 @@ export default {
         if(loginPassword.type == "text")
         {
             loginPassword.type = "password"
-            iconShowLogin.src = "/images/iconHidden.png"
+            iconShowLogin.src = "/images/icons/iconHidden.png"
         }
         else if(loginPassword.type == "password")
         {
             loginPassword.type = "text"
-            iconShowLogin.src = "/images/iconShow.png"
+            iconShowLogin.src = "/images/icons/iconShow.png"
         }
 
         //register
@@ -315,14 +321,44 @@ export default {
         {
             registerPassword.type = "password"
             registerConfirmPassword.type = "password"
-            iconShowRegister.src = "/images/iconHidden.png"
+            iconShowRegister.src = "/images/icons/iconHidden.png"
         }
         else if(registerPassword.type == "password")
         {
             registerPassword.type = "text"
             registerConfirmPassword.type = "text"
-            iconShowRegister.src = "/images/iconShow.png"
+            iconShowRegister.src = "/images/icons/iconShow.png"
         }
+    }
+
+    
+    function generatePwaManifest()
+    {
+        //variables
+        let manifest = ""
+        let link = ""
+
+        //set manifest
+        manifest = {
+            name: 'Backend',
+            short_name: 'Backend',
+            display: 'standalone',
+            theme_color: '#000000',
+            background_color: '#000000',
+            icons: [
+                { src: DEFAULT_DOMAIN + '/images/pwa/pwa-icon-192x192-blue.png', sizes: '192x192', type: 'image/png', purpose: "any" },
+                { src: DEFAULT_DOMAIN + '/images/pwa/pwa-icon-512x512-blue.png', sizes: '512x512', type: 'image/png', purpose: "any" },
+            ],
+            start_url: window.location.href + "backend"
+        }
+        
+        //create base64 file
+        link = document.createElement('link')
+        link.rel = 'manifest'
+        link.href = `data:application/json;base64,${btoa(JSON.stringify(manifest))}`
+        
+        //add file link to html header
+        document.head.appendChild(link)
     }
 
 
@@ -540,6 +576,7 @@ export default {
     /*** mobile ***/
     @media screen and (max-width: 1000px) 
     {
+        #componentStart { overflow-x: hidden; }
         #menu { width: 90vw; }
         #register { width: 80vw; }
         #login { width: 80vw; }

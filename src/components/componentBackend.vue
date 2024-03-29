@@ -19,7 +19,7 @@
         <div id="backendCategories" v-if="backendCategoriesSelected">
             <!-- edit category -->
             <div id="">
-                <img id="settingsCategoriesIcon" src="/images/iconSettingsCategories.png" v-on:click="editCategoriesModal(backendCategories)" />
+                <img id="settingsCategoriesIcon" src="/images/icons/iconSettingsCategories.png" v-on:click="editCategoriesModal(backendCategories)" />
             </div>
 
             <!-- select category -->
@@ -275,8 +275,8 @@
                 <input id="inputCategoryDelete" class="editItemDelete" type="button" value="━" v-on:click="editCategory('','delete')" />
                 <input id="inputCategoryAddRow" class="editAddRow" type="button" value="+" v-on:click="editCategory('','add')" />
                 
-                <img id="inputCategoryHiddenToggleShow" src="/images/iconShow.png" v-on:click="editCategory('','hidden')" />
-                <img id="inputCategoryHiddenToggleHidden" src="/images/iconHidden.png" v-on:click="editCategory('','show')" />
+                <img id="inputCategoryHiddenToggleShow" src="/images/icons/iconShow.png" v-on:click="editCategory('','hidden')" />
+                <img id="inputCategoryHiddenToggleHidden" src="/images/icons/iconHidden.png" v-on:click="editCategory('','show')" />
                 
                 <input hidden id="inputCategoryHidden" class="editHideRow" type="checkbox" value="" />
             </div>
@@ -321,8 +321,8 @@
                 <input id="inputSectionDelete" class="editItemDelete" type="button" value="━" v-on:click="editSection('','delete')" />
                 <input id="inputSectionAddRow" class="editAddRow" type="button" value="+" v-on:click="editSection('','add')" />
                 
-                <img id="inputSectionHiddenToggleShow" src="/images/iconShow.png" v-on:click="editSection('','hidden')" />
-                <img id="inputSectionHiddenToggleHidden" src="/images/iconHidden.png" v-on:click="editSection('','show')" />
+                <img id="inputSectionHiddenToggleShow" src="/images/icons/iconShow.png" v-on:click="editSection('','hidden')" />
+                <img id="inputSectionHiddenToggleHidden" src="/images/icons/iconHidden.png" v-on:click="editSection('','show')" />
                 <input hidden id="inputSectionHidden" class="editHideRow" type="checkbox" value="" />
             </div>
 
@@ -366,8 +366,8 @@
                 
                 <div id="editAccountChangePassword">
                     <input id="editAccountPasswordOld" class="editAccountInputText" type="password" placeholder="Old Password" maxlength="20" />
-                    <img id="editAccountPasswordImgShow" src="/images/iconShow.png" v-on:click="showPasswordInputs()" />
-                    <img id="editAccountPasswordImgHide" src="/images/iconHidden.png" v-on:click="hidePasswordInputs()" />
+                    <img id="editAccountPasswordImgShow" src="/images/icons/iconShow.png" v-on:click="showPasswordInputs()" />
+                    <img id="editAccountPasswordImgHide" src="/images/icons/iconHidden.png" v-on:click="hidePasswordInputs()" />
                     <input id="editAccountPasswordNew" class="editAccountInputText" type="password" placeholder="New Password" maxlength="20" />
                     <input id="editAccountPasswordNewAgain" class="editAccountInputText" type="password" placeholder="New Password Again" />
                     <input id="editAccountPasswordConfirm" class="editAccountInputText" type="button" value="Confirm New Password" maxlength="20" />
@@ -376,6 +376,30 @@
             
             <!-- account settings -->
             <div id="editAccountSettings" v-if="backendAccountSettings">
+                
+                <!-- edit: account icon -->
+                <div id="editAccountIcon" class="editAccountSection">
+                    
+                    <!-- title -->
+                    <label class="editAccountTitle">Icon</label>
+
+                    <div id="editAccountIconDefaultIcons">
+                        <!-- <img class="editAccountIcon" src="/images/pwa/pwa-icon-192x192-blue.png" v-on:click="editIcon('blue')" /> -->
+                        <img class="editAccountIcon" src="/images/pwa/pwa-icon-192x192-original.png" v-on:click="editIcon('original')" />
+                        <img class="editAccountIcon" src="/images/pwa/pwa-icon-192x192-green.png" v-on:click="editIcon('green')" />
+                        <img class="editAccountIcon" src="/images/pwa/pwa-icon-192x192-red.png" v-on:click="editIcon('red')" />
+                        <img class="editAccountIcon" src="/images/pwa/pwa-icon-192x192-orange.png" v-on:click="editIcon('orange')" />
+                        <img class="editAccountIcon" src="/images/pwa/pwa-icon-192x192-violet.png" v-on:click="editIcon('violet')" />
+                        <img class="editAccountIcon" src="/images/pwa/pwa-icon-192x192-yellow.png" v-on:click="editIcon('yellow')" />
+                    </div>
+                    
+                    <!-- <input id="editAccountIconInputDefault" class="editAccountInputText" type="button" value="Default" /> -->
+                    <!-- <input id="editAccountIconInputCustom" class="editAccountInputText" type="button" value="Custom" /> -->
+                    <input id="editAccountIconInput192x192" class="editAccountInputText" type="text" value="" placeholder="Icon Image Url (192x192)" maxlength="100" />
+                    <input id="editAccountIconInput512x512" class="editAccountInputText" type="text" value="" placeholder="Icon Image Url (512x512)" maxlength="100" />
+                    <!-- <input hidden id="editAccountIconInput192x192" class="editAccountInputText" type="text" value="" placeholder="Icon Image Url (192x192)" maxlength="100" /> -->
+                    <!-- <input hidden id="editAccountIconInput512x512" class="editAccountInputText" type="text" value="" placeholder="Icon Image Url (512x512)" maxlength="100" /> -->
+                </div>
 
                 <!-- edit: account colors -->
                 <div id="editAccountColors" class="editAccountSection">
@@ -637,7 +661,7 @@
 
         <!-- button: edit sections -->
         <div id="" v-if="backendSections">
-            <img id="settingsSectionsIcon" src="/images/iconSettingsSections.png" v-on:click="editSectionsModal(backendSections)"/>
+            <img id="settingsSectionsIcon" src="/images/icons/iconSettingsSections.png" v-on:click="editSectionsModal(backendSections)"/>
         </div>
 
 
@@ -654,7 +678,7 @@
 
         <!-- button: logout account -->
         <div id="logoutAccount">
-            <p id="logoutAccountText" v-on:click="logout()">⮨</p>
+            <p id="logoutAccountText" v-on:click="logout()">⬅</p>
         </div>
 
         <!-- mobile only -->
@@ -680,6 +704,7 @@ export default {
 
     //variables
     const BACKEND_API = configs.REST_API || "http://127.0.0.1:8000"
+    const DEFAULT_DOMAIN = configs.DEFAULT_DOMAIN || "http://127.0.0.1:8000"
     const backendSections = computed(() => { return store.getters['storage/backendSections']})
     const backendCategories = computed(() => { return store.getters['storage/backendCategories']})
     const backendData = computed(() => { return store.getters['storage/backendData']})
@@ -710,7 +735,12 @@ export default {
 
 
     //lifecycle hooks
-    onMounted(() => { console.log("componentBackend mounted"); fetchSpecificUser(); document.title = "Backend" })
+    onMounted(() => { 
+        console.log("componentBackend mounted")
+        document.title = "Backend"
+        fetchSpecificUser()
+        generatePwaManifest()
+    })
     onUpdated(() => { console.log("componentBackend updated") })
 
 
@@ -740,6 +770,9 @@ export default {
         let token = localStorage.getItem("cms-token")
         let lastLogin = localStorage.getItem("cms-last-login")
         let obj = JSON.stringify({ "username": username, "token": token, "lastLogin": lastLogin })
+
+        //null check
+        if(username == null || token == null || lastLogin == null) { router.push("/"); return }
         
         //fetch specific user data
         await fetch(BACKEND_API + "/user-specific", {method: 'post', body: obj})
@@ -763,6 +796,9 @@ export default {
                     "lastLogin": data.info.lastLogin,
                     "accountStatus": data.info.accountStatus
                 })
+
+                //redirect
+                router.push("/backend")
             }
 
             //fetch user failed
@@ -3142,6 +3178,8 @@ export default {
         editAccount("colorText", settings.colorText, 'false')
         editAccount("colorSectionBackground", settings.colorSectionBackground, 'false')
         editAccount("colorLoadingScreen", settings.colorLoadingScreen, 'false')
+        editAccount("iconImage192x192", settings.iconImage192x192, 'false')
+        editAccount("iconImage512x512", settings.iconImage512x512, 'false')
     }
 
     
@@ -3214,6 +3252,8 @@ export default {
         let checkboxSaveUpdateSettings = document.getElementById("checkboxSaveUpdateSettings")
         let confirmChangesUpdateSettings = document.getElementById("confirmChangesUpdateSettings")
         let labelSaveUpdateSettings = document.getElementById("labelSaveUpdateSettings")
+        let editAccountIconInput192x192 = document.getElementById("editAccountIconInput192x192")
+        let editAccountIconInput512x512 = document.getElementById("editAccountIconInput512x512")
 
         //variables
         let settings = JSON.parse(localStorage.getItem("cms-edit-settings"))
@@ -3246,6 +3286,10 @@ export default {
         else if(type == "email") { editAccountEmail.value = backendAccountCredentials.value.email }
         else if(type == "phone") { editAccountPhone.value = backendAccountCredentials.value.phone }
 
+
+        //icon
+        else if(type == "iconImage192x192") { editAccountIconInput192x192.value = value  }
+        else if(type == "iconImage512x512") { editAccountIconInput512x512.value = value }
 
         //colors
         else if(type == "colorNavBackground") { editAccountColorNavBackground.value = value  }
@@ -3647,6 +3691,8 @@ export default {
         let editAccountPasswordProtectedPassword = document.getElementById("editAccountPasswordProtectedPassword")
         let editAccountAboutText = document.getElementById("editAccountAboutText")
         let editAccountSectionBackgroundImageUrl = document.getElementById("editAccountSectionBackgroundImageUrl")
+        let editAccountIconInput192x192 = document.getElementById("editAccountIconInput192x192")
+        let editAccountIconInput512x512 = document.getElementById("editAccountIconInput512x512")
 
         //variables
         let credentials = {
@@ -3689,6 +3735,8 @@ export default {
         lsSettings.sectionBackgroundImageUrl = editAccountSectionBackgroundImageUrl.value
         // lsSettings.loadingScreenUrl = editAccountLoadingScreenUrl.value
         lsSettings.sitePasswordProtectedPassword = editAccountPasswordProtectedPassword.value
+        lsSettings.iconImage192x192 = editAccountIconInput192x192.value
+        lsSettings.iconImage512x512 = editAccountIconInput512x512.value
 
         //check new username
         if(editAccountUsername.value != "" && editAccountUsername.value != backendAccountCredentials.value.username) 
@@ -3883,7 +3931,9 @@ export default {
             "sitePasswordProtected": "false",
             "sitePasswordProtectedPassword": "",
             "textSize": "medium",
-            "textStyle": "normal"
+            "textStyle": "normal",
+            "iconImage192x192": DEFAULT_DOMAIN + "/images/pwa/pwa-icon-192x192-original.png",
+            "iconImage512x512": DEFAULT_DOMAIN + "/images/pwa/pwa-icon-512x512-original.png"
         }
         let defaultCredentials = {
             "country": "country",
@@ -4094,6 +4144,48 @@ export default {
     }
 
 
+    function generatePwaManifest()
+    {
+        //variables
+        let manifest = ""
+        let link = ""
+
+        //set manifest
+        manifest = {
+            name: 'Backend',
+            short_name: 'Backend',
+            display: 'standalone',
+            theme_color: '#000000',
+            background_color: '#000000',
+            icons: [
+                { src: DEFAULT_DOMAIN + '/images/pwa/pwa-icon-192x192-blue.png', sizes: '192x192', type: 'image/png', purpose: "any" },
+                { src: DEFAULT_DOMAIN + '/images/pwa/pwa-icon-512x512-blue.png', sizes: '512x512', type: 'image/png', purpose: "any" },
+            ],
+            start_url: window.location.href
+        };
+        
+        //create base64 file
+        link = document.createElement('link');
+        link.rel = 'manifest';
+        link.href = `data:application/json;base64,${btoa(JSON.stringify(manifest))}`;
+        
+        //add file link to html header
+        document.head.appendChild(link);
+    }
+
+
+    function editIcon(type)
+    {
+        //elements
+        let editAccountIconInput192x192 = document.getElementById("editAccountIconInput192x192")
+        let editAccountIconInput512x512 = document.getElementById("editAccountIconInput512x512")
+
+        //update elements
+        editAccountIconInput192x192.value = DEFAULT_DOMAIN + "/images/pwa/pwa-icon-192x192-" + type + ".png"
+        editAccountIconInput512x512.value = DEFAULT_DOMAIN + "/images/pwa/pwa-icon-512x512-" + type + ".png"
+    }
+
+
     return {
         //variables
         backendSections,
@@ -4127,6 +4219,7 @@ export default {
         editCategory,
         editSection,
         editAccount,
+        editIcon,
         sortBackendDataSelected,
         sortBackendCategories,
         sortBackendSections,
@@ -4328,6 +4421,8 @@ export default {
         border-radius: 90%;
         background-color: white;
     }
+    #checkoutPublicSite:hover { opacity: 1; }
+    #checkoutPublicSite:active { opacity: 1; }
     #mobileCheckoutPublicSite { display: none; }
     #logoutAccount 
     { 
@@ -4335,11 +4430,12 @@ export default {
         display: block; 
         height: auto; 
         width: auto; 
-        bottom: -8px;
-        right: 30px;
+        bottom: 4px;
+        right: 24px;
         font-size: 40px;
         opacity: 0.2;
     }
+    #settingsAccount:active { opacity: 1; }
     #settingsAccount:hover { opacity: 1; }
     #logoutAccount:hover { opacity: 1; }
     #logoutAccount:active { opacity: 1; }
@@ -4676,6 +4772,7 @@ export default {
         border: 0px solid white;
     }
     #settingsAccountText { display: none; }
+    #editAccountIconDefaultIcons { display: flex; overflow-x: scroll; }
 
 
     /*** classes ***/
@@ -5309,6 +5406,7 @@ export default {
         border: 0px solid white;
         background-color: #1D212E;
     }
+    .editAccountIcon { height: 100px; width: 100px; }
 
     
     /*** mobile ***/
