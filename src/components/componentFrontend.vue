@@ -23,8 +23,10 @@
 
         <!-- category title -->
         <div id="frontendCategories" v-if="frontendCategories">
-            <div id="selectedCategoryTitle" v-on:click.left="loadCategoryNavigatorModal()" v-on:click.middle="loadNextCategory()">
-            </div>
+            <div hidden>{{frontendCategoriesTotalCategories = sortFrontendCategories(frontendCategories).length}}</div>
+
+            <div id="selectedCategoryTitle" v-if="frontendCategoriesTotalCategories == 1"></div>
+            <div id="selectedCategoryTitle" v-else v-on:click.left="loadCategoryNavigatorModal()"></div>
         </div>
 
 
@@ -85,8 +87,8 @@
                         <div id="frontendDataTitleLinklist" class="frontendDataTitle">{{data.title}}</div>
 
                         <!-- data -->
-                        <div class="frontendDataData" v-for="item in loadDataData(data)">
-                            <a class="linklist" v-bind:href="item.link">➡⠀{{item.text}}</a>
+                        <div class="frontendDataData linklistContainer" v-for="item in loadDataData(data)">
+                            <p class="linklist" v-bind:href="item.link" v-on:click="loadLinkListUrl(item.link)">➡⠀{{item.text}}</p>
                         </div>
                     </div>
 
@@ -97,7 +99,7 @@
                         <div id="frontendDataTitleTextlist" class="frontendDataTitle">{{data.title}}</div>
 
                         <!-- data -->
-                        <div class="frontendDataData" v-for="item in loadDataData(data)">
+                        <div class="frontendDataData textlistContainer" v-for="item in loadDataData(data)">
                             <div class="textlist">•⠀{{item.text}}</div>
                         </div>
                     </div>
@@ -114,7 +116,7 @@
                         <div id="frontendDataTitleImageGallery" class="frontendDataTitle" v-if="data.title != ''">{{data.title}}</div>
 
                         <!-- image -->
-                        <div class="frontendDataData">
+                        <div class="frontendDataData" v-if="firstGalleryImage">
                             <p v-bind:id="'galleryImagePos#' + data.pos" class="galleryImagePos">{{firstGalleryImage.pos}}/{{totalImgs}}</p>
                             <img v-bind:id="'imageGallery#' + data.pos" class="galleryImageSource" v-bind:src='firstGalleryImage.image' v-bind:alt='(firstGalleryImage.pos - 1)' v-on:click.left="nextImageGalleryItem(data.pos, data.data)" v-on:click.right="previousImageGalleryItem(data.pos, data.data)" />
                             <p v-bind:id="'galleryImageDescription#' + data.pos" class="galleryImageDescription" v-if="totalImgs == 1 && firstGalleryImage.description == ''"></p>
@@ -157,7 +159,7 @@
 
             <!-- sections -->
             <div class="sectionNavigatorModalItems">
-                <div id="" v-for="(item, index) in sortFrontendSections(frontendSections)">
+                <div id="" class="selectSectionContainer" v-for="(item, index) in sortFrontendSections(frontendSections)">
                     <div v-if="item.hidden == 'false'" class="selectSection" v-on:click="setRoutePath(item.title)">{{item.title}}</div>
                 </div>
                 
@@ -178,7 +180,7 @@
             
             <!-- categories -->
             <div class="categoryNavigatorModalItems">
-                <div id="" v-for="(item, index) in sortFrontendCategories(frontendCategories)">
+                <div id="" class="categoryContainer" v-for="(item, index) in sortFrontendCategories(frontendCategories)">
                     <div id="" v-if="item.hidden == 'false'" class="category" v-on:click="setRoutePath(item.section + '/' + item.title)">
                         {{item.title}}
                     </div>
@@ -291,7 +293,8 @@
                 </p>
             </div>
             
-            <div id="infoSlideshowMode" v-if="frontendContact">
+            <!-- slideshow mode -->
+            <div id="infoSlideshowMode" v-if="frontendSettings.modeSlideshow == 'true'">
                 <p id="infoSlideshowModeTitle" class="modalTitle">Slideshow Mode</p>
                 <p id="aboutText" class="infoItem">Rotate screen to activate</p>
             </div>
@@ -417,7 +420,7 @@
             <p id="slideshowSectionStart" v-else-if="frontendSlideshowPage && frontendSlideshowPage.type == 'sectionStart'">{{frontendSlideshowPage.pos}}. {{frontendSlideshowPage.title}}</p>
             <p id="slideshowTitle" v-else-if="frontendSlideshowPage && frontendSlideshowPage.title != ''">{{frontendSlideshowPage.title}}</p>
             <p id="slideshowTitle" v-else-if="frontendSlideshowPage && frontendSlideshowPage.title == '' && frontendSlideshowPage.type == 'timeline'">Timeline</p>
-            <p id="slideshowTitle" v-else-if="frontendSlideshowPage && frontendSlideshowPage.title == '' && frontendSlideshowPage.type == 'galleryImages'">{{frontendSlideshowPage.category}}</p>
+            <p id="slideshowTitle" v-else-if="frontendSlideshowPage && frontendSlideshowPage.title == '' && frontendSlideshowPage.type == 'galleryImages'">&#8203;</p> <!-- {{frontendSlideshowPage.category}} -->
             <p id="slideshowTitle" v-else-if="frontendSlideshowPage && frontendSlideshowPage.title == ''">&#8203;</p>
 
             <!-- slideshow page data -->
@@ -443,8 +446,9 @@
                         
                         <!-- linklist -->
                         <div id="" class="slideshowItemLinklist" v-else-if="frontendSlideshowPage.type == 'linklist'">
-                            <div class="slideshowItemLinklistText">{{row.text}}</div>
-                            <div class="slideshowItemLinklistLink">• {{row.link.replaceAll("https://", "").replaceAll("http", "").replaceAll("www.", "")}}</div>
+                            <div class="slideshowItemLinklistText" v-if="row.text">{{row.text}}</div>
+                            <div class="slideshowItemLinklistLink" v-if="row.link && row.link.includes('://')">• {{row.link.replaceAll("https://", "").replaceAll("http", "").replaceAll("www.", "")}}</div>
+                            <div class="slideshowItemLinklistLink" v-else></div>
                         </div>
     
                         <!-- timeline -->
@@ -618,7 +622,10 @@ export default {
         // e.button 4 = side-front click
 
         //slideshow
-        if(slideshowModeActive == "true")
+        if(settings.modeSlideshow == "false") 
+        { return }
+        
+        else if(slideshowModeActive == "true")
         {
             if(e.button == 1) { slideshowModeExit() }
             else if(e.button == 3) { e.preventDefault(); slideshowModePrevious() }
@@ -861,6 +868,29 @@ export default {
         })
 
         return x
+    }
+
+    function sortFrontendDataRowsSlideshow(rows)
+    {
+        let sorted = []
+
+        if(rows && rows.length == 1)
+        {
+            let r = JSON.parse(rows)
+
+            sorted.push(r)
+        }
+        else if(rows && rows.length > 1)
+        {
+            for(let item in rows)
+            {
+                sorted.push(JSON.parse(rows[item]))
+            }
+
+            sorted = sorted.sort((a, b) => { return a.pos - b.pos })
+        }
+
+        return sorted
     }
 
 
@@ -1405,7 +1435,7 @@ export default {
         }, 100)
 
         //preload images from galleries
-        preloadGalleryImages()
+        preloadImages()
     }
 
 
@@ -1945,8 +1975,26 @@ export default {
     }
 
 
-    function preloadGalleryImages()
+    function preloadImages()
     {
+        //debugging
+        console.log("preloadImages")
+        
+        //category background images
+        for(let item in frontendCategories.value)
+        {
+            let categoryBackgroundImage = frontendCategories.value[item].backgroundImage
+
+            if(categoryBackgroundImage != null)
+            {
+                // console.log(categoryBackgroundImage)
+                
+                let newImg = new Image
+                newImg.src = categoryBackgroundImage
+            }
+        }
+
+        //gallery images
         for(let item in frontendData.value)
         {
             for(let r in frontendData.value[item].rows)
@@ -1982,16 +2030,38 @@ export default {
         let categoriesSorted = frontendCategories.value
         let sectionsByPos = []
         let dataRowsInOrder = []
-        let slides = [{
-            "backgroundImage": settings.pageStartBackgroundImage,
-            "category": "",
-            "data": settings.pageStartText,
-            "hidden": "false",
-            "pos": "0",
-            "section": "",
-            "title": settings.pageStartTitle,
-            "type": "slideshowStart"
-        }]
+        let startPageSlide = ""
+        let endPageSlide = ""
+        let slides = []
+
+        if(settings.pageStart == "true") 
+        { 
+            startPageSlide = {
+                "backgroundImage": settings.pageStartBackgroundImage,
+                "category": "",
+                "data": settings.pageStartText,
+                "hidden": "false",
+                "pos": "0",
+                "section": "",
+                "title": settings.pageStartTitle,
+                "type": "slideshowStart"
+            }
+            slides.push(startPageSlide) 
+        }
+        else if(settings.pageStart == "false")
+        {
+            startPageSlide = {
+                "backgroundImage": "",
+                "category": "",
+                "data": "",
+                "hidden": "false",
+                "pos": "0",
+                "section": "",
+                "title": capitalizeString(router.currentRoute.value.params.domain),
+                "type": "slideshowStart"
+            }
+            slides.push(startPageSlide)
+        }
 
         //add sections to array
         for(let s in sectionsSorted)
@@ -2005,11 +2075,12 @@ export default {
             let obj = dataSorted[item]
             let section = obj.section.toLowerCase()
             let category = obj.category.toLowerCase()
-            let rows = dataSorted[item].rows
+            let rows = sortFrontendDataRowsSlideshow(dataSorted[item].rows)
 
             for(let item in rows) 
             { 
-                let r = JSON.parse(rows[item])
+                let r = rows[item]
+                // let r = JSON.parse(rows[item])
                 
                 r.section = section
                 r.category = category
@@ -2055,21 +2126,27 @@ export default {
         
         //add slides to array
         for(let item in sectionsByPos)
-        {
+        {   
+            //check if index section exist
+            let sPos = ""
+            if(sectionsByPos[0].toString().toLowerCase() == "index") { sPos = (parseInt(item)).toString() }
+            else { sPos = (parseInt(item) + 1).toString() }
+
             //variables
             let s = {
                 "backgroundImage": "",
                 "category": "",
                 "data": "",
                 "hidden": "false",
-                "pos": (parseInt(item) + 1).toString(),
+                "pos": sPos,
                 "section": sectionsByPos[item],
                 "title": firstLetterToUpperCase(sectionsByPos[item]),
                 "type": "sectionStart"
             }
 
             //add section start slide
-            slides.push(s)
+            if(s.title.toLowerCase() != "index") { slides.push(s) }
+            
 
             //set section background image
             for(let b in categoriesSorted)
@@ -2096,16 +2173,34 @@ export default {
         }
 
         //add end page
-        slides.push({
-            "backgroundImage": settings.pageEndBackgroundImage,
-            "category": "",
-            "data": settings.pageEndText,
-            "hidden": "false",
-            "pos": slides.length.toString(),
-            "section": "",
-            "title": settings.pageEndTitle,
-            "type": "slideshowEnd"
-        })
+        if(settings.pageEnd == "true") 
+        { 
+            endPageSlide = {
+                "backgroundImage": settings.pageEndBackgroundImage,
+                "category": "",
+                "data": settings.pageEndText,
+                "hidden": "false",
+                "pos": slides.length.toString(),
+                "section": "",
+                "title": settings.pageEndTitle,
+                "type": "slideshowEnd"
+            }
+            slides.push(endPageSlide)
+        }
+        else if(settings.pageEnd == "false")
+        {
+            endPageSlide = {
+                "backgroundImage": "",
+                "category": "",
+                "data": "",
+                "hidden": "false",
+                "pos": slides.length.toString(),
+                "section": "",
+                "title": "End",
+                "type": "slideshowEnd"
+            }
+            slides.push(endPageSlide)
+        }
 
         //set local storage
         localStorage.setItem("cms-slides", JSON.stringify(slides))
@@ -2261,6 +2356,19 @@ export default {
     }
 
 
+    function loadLinkListUrl(url)
+    {
+        //debugging
+        console.log(url)
+
+        //load external
+        if(url.includes("://")) { window.open(url, '_self') }
+
+        //load internal
+        else { router.push(url) }
+    }
+
+
     return {
         //variables
         frontendSections,
@@ -2309,6 +2417,7 @@ export default {
         slideshowModeNext,
         slideshowModePrevious,
         slideshowModeExit,
+        loadLinkListUrl
     }
   }
 }
@@ -2465,6 +2574,7 @@ export default {
     #frontendDataRows { max-height: var(--frontendDataRowsHeight); overflow-y: scroll; }
     #frontendDataTitleTimeline { margin: 0px 0px 30px 0px; }
     #frontendDataTitleMultiline { margin: 0px 0px 6px 0px; }
+    #frontendDataTitleTextlist { margin: 0px 0px 8px 0px; }
     #frontendDataTitleImageGallery { margin: 30px; text-align: center; }
     #categoryNavigatorModal 
     { 
@@ -2900,6 +3010,7 @@ export default {
         font-size: 46px; 
         font-weight: bold;
         text-transform: capitalize;
+        overflow-x: scroll;
         color: var(--colorText); /* #822c8b */
         /* border: 1px solid white; */
         /* background-color: #1D212E; */
@@ -2990,13 +3101,14 @@ export default {
     .linklist 
     { 
         display: inline-block; 
-        margin: 6px 0px 6px 0px; 
+        margin: 10px 0px 10px 0px; 
         font-size: 20px; 
         text-decoration: none; 
         opacity: 0.7;
         text-shadow: 0px 1px #1D212E;
         color: var(--colorText); 
     }
+    .linklistContainer { white-space: nowrap; overflow-x: scroll; }
     .textlist 
     { 
         display: inline-block; 
@@ -3006,6 +3118,7 @@ export default {
         text-shadow: 0px 1px #1D212E;
         color: var(--colorText); 
     }
+    .textlistContainer { white-space: nowrap; overflow-x: scroll; }
     .galleryImagePos { display: none; position: relative; width: max-content; margin: 0px; padding: 0px; top: 29px; left: 14px; opacity: 0.7; }
     .galleryImageDescription 
     { 
@@ -3186,6 +3299,7 @@ export default {
         /* border: 3px solid #822c8b; */
         /* background-color: #1D212E; */
     }
+    .categoryContainer { display: block; overflow-x: scroll; }
     .sectionNavigatorModalItems
     {
         position: fixed;
@@ -3208,6 +3322,7 @@ export default {
         /* border: 3px solid #822c8b; */
         /* background-color: #1D212E; */
     }
+    .selectSectionContainer { display: block; overflow-x: scroll; }
     .searchResultItem 
     { 
         display: flex;
@@ -3264,17 +3379,31 @@ export default {
     .infoItemMousebindName { display: inline-block; font-size: 26px; vertical-align: super; }
     .infoItemKeybindDescription { display: inline-block; vertical-align: super; font-size: 24px; opacity: 0.9; }
     .infoItemMousebindDescription { display: inline-block; vertical-align: super; font-size: 24px; opacity: 0.9; }
-    .slideshowImage { height: 600px; width: auto; user-select: none; user-drag: none; -webkit-user-drag: none; border: 1px solid rgba(255, 255, 255, 0.1); }
+    .slideshowImage 
+    { 
+        position: absolute;
+        height: 100vh;
+        width: 100vw;
+        top: 0px;
+        left: 0px;
+        user-select: none; 
+        user-drag: none; 
+        -webkit-user-drag: none;
+        z-index: -1;
+        opacity: 1;
+        border: 1px solid rgba(255, 255, 255, 0.1); 
+    }
     .slideshowImageDescription 
     { 
-        width: 990px; 
+        position: absolute;
+        width: -webkit-fill-available;
+        bottom: 40px;
         margin: auto;
-        margin-top: 40px; 
-        margin-bottom: 20px; 
         font-size: 22px; 
         font-weight: bold; 
         text-align: center;
-        opacity: 0.6; 
+        text-shadow: 0px 1px black;
+        opacity: 1; 
     }
     .slideshowItemMultiline { width: 49%; margin: auto; margin-bottom: 20px; font-size: 24px; font-weight: bold; opacity: 0.7; }
     .slideshowItemTextlist { width: 40%; margin: auto; margin-bottom: 30px; font-size: 26px; font-weight: bold; text-align: center; opacity: 0.7; }
@@ -3291,7 +3420,7 @@ export default {
     /*** mobile ***/
     @media screen and (max-width: 1000px) and (orientation: portrait)
     {
-        #frontendSections { bottom: 0px; height: auto; width: auto; margin: 0px; padding: 0px; }
+        #frontendSections { bottom: 0px; height: auto; width: -webkit-fill-available; margin: 0px; padding: 0px; }
         #frontendSectionsList { flex-direction: row; height: auto; justify-content: center; } 
         #frontendCategories { width: 80vw; top: 3vh; left: 0%; margin: 0px 10vw 0px 10vw; }
         #frontendData { width: 80vw; left: 0%; margin: 0px 10vw 0px 10vw; }
@@ -3410,12 +3539,12 @@ export default {
             opacity: 0.09;
             color: white;
         }
-        #mobileLandscapePreviousSlide { margin-top: 8px; margin-right: 10px; rotate: 180deg ;}
+        #mobileLandscapePreviousSlide { margin-top: 9px; margin-right: 10px; rotate: 180deg ;}
         #mobileExitSlideshow 
         { 
             position: fixed; 
             display: block; 
-            top: -2px;
+            top: -6px;
             left: 6px; 
             font-size: 34px;
             font-weight: bold; 

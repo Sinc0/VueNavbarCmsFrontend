@@ -357,11 +357,11 @@
                 
                 <!-- inputs -->
                 <input id="editAccountUsername" class="editAccountInputText" type="text" placeholder="Username" v-bind:value="accountCredentials.username" maxlength="20" />
-                <input id="editAccountDomain" class="editAccountInputText" type="text" placeholder="Domain" v-bind:value="accountCredentials.domain" maxlength="20" />
+                <input id="editAccountDomain" class="editAccountInputText" type="text" placeholder="Domain" v-bind:value="accountCredentials.domain" maxlength="40" />
                 <input id="editAccountEmail" class="editAccountInputText" type="text" placeholder="Email" v-bind:value="accountCredentials.email" maxlength="100" />
-                <input id="editAccountName" class="editAccountInputText" type="text" placeholder="Name" v-bind:value="accountCredentials.name" maxlength="20" />
-                <input id="editAccountPhone" class="editAccountInputText" type="text" placeholder="Phone" v-bind:value="accountCredentials.phone" maxlength="20" />
-                <input id="editAccountCountry" class="editAccountInputText" type="text" placeholder="Country" v-bind:value="accountCredentials.country" maxlength="20" />
+                <input id="editAccountName" class="editAccountInputText" type="text" placeholder="Name" v-bind:value="accountCredentials.name" maxlength="30" />
+                <input id="editAccountPhone" class="editAccountInputText" type="text" placeholder="Phone" v-bind:value="accountCredentials.phone" maxlength="30" />
+                <input id="editAccountCountry" class="editAccountInputText" type="text" placeholder="Country" v-bind:value="accountCredentials.country" maxlength="30" />
                 <input id="editAccountPassword" class="editAccountInputText" type="button" value="Change Password" v-on:click="editAccount('password', '', 'true')" maxlength="20" />
                 
                 <div id="editAccountChangePassword">
@@ -369,7 +369,7 @@
                     <img id="editAccountPasswordImgShow" src="/images/icons/iconShow.png" v-on:click="showPasswordInputs()" />
                     <img id="editAccountPasswordImgHide" src="/images/icons/iconHidden.png" v-on:click="hidePasswordInputs()" />
                     <input id="editAccountPasswordNew" class="editAccountInputText" type="password" placeholder="New Password" maxlength="20" />
-                    <input id="editAccountPasswordNewAgain" class="editAccountInputText" type="password" placeholder="New Password Again" />
+                    <input id="editAccountPasswordNewAgain" class="editAccountInputText" type="password" placeholder="New Password Again" maxlength="20" />
                     <input id="editAccountPasswordConfirm" class="editAccountInputText" type="button" value="Confirm New Password" maxlength="20" />
                 </div>
             </div>
@@ -674,11 +674,14 @@
         <!-- button: checkout public site -->
         <div id="checkoutPublicSite" v-on:click="checkoutPublicSite('desktop')">
         </div>
+        
+        <!-- button: checkout public site -->
+        <div id="reloadPage" v-on:click="reloadPage()">↻</div>
 
 
         <!-- button: logout account -->
         <div id="logoutAccount">
-            <p id="logoutAccountText" v-on:click="logout()">⬅</p>
+            <p id="logoutAccountText" v-on:click="logout()">⇠</p> <!-- ⬅ -->
         </div>
 
         <!-- mobile only -->
@@ -2125,6 +2128,7 @@ export default {
         let confirmCheckboxUpdateCategories = document.getElementById("confirmCheckboxUpdateCategories")
         let checkboxSaveUpdateCategories = document.getElementById("checkboxSaveUpdateCategories")
         let confirmChangesCheckboxUpdateCategories = document.getElementById("confirmChangesCheckboxUpdateCategories")
+        let inputCategorySettingsBackgroundImageUrl = document.getElementById("inputCategorySettingsBackgroundImageUrl")
         let editCategoryObjects = document.getElementsByClassName("editCategoryObj")
 
         categories = categories.sort((a, b) => { return a.pos - b.pos })
@@ -2144,6 +2148,7 @@ export default {
         updateStatusMessageUpdateCategories.style.display = "none"
         confirmChangesCheckboxUpdateCategories.style.display = "none"
         checkboxSaveUpdateCategories.checked = false
+        inputCategorySettingsBackgroundImageUrl.value = ""
     }
 
 
@@ -3898,51 +3903,6 @@ export default {
         let lsToken = localStorage.getItem("cms-token")
         let userInfo = {"username": lsAccount, "lastLogin": lsLastLogin, "token": lsToken }
         let obj = {"userInfo": userInfo, "password": editAccountDangerConfirmText.value}
-        let defaultSettings = {
-            "buttonAbout": "true",
-            "buttonAboutText": "this is a text example",
-            "buttonContact": "true",
-            "buttonFullscreen": "true",
-            "buttonSearch": "true",
-            "colorLoadingScreen": "#000000",
-            "colorNavBackground": "transparent",
-            "colorNavIcons": "transparent",
-            "colorNavIconsText": "#000000",
-            "colorSectionBackground": "red",
-            "colorText": "#ffffff",
-            "loadingScreen": "true",
-            "loadingScreenUrl": "",
-            "modeSlideshow": "true",
-            "navIconSize": "small",
-            "navIconType": "rounded",
-            "navPosition": "left",
-            "pageEnd": "true",
-            "pageEndText": "this is a end text example",
-            "pageEndTitle": "End",
-            "pageEndBackgroundImage": "",
-            "pageIndex": "false",
-            "pageStart": "true",
-            "pageStartText": "this is a start text example",
-            "pageStartTitle": "Start",
-            "pageStartBackgroundImage": "",
-            "sectionBackgroundImage": "false",
-            "sectionBackgroundImageUrl": "",
-            "siteAccess": "public",
-            "sitePasswordProtected": "false",
-            "sitePasswordProtectedPassword": "",
-            "textSize": "medium",
-            "textStyle": "normal",
-            "iconImage192x192": DEFAULT_DOMAIN + "/images/pwa/pwa-icon-192x192-original.png",
-            "iconImage512x512": DEFAULT_DOMAIN + "/images/pwa/pwa-icon-512x512-original.png"
-        }
-        let defaultCredentials = {
-            "country": "country",
-            "domain": "",
-            "email": "example@email.com",
-            "name": "name",
-            "phone": "+123456789",
-            "username": lsAccount
-        }
         
         //update elements
         editAccountDangerDelete.style.display = "none"
@@ -3973,17 +3933,18 @@ export default {
             .then((data) => {
 
                 //debugging
-                console.log(data)
+                // console.log(data)
 
                 //set update successful message
                 if(data.status == "update user reset successful") 
                 { 
-                    console.log(backendAccountSettings.value)
-                    console.log(backendAccountCredentials.value)
+                    //debugging
+                    // console.log(backendAccountSettings.value)
+                    // console.log(backendAccountCredentials.value)
 
                     //set vuex
-                    store.dispatch('storage/actionSetBackendAccountSettings', defaultSettings)
-                    store.dispatch('storage/actionSetBackendAccountCredentials', defaultCredentials)
+                    store.dispatch('storage/actionSetBackendAccountSettings', backendAccountSettings.value)
+                    store.dispatch('storage/actionSetBackendAccountCredentials', backendAccountCredentials.value)
 
                     updateStatusMessage.style.color = "white"
                     updateStatusMessage.style.display = "block"
@@ -4154,7 +4115,7 @@ export default {
         manifest = {
             name: 'Backend',
             short_name: 'Backend',
-            display: 'fullscreen',
+            display: 'standalone',
             theme_color: '#000000',
             background_color: '#000000',
             icons: [
@@ -4201,6 +4162,13 @@ export default {
     {
         return value.toString().substring(0, 1).toUpperCase() + value.substring(1).toLowerCase()
     }
+
+
+    function reloadPage()
+    {
+        window.location.reload()
+    }
+    
 
     return {
         //variables
@@ -4254,7 +4222,8 @@ export default {
         backendAccountLoginInfo,
         imageGalleryUpdateImageDescription,
         logout,
-        checkoutPublicSite
+        checkoutPublicSite,
+        reloadPage
     }
   }
 }
@@ -4440,6 +4409,21 @@ export default {
     #checkoutPublicSite:hover { opacity: 1; }
     #checkoutPublicSite:active { opacity: 1; }
     #mobileCheckoutPublicSite { display: none; }
+    #reloadPage 
+    { 
+        position: fixed; 
+        display: block; 
+        height: auto; 
+        width: auto; 
+        bottom: 49px;
+        right: 22px;
+        font-size: 49px;
+        font-weight: normal;
+        cursor: default;
+        opacity: 0.2;
+    }
+    #reloadPage:hover { opacity: 1; }
+    #reloadPage:active { opacity: 1; }
     #logoutAccount 
     { 
         position: fixed; 
@@ -4448,14 +4432,15 @@ export default {
         width: auto; 
         bottom: 4px;
         right: 24px;
-        font-size: 40px;
+        font-size: 42px;
+        font-weight: bold;
         opacity: 0.2;
     }
-    #settingsAccount:active { opacity: 1; }
-    #settingsAccount:hover { opacity: 1; }
     #logoutAccount:hover { opacity: 1; }
     #logoutAccount:active { opacity: 1; }
     #logoutAccountText { margin: 0px; padding: 0px; cursor: default; }
+    #settingsAccount:active { opacity: 1; }
+    #settingsAccount:hover { opacity: 1; }
     #dataObjModal 
     { 
         position: fixed; 
@@ -5594,20 +5579,21 @@ export default {
         {
             position: fixed; 
             display: block; 
-            height: 40px; 
-            width: 40px;
+            height: 36px; 
+            width: 36px;
             top: initial;
-            bottom: 11px;
+            bottom: 14px;
             left: initial;
-            right: 12px;
-            opacity: 0.2;
+            right: 14px;
+            opacity: 0.4;
             border-radius: 90%;
             background-color: white;
         }
+        #reloadPage { display: none; }
 
         .section { margin: 0px 6px 0px 6px; padding: 20px; background-color: transparent; }
         .category { margin: 0px 10px 0px 10px ; padding: 0px; font-size: 24px; font-weight: normal; }
-        .data { padding: 20px 20px 20px 26px; font-size: 20px; opacity: 0.6; }
+        .data { padding: 20px 20px 20px 26px; font-size: 20px; font-weight: normal; opacity: 0.6; }
         .editPosDisplay { margin: 6px 12px 0px 12px; }
         .editPosDown { margin: 6px 12px 0px 12px; }
         .editPosUp { margin: 6px 12px 0px 12px; }
@@ -5626,7 +5612,15 @@ export default {
         .dataObjModalRowTitle { font-size: 22px; }
         .editAccountInputDanger { font-size: 20px; }
         .accountInfoTitle { display: inline-block; width: auto; font-size: 20px; white-space: nowrap; }
-        .accountInfoText { display: inline-block; width: -webkit-fill-available; margin: 0px; font-size: 20px; white-space: nowrap; overflow-x: scroll; }
+        .accountInfoText 
+        { 
+            display: inline-block; 
+            width: -webkit-fill-available; 
+            margin: 0px 0px 0px 10px;
+            font-size: 20px; 
+            white-space: nowrap; 
+            overflow-x: scroll; 
+        }
         .inputMultilineText { padding: 10px; }
         .dataObjModalRowInput { padding: 3px 10px 3px 10px; }
         .inputMultilineSidebarPos { padding: 20px 10px 10px 20px; }

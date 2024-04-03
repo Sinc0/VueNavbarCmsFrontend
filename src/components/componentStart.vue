@@ -16,12 +16,12 @@
 
         <!-- modal: register -->
         <div id="register">
-            <label id="registerInfoUsername">username max length: 10</label>
-            <label id="registerInfoPassword">password max length: 10</label>
+            <label id="registerInfoUsername">username max length: 20</label>
+            <label id="registerInfoPassword">password max length: 20</label>
             <label id="registerErrorMessage"></label>
-            <input required id="registerUsername" class="inputRegister" type="text" placeholder="username" maxlength="10" />
-            <input required id="registerPassword" class="inputRegister" type="password" placeholder="password" maxlength="10" />
-            <input required id="registerConfirmPassword" class="inputRegister" type="password" placeholder="password again" maxlength="10" />
+            <input required id="registerUsername" class="inputRegister" type="text" placeholder="username" maxlength="20" />
+            <input required id="registerPassword" class="inputRegister" type="password" placeholder="password" maxlength="20" />
+            <input required id="registerConfirmPassword" class="inputRegister" type="password" placeholder="password again" maxlength="20" />
             <div id="registerPasswordOverlayImages">
                 <img id="iconShowRegister" class="inputOverlayImg" src="/images/icons/iconHidden.png" v-on:click="showPasswordCharacters()" />
             </div>
@@ -31,8 +31,8 @@
         <!-- modal: login -->
         <div id="login">
             <label id="loginErrorMessage"></label>
-            <input required id="loginUsername" class="inputLogin" type="text" placeholder="username" maxlength="10" />
-            <input required id="loginPassword" class="inputLogin" type="password" placeholder="password" maxlength="10" />
+            <input required id="loginUsername" class="inputLogin" type="text" placeholder="username" maxlength="20" />
+            <input required id="loginPassword" class="inputLogin" type="password" placeholder="password" maxlength="20" />
             <div id="registerLoginOverlayImages">
                 <img id="iconShowLogin" class="inputOverlayImg" src="/images/icons/iconHidden.png" v-on:click="showPasswordCharacters()" />
             </div>
@@ -342,7 +342,7 @@ export default {
         manifest = {
             name: 'Backend',
             short_name: 'Backend',
-            display: 'fullscreen',
+            display: 'standalone',
             theme_color: '#000000',
             background_color: '#000000',
             icons: [
