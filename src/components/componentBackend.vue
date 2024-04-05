@@ -476,7 +476,7 @@
                 </div>
                 
                 <!-- edit: account text -->
-                <div id="editAccountText" class="editAccountSection">
+                <div id="editAccountTexts" class="editAccountSection">
 
                     <!-- title -->
                     <label class="editAccountTitle">Text</label>
@@ -4774,6 +4774,7 @@ export default {
     }
     #settingsAccountText { display: none; }
     #editAccountIconDefaultIcons { display: flex; overflow-x: scroll; }
+    #editAccountTexts { display: none; }
 
 
     /*** classes ***/

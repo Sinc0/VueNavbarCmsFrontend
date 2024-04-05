@@ -47,10 +47,10 @@
             <p class="aboutText">This a student project made to learn about Vue, Python, Databases</p>
 
             <!-- examples -->
-            <p id="aboutExamplesTitle" class="aboutTitle">Examples</p>
-            <p class="aboutText">#1</p>
-            <p class="aboutText">#2</p>
-            <p class="aboutText">#3</p>
+            <p id="aboutExamplesTitle" class="aboutTitle">Project Examples</p>
+            <p class="aboutText"><a class="aboutLink" href="/electric-vehicles">Electric Vehicles</a></p>
+            <p class="aboutText"><a class="aboutLink" href="/top-10-countries-by-population">Countries</a></p>
+            <p class="aboutText"><a class="aboutLink" href="/cities">Cities</a></p>
 
             <!-- privacy policy -->
             <p id="aboutPrivacyPolicyTitle" class="aboutTitle">Privacy Policy</p>
@@ -572,6 +572,7 @@ export default {
     .aboutText { margin: 0px; margin: 6px 0px 6px 0px; padding: 0px; font-weight: bold; font-size: 20px; opacity: 0.7; text-align: center }
     .no { color: red; }
     .yes { color: lightgreen; }
+    .aboutLink { text-decoration: none; color: white; }
 
 
     /*** mobile ***/

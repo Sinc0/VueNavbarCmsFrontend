@@ -163,7 +163,7 @@
                     <div v-if="item.hidden == 'false'" class="selectSection" v-on:click="setRoutePath(item.title)">{{item.title}}</div>
                 </div>
                 
-                <p id="selectedSectionPageEnd" class="selectSection" v-on:click="setRoutePath('end')">End</p>
+                <!-- <p id="selectedSectionPageEnd" class="selectSection" v-on:click="setRoutePath('end')">End</p> -->
             </div>
         </div>
 
@@ -504,7 +504,7 @@ export default {
 
 
     //variables
-    const BACKEND_API = configs.REST_API || "http://127.0.0.1:8000" 
+    const BACKEND_API = configs.REST_API || "http://127.0.0.1:8000"
     const frontendSections = computed(() => { return store.getters['storage/frontendSections']})
     const frontendCategories = computed(() => { return store.getters['storage/frontendCategories']})
     const frontendData = computed(() => { return store.getters['storage/frontendData']})
@@ -663,10 +663,22 @@ export default {
             { 
                 setDomainData(data).then(() => { generatePwaManifest()})
             }
+            
+            //domain is private
+            else if(data.status == "domain is private") 
+            {
+                let lsAcc = localStorage.getItem("cms-account")
+                let lsToken = localStorage.getItem("cms-token")
+                let lsLastLogin = localStorage.getItem("cms-last-login")
 
-            //fetch domain failed
-            if(data.status == "fetch specific domain failed") { router.push("/") }
-            else if(data.status == "domain does not exist") { router.push("/") }
+                if(lsAcc != "" && lsToken != "" && lsLastLogin != "")
+                {
+                    fetchPrivateDomain(lsAcc, lsToken, lsLastLogin)
+                }
+
+            }
+
+            //domain is password protected
             else if(data.status == "domain is password protected")
             {
                 let sitePasswordProtectedModal = document.getElementById("sitePasswordProtectedModal")
@@ -675,6 +687,10 @@ export default {
                 sitePasswordProtectedModal.style.display = "block"
                 passwordProtectedDomainName.value = data.domainName
             }
+
+            //fetch domain failed
+            else if(data.status == "domain does not exist") { router.push("/") }
+            
         })
     }
 
@@ -942,7 +958,7 @@ export default {
     function loadCategoryNavigatorModal()
     {
         //debugging
-        console.log("loadCategoryNavigatorModal")
+        // console.log("loadCategoryNavigatorModal")
 
         //elements
         let categoryNavigatorModal = document.getElementById("categoryNavigatorModal")
@@ -965,7 +981,7 @@ export default {
     function loadSectionNavigatorModal()
     {
         //debugging
-        console.log("loadSectionNavigatorModal")
+        // console.log("loadSectionNavigatorModal")
 
         //elements
         let sectionNavigatorModal = document.getElementById("sectionNavigatorModal")
@@ -988,7 +1004,7 @@ export default {
     function loadAboutModal()
     {
         //debugging
-        console.log("loadAboutModal")
+        // console.log("loadAboutModal")
 
         //elements
         let aboutModal = document.getElementById("aboutModal")
@@ -1035,7 +1051,7 @@ export default {
     function loadNextCategory()
     {   
         //debugging
-        console.log("loadNextCategory")
+        // console.log("loadNextCategory")
         
         //null check
         if(frontendCategories.value == null) { return }
@@ -1079,7 +1095,7 @@ export default {
     function loadPreviousCategory()
     {
         //debugging
-        console.log("loadNextCategory")
+        // console.log("loadPreviousCategory")
 
         //null check
         if(frontendCategories.value == null) { return }
@@ -1197,7 +1213,7 @@ export default {
     function specificImageGalleryItem(imageGalleryId, imageGalleryData, specificImageNr)
     {
         //debugging
-        console.log("specificImageGalleryItem: " + specificImageNr)
+        // console.log("specificImageGalleryItem: " + specificImageNr)
 
         //elements
         let imageGallery = document.getElementById("imageGallery#" + imageGalleryId)
@@ -1224,7 +1240,7 @@ export default {
     }
 
 
-    async function fetchProtectedDomain()
+    async function fetchProtectedDomainData()
     {
         //elements
         let passwordProtectedDomainName = document.getElementById("passwordProtectedDomainName")
@@ -1235,7 +1251,9 @@ export default {
         //variables
         let domainName = passwordProtectedDomainName.value
         let domainPassword = passwordProtectedPasswordInput.value
-        let obj = JSON.stringify({"domainName": domainName, "domainPassword": domainPassword})
+        let route = router.currentRoute.value.params
+        let domainRoute = route.domain || ""
+        let obj = JSON.stringify({"domainRoute": domainRoute, "domainName": domainName, "domainPassword": domainPassword})
 
         if(domainName != '' && domainPassword != '')
         {
@@ -1244,7 +1262,7 @@ export default {
             .then((response) => { return response.json() })
             .then((data) => {
                 //debugging
-                console.log(data)
+                // console.log(data)
 
                 if(data.status == "fetch protected domain successful")
                 {   
@@ -1265,7 +1283,7 @@ export default {
     async function setDomainData(data)
     {   
         //debugging
-        console.log(data.settings)
+        // console.log(data.settings)
 
         //elements
         let loadingScreen = document.getElementById("loadingScreen")
@@ -1301,9 +1319,10 @@ export default {
         let frontendSectionsListFlexDirection = ""
         let navIconTypeBorderRadius = ""
         let route = data.route
+        let docTitle = route.domain || data.route
         
         //set html title
-        document.title = capitalizeString(route.domain)
+        document.title = capitalizeString(docTitle)
         
         //save to vuex
         store.dispatch('storage/actionSetFrontendSections', data.sections)
@@ -1328,7 +1347,7 @@ export default {
         setTimeout(() => {
             //set pages
             if(settings.pageStart == "true") { setTimeout(() => { document.getElementById("buttonStart").style.display = "block" }, 100) }
-            if(settings.pageEnd == "true" ) { setTimeout(() => { document.getElementById("selectedSectionPageEnd").style.display = "block" }, 100) }
+            // if(settings.pageEnd == "true" ) { setTimeout(() => { document.getElementById("selectedSectionPageEnd").style.display = "block" }, 100) }
 
             //set extras
             if(settings.modeSlideshow == "true" && window.screen.width > 1000) { buttonSlideshowMode.style.display = "block" }
@@ -1503,7 +1522,7 @@ export default {
     function setRoutePath(value)
     {   
         //debugging
-        console.log("setRoutePath")
+        // console.log("setRoutePath")
 
         //variables
         let routeParams = router.currentRoute.value.params
@@ -1534,7 +1553,7 @@ export default {
     function handleRouting(route)
     {   
         //debugging
-        console.log("handleRouting")
+        // console.log("handleRouting")
 
         //variables
         let type = ""
@@ -1701,7 +1720,9 @@ export default {
 
     function capitalizeString(value)
     {   
-        console.log("capitalizeString")
+        //debugging
+        // console.log("capitalizeString")
+        
         //set value
         value = value.replaceAll("-", " ")
 
@@ -1726,7 +1747,7 @@ export default {
     function loadSearchModal()
     {
         //debugging
-        console.log("loadSearchModal")
+        // console.log("loadSearchModal")
 
         //elements
         let searchModal = document.getElementById("searchModal")
@@ -1776,7 +1797,7 @@ export default {
     function search(value)
     {
         //debugging
-        console.log("search: " + value)
+        // console.log("search: " + value)
 
         //elements
         let searchModalInput = document.getElementById("searchModalInput")
@@ -1912,7 +1933,7 @@ export default {
     function selectSearchHitsCategory(type)
     {   
         //debugging
-        console.log("selectSearchHitsCategory: " + type)
+        // console.log("selectSearchHitsCategory: " + type)
 
         //elements
         let searchModalResults = document.getElementById("searchModalResults")
@@ -1978,7 +1999,7 @@ export default {
     function preloadImages()
     {
         //debugging
-        console.log("preloadImages")
+        // console.log("preloadImages")
         
         //category background images
         for(let item in frontendCategories.value)
@@ -1987,8 +2008,6 @@ export default {
 
             if(categoryBackgroundImage != null)
             {
-                // console.log(categoryBackgroundImage)
-                
                 let newImg = new Image
                 newImg.src = categoryBackgroundImage
             }
@@ -2295,6 +2314,7 @@ export default {
         store.dispatch('storage/actionSetFrontendSlideshowPage', slides[slidesCurrentPage])
     }
 
+
     function slideshowModeExit()
     {
         setTimeout(() => {
@@ -2325,7 +2345,7 @@ export default {
     async function generatePwaManifest()
     {
         //debugging
-        console.log("generatePwaManifest")
+        // console.log("generatePwaManifest")
         
         //variables
         let manifest = ""
@@ -2359,13 +2379,54 @@ export default {
     function loadLinkListUrl(url)
     {
         //debugging
-        console.log(url)
+        // console.log(url)
 
         //load external
         if(url.includes("://")) { window.open(url, '_self') }
 
         //load internal
         else { router.push(url) }
+    }
+
+
+    async function fetchProtectedDomain()
+    {
+        fetchProtectedDomainData().then(() => { generatePwaManifest()})
+    }
+
+    
+    async function fetchPrivateDomain(lsUsername, lsToken, lsLogin)
+    {   
+        //variables
+        let username = lsUsername
+        let token = lsToken
+        let lastLogin = lsLogin
+        let obj = JSON.stringify({ "username": username, "token": token, "lastLogin": lastLogin })
+
+        //null check
+        if(username == null || token == null || lastLogin == null) { router.push("/"); return }
+        
+        //fetch specific user data
+        await fetch(BACKEND_API + "/domain-private", {method: 'post', body: obj})
+        .then((response) => { return response.json() })
+        .then((data) => {
+            
+            //debugging
+            // console.log(data)
+
+            //fetch user successful
+            if(data.status == "fetch private domain successful") 
+            { 
+                setDomainData(data).then(() => { generatePwaManifest()})
+            }
+
+            //fetch user failed
+            else if(data.status == "fetch private domain failed") 
+            {
+                router.push("/")
+            }
+
+        })
     }
 
 
@@ -2403,6 +2464,7 @@ export default {
         nextImageGalleryItem,
         previousImageGalleryItem,
         fetchProtectedDomain,
+        fetchProtectedDomainData,
         displayExtraPage,
         fullscreen,
         displayMobileNavigator,

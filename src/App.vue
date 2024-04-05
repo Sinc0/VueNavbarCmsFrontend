@@ -10,8 +10,8 @@ import {onMounted, onUpdated} from 'vue'
     setup() {
     
     //lifecycle hooks
-    onMounted(() => { console.log("App mounted") })
-    onUpdated(() => { console.log("App updated") })
+    // onMounted(() => { console.log("App mounted") })
+    // onUpdated(() => { console.log("App updated") })
 
     return {}
   }}

@@ -18,8 +18,8 @@ export default {
 
   setup() {
     //lifecycle hooks
-    onMounted(() => { console.log("viewFrontend mounted") })
-    onUpdated(() => { console.log("viewFrontend updated") })
+    // onMounted(() => { console.log("viewFrontend mounted") })
+    // onUpdated(() => { console.log("viewFrontend updated") })
 
     return {
 

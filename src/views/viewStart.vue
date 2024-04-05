@@ -19,8 +19,8 @@ export default {
 
   setup() {
     //lifecycle hooks
-    onMounted(() => { console.log("viewStart mounted") })
-    onUpdated(() => { console.log("viewStart updated") })
+    // onMounted(() => { console.log("viewStart mounted") })
+    // onUpdated(() => { console.log("viewStart updated") })
 
     return { 
         
