@@ -1,16 +1,18 @@
 <template>
     <div id="componentStart">
         
-        <!-- menu categories -->
+        <!-- menu -->
         <div id="menu">
+
+            <!-- tab: login -->
             <span id="menuCategoryLogin" class="menuCategory" v-on:click="displaySelectedMenu('login')">Login</span>
-            
             <span class="dot"> • </span>
             
+            <!-- tab: register -->
             <span id="menuCategoryRegister" class="menuCategory" v-on:click="displaySelectedMenu('register')">Register</span>
-            
             <span class="dot"> • </span>
             
+            <!-- tab: about -->
             <span id="menuCategoryAbout" class="menuCategory" v-on:click="displaySelectedMenu('about')">About</span>
         </div>
 
@@ -79,22 +81,27 @@ import configs from '/configs.json'
 
 export default {
   setup() {
+
     //variables
     const BACKEND_API = configs.REST_API || "http://127.0.0.1:8000"
     const DEFAULT_DOMAIN = configs.DEFAULT_DOMAIN || "http://127.0.0.1:8000"
     const DEFAULT_TITLE = configs.DEFAULT_TITLE || ""
 
 
-    //lifecycle hooks
+    //lifecycle hook: onMounted
     onMounted(() => 
     { 
         console.log("componentStart mounted")
         document.title = DEFAULT_TITLE
         generatePwaManifest()
     })
+
+
+    //lifecycle hook: onUpdated
     onUpdated(() => { console.log("componentStart updated") })
 
 
+    //functions
     function displaySelectedMenu(type)
     {
         //elements

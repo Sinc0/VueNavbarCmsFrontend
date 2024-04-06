@@ -72,7 +72,7 @@
                         <div id="frontendDataTitleTimeline" class="frontendDataTitle">{{data.title}}</div>
                         
                         <!-- data -->
-                        <div class="timelineDataObj frontendDataData" v-if="timelineData != ''" v-for="item in timelineData">
+                        <div v-bind:id="'timelineItem' + (index + 1)" class="timelineDataObj frontendDataData" v-if="timelineData != ''" v-for="(item, index) in timelineData">
                             <div class="timeline">
                                 <span class="timelineYear">━━  {{item.year}}  ━━ </span>
                                 <span class="timelineText">  {{item.text}}</span>
@@ -279,7 +279,7 @@
                 <p class="infoItemMousebind">
                     <span class="infoItemMousebindName">Click Scroll</span>
                     <span class="dotMousebindItem">·</span>
-                    <span class="infoItemMousebindDescription">Slideshow</span>
+                    <span class="infoItemMousebindDescription">Slideshow Mode</span>
                 </p>
                 <p class="infoItemMousebind">
                     <span class="infoItemMousebindName">Click Side 1</span>
@@ -381,17 +381,26 @@
                         <span class="searchResultDataType">category</span>
                         <span class="dotSearchItem"> · </span>
                         <span>{{item.title}}</span>
-                        <span class="dotSearchItem"> · in {{item.section}} </span>
+                        <span class="dotSearchItem"> · in {{firstLetterToUpperCase(item.section)}} </span>
                     </div>
                     
-                    <!-- text -->
-                    <div class="searchResultData searchResultItem" v-else-if="item.searchResultType == 'text' && item.text" v-on:click="setRoutePath(item.section + '/' + item.category + '@row' + item.divId + '-item' + item.pos, item)">
+                    <!-- text/lists -->
+                    <div class="searchResultData searchResultItem" v-else-if="item.searchResultType == 'text' && item.dataType != 'timeline' && item.text" v-on:click="setRoutePath(item.section + '/' + item.category + '@row' + item.divId + '-item' + item.pos, item)">
                         <div class="searchResultDataText">
                             <span class="searchResultDataType" v-if="item.dataType == 'linklist'">link</span>
-                            <span class="searchResultDataType" v-else-if="item.dataType == 'textlist'">item</span>
+                            <span class="searchResultDataType" v-else-if="item.dataType == 'textlist'">list-item</span>
                             <span class="searchResultDataType" v-else-if="item.dataType == 'timeline'">timeline</span>
                             <span class="searchResultDataType" v-else-if="item.dataType == 'singleline'">text</span>
                             <span class="searchResultDataType" v-else-if="item.dataType == 'multiline'">text</span>
+                            <span class="dotSearchItem">·</span> 
+                            <span>{{item.text}}</span>
+                        </div>
+                    </div>
+
+                    <!-- timeline -->
+                    <div class="searchResultData searchResultItem" v-else-if="item.searchResultType == 'text' && item.dataType == 'timeline' && item.text" v-on:click="setRoutePath(item.section + '/' + item.category + '@row' + item.divId + '-timeline' + item.pos, item)">
+                        <div class="searchResultDataText">
+                            <span class="searchResultDataType" v-if="item.dataType == 'timeline'">timeline</span>
                             <span class="dotSearchItem">·</span> 
                             <span>{{item.text}}</span>
                         </div>
@@ -526,14 +535,14 @@ export default {
     var slidesCurrentPage = 0
 
 
-    //lifecycle hook: on mounted
+    //lifecycle hook: onMounted
     onMounted(() => { 
         console.log("componentFrontend mounted")
         fetchDomain()
     })
     
 
-    //lifecycle hook: on updated
+    //lifecycle hook: onUpdated
     onUpdated(() => {
         console.log("componentFrontend updated")
         
@@ -888,8 +897,10 @@ export default {
 
     function sortFrontendDataRowsSlideshow(rows)
     {
+        //variables
         let sorted = []
 
+        //add rows to array
         if(rows && rows.length == 1)
         {
             let r = JSON.parse(rows)
@@ -1345,6 +1356,7 @@ export default {
 
         //set styling
         setTimeout(() => {
+            
             //set pages
             if(settings.pageStart == "true") { setTimeout(() => { document.getElementById("buttonStart").style.display = "block" }, 100) }
             // if(settings.pageEnd == "true" ) { setTimeout(() => { document.getElementById("selectedSectionPageEnd").style.display = "block" }, 100) }
@@ -1445,15 +1457,15 @@ export default {
             document.documentElement.style.setProperty("--frontendCategoriesTop", frontendCategoriesTop)
             document.documentElement.style.setProperty("--frontendDataTop", frontendDataTop)
             document.documentElement.style.setProperty("--frontendDataRowsMaxHeight", frontendDataRowsMaxHeight)
-            document.documentElement.style.setProperty("--colorLoadingScreen", settings.colorLoadingScreen)
+            // document.documentElement.style.setProperty("--colorLoadingScreen", settings.colorLoadingScreen)
             document.documentElement.style.setProperty("--colorNavBackground", settings.colorNavBackground)
             document.documentElement.style.setProperty("--colorNavIcons", settings.colorNavIcons)
-            document.documentElement.style.setProperty("--colorNavIconsText", settings.colorNavIconsText)
+            // document.documentElement.style.setProperty("--colorNavIconsText", settings.colorNavIconsText)
             document.documentElement.style.setProperty("--colorText", settings.colorText)
             document.documentElement.style.setProperty("--colorSectionBackground", settings.colorSectionBackground)
         }, 100)
 
-        //preload images from galleries
+        //preload domain images
         preloadImages()
     }
 
@@ -1616,9 +1628,11 @@ export default {
         else if(type == "section + category") 
         {   
             let rowDivId = ""
+            let rowDivTimelineId = ""
             let rowDivImage = ""
             let splitRoute = ""
             let itemType = ""
+            let searchItemDiv = ""
 
             //route is standard
             if(!route.category.includes("@")) 
@@ -1628,24 +1642,41 @@ export default {
             
             //route includes row/item
             else if(route.category.includes("@")) 
-            { 
+            {
+                //set item type 
                 splitRoute = route.category.split("@")
                 route.category = splitRoute[0]
-                
                 if(splitRoute[1] == "") { return }
                 else if(splitRoute[1].split("-")[1].toString().includes("image")) { itemType = "image"}
-                else { itemType = "item" }
+                else if(splitRoute[1].split("-")[1].toString().includes("item")) { itemType = "item" }
+                else { itemType = "timeline" }
 
+                //set item id
                 rowDivId = splitRoute[1].split("-")[0].toString().replace("row", "")
+                rowDivTimelineId = splitRoute[1].split("-")[1].toString().replace("timeline", "")
                 rowDivImage = splitRoute[1].split("-")[1].toString().replace("image", "")
                 
+                //load related category & data
                 loadSectionCategories(sectionObj, route.section , route.category)
 
+                //scroll to specific item
                 setTimeout(() => { 
-                    let searchItemDiv = document.getElementById("data" + rowDivId)
                     
-                    if(itemType == "item") { searchItemDiv.scrollIntoView({ behavior: 'smooth' }) }
+                    //text/list
+                    if(itemType == "item") 
+                    { 
+                        searchItemDiv = document.getElementById("data" + rowDivId)
+                        searchItemDiv.scrollIntoView({ behavior: 'smooth' }) 
+                    }
 
+                    //timeline
+                    else if(itemType == "timeline")
+                    {
+                        searchItemDiv = document.getElementById("timelineItem" + rowDivTimelineId)
+                        searchItemDiv.scrollIntoView({ behavior: 'smooth' }) 
+                    }
+
+                    //image 
                     else if(itemType == "image")
                     {
                         let imageGalleryData = ""
@@ -1656,7 +1687,9 @@ export default {
                             if(obj.type == 'galleryImages' && obj.pos == rowDivId) { imageGalleryData = obj.data }
                         }
 
+                        searchItemDiv = document.getElementById("data" + rowDivId)
                         searchItemDiv.scrollIntoView({ behavior: 'smooth' })
+
                         specificImageGalleryItem(rowDivId, imageGalleryData, rowDivImage)
                     }
                 }, 300)
@@ -2512,10 +2545,10 @@ export default {
         --backgroundPageStart: initial;
         --backgroundPageEnd: initial;
 
-        --colorLoadingScreen: black;
+        /* --colorLoadingScreen: black; */
         --colorNavBackground: black; 
         --colorNavIcons: black; 
-        --colorNavIconsText: black;
+        /* --colorNavIconsText: black; */
         --colorSectionBackground: black;
         --colorText: black;
 
@@ -2850,6 +2883,7 @@ export default {
         text-shadow: 0px 1px black;
         white-space: nowrap;
         overflow-x: scroll;
+        color: var(--colorText);
     }
     #pageStartText 
     {
@@ -2861,6 +2895,7 @@ export default {
         white-space: nowrap;
         opacity: 0.6;
         overflow-x: scroll;
+        color: var(--colorText);
     }
     #pageEndTitle 
     { 
@@ -2872,6 +2907,7 @@ export default {
         text-shadow: 0px 1px black;
         white-space: nowrap;
         overflow-x: scroll;
+        color: var(--colorText);
     }
     #pageEndText 
     { 
@@ -2883,6 +2919,7 @@ export default {
         white-space: nowrap;
         opacity: 0.6;
         overflow-x: scroll;
+        color: var(--colorText);
     }
     #mobileNavigatorButton { display: none; }
     #mobileNavigatorModal { display: none; }
@@ -3482,7 +3519,7 @@ export default {
     /*** mobile ***/
     @media screen and (max-width: 1000px) and (orientation: portrait)
     {
-        #frontendSections { bottom: 0px; height: auto; width: -webkit-fill-available; margin: 0px; padding: 0px; }
+        #frontendSections { bottom: 0px; height: fit-content; width: -webkit-fill-available; margin: 0px; padding: 0px; }
         #frontendSectionsList { flex-direction: row; height: auto; justify-content: center; } 
         #frontendCategories { width: 80vw; top: 3vh; left: 0%; margin: 0px 10vw 0px 10vw; }
         #frontendData { width: 80vw; left: 0%; margin: 0px 10vw 0px 10vw; }

@@ -3,8 +3,9 @@
         
         <!-- sections -->
         <div id="backendSections" v-if="backendSections">
+            
+            <!-- select section -->
             <div id="backendSectionsList">
-                <!-- select section -->
                 <div v-bind:id="'section#' + section.pos" class="section" 
                     v-for="section in sortBackendSections(backendSections)" 
                     v-on:click="loadSectionCategories(section)" 
@@ -17,6 +18,7 @@
 
         <!-- categories -->
         <div id="backendCategories" v-if="backendCategoriesSelected">
+            
             <!-- edit category -->
             <div id="">
                 <img id="settingsCategoriesIcon" src="/images/icons/iconSettingsCategories.png" v-on:click="editCategoriesModal(backendCategories)" />
@@ -35,6 +37,7 @@
 
         <!-- data -->
         <div id="backendData">
+            
             <!-- select data row -->
             <div id="backendDataRows">
                 <div class="data" v-for="data in sortBackendDataSelected(backendDataSelected)" v-on:click="loadDataObjModal(data, false)">
@@ -49,6 +52,7 @@
 
         <!-- modal: data obj -->
         <div id="dataObjModal" v-if="backendDataObjModal">
+            
             <!-- header -->
             <p id="dataObjModalHeader" class="dataObjHeader">&lt{{backendDataObjModal.type}}></p>
             
@@ -349,6 +353,7 @@
             
             <!-- account credentials -->
             <div id="editAccountCredentials" class="editAccountSection" v-if="backendAccountCredentials">
+                
                 <!-- variables -->
                 <div hidden>{{accountCredentials = sortAccountCredentials(backendAccountCredentials)}}</div>
                 
@@ -393,10 +398,10 @@
                         <img id="iconYellow" class="editAccountIcon" src="/images/pwa/pwa-icon-192x192-yellow.png" v-on:click="editIcon('yellow')" />
                     </div>
                     
-                    <!-- <input id="editAccountIconInputDefault" class="editAccountInputText" type="button" value="Default" /> -->
-                    <!-- <input id="editAccountIconInputCustom" class="editAccountInputText" type="button" value="Custom" /> -->
                     <input id="editAccountIconInput192x192" class="editAccountInputText" type="text" value="" placeholder="Icon Image Url (192x192)" maxlength="100" />
                     <input id="editAccountIconInput512x512" class="editAccountInputText" type="text" value="" placeholder="Icon Image Url (512x512)" maxlength="100" />
+                    <!-- <input id="editAccountIconInputDefault" class="editAccountInputText" type="button" value="Default" /> -->
+                    <!-- <input id="editAccountIconInputCustom" class="editAccountInputText" type="button" value="Custom" /> -->
                     <!-- <input hidden id="editAccountIconInput192x192" class="editAccountInputText" type="text" value="" placeholder="Icon Image Url (192x192)" maxlength="100" /> -->
                     <!-- <input hidden id="editAccountIconInput512x512" class="editAccountInputText" type="text" value="" placeholder="Icon Image Url (512x512)" maxlength="100" /> -->
                 </div>
@@ -420,7 +425,7 @@
                     </div>
     
                     <!-- color: loading screen -->
-                    <div id="" class="editAccountColors">
+                    <div id="editAccountLoadingScreenColor" class="editAccountColors">
                         <input id="editAccountColorLoadingScreen" class="editAccountInputColor" type="text" maxlength="40" placeholder="..." />
                         <label class="editAccountText"> Loading Screen</label>
                     </div>
@@ -438,7 +443,7 @@
                     </div>
 
                     <!-- color: nav icons text -->
-                    <div id="" class="editAccountColors">
+                    <div id="editAccountNavIconsTextColor" class="editAccountColors">
                         <input id="editAccountColorNavIconsText" class="editAccountInputColor" type="text" maxlength="40" placeholder="..." />
                         <label class="editAccountText"> Nav Icons Text</label>
                     </div>
@@ -737,17 +742,28 @@ export default {
     var newSectionPos = ""
 
 
-    //lifecycle hooks
-    onMounted(() => { 
+    //lifecycle hook: onMounted
+    onMounted(() => {
+
+        //log
         console.log("componentBackend mounted")
+
+        //set html title
         document.title = "Backend"
+
+        //load user data
         fetchSpecificUser()
+
+        //generate PWA manifest
         generatePwaManifest()
     })
+
+
+    //lifecycle hook: onUpdated
     onUpdated(() => { console.log("componentBackend updated") })
 
 
-    //event listeners
+    //event listener: wheel
     document.addEventListener('wheel', function(e) {
         
         //elements 
@@ -783,7 +799,7 @@ export default {
         .then((data) => {
             
             //debugging
-            console.log(data)
+            // console.log(data)
 
             //fetch user successful
             if(data.status == "fetch specific user successful") 
@@ -937,7 +953,7 @@ export default {
         oldDataPos = data.pos
 
         //debugging
-        console.log("loadDataObjModal: Row " + selectedDataPos)
+        // console.log("loadDataObjModal: Row " + selectedDataPos)
         
         //set vuex
         store.dispatch('storage/actionSetBackendDataObjModal', data)
@@ -1067,8 +1083,10 @@ export default {
         for(let c in rowDataItem)
         {
             if(imagePos == rowDataItem[c].pos) 
-            { 
-                console.log(rowDataItem[c])
+            {   
+                //debugging
+                // console.log(rowDataItem[c])
+
                 rowDataItem.splice(c, 1)
             }
         }
@@ -1124,7 +1142,8 @@ export default {
         //null check
         if(imgUrl == "" || imgUrl == null || imgUrl == undefined) 
         { 
-            console.log("error: image url is empty") 
+            //debugging
+            // console.log("error: image url is empty") 
         }
 
         //handle image data
@@ -1284,13 +1303,7 @@ export default {
         for(let item in galleryImages)
         {   
             let imagePos = galleryImages[item].pos
-
-            if(imagePos == inputImagePosition.value) 
-            { 
-                console.log(galleryImages[item])
-                
-                galleryImages[item].description = imageDescription
-            }
+            if(imagePos == inputImagePosition.value) { galleryImages[item].description = imageDescription }
         }
 
         //stringify gallery images
@@ -1378,7 +1391,7 @@ export default {
         if(type == 'delete')
         {
             //debugging
-            console.log("delete data object: " + pos)
+            // console.log("delete data object: " + pos)
             
             //remove item from backend data
             for(let item in backendData.value)
@@ -1454,7 +1467,7 @@ export default {
             rowData.data = rowData.data
             
             //check special case
-            if(dataObjModalSinglelineText) { rowData.data = dataObjModalSinglelineText.value; console.log(dataObjModalSinglelineText.value)}
+            if(dataObjModalSinglelineText) { rowData.data = dataObjModalSinglelineText.value }
             
             //save row to local storage
             localStorage.setItem("cms-edit-row", JSON.stringify(rowData))
@@ -1477,7 +1490,9 @@ export default {
 
                             if(rowItem.pos == newItem.pos)
                             {
-                                console.log("item position already taken")
+                                //debugging
+                                // console.log("item position already taken")
+
                                 posIsTaken = true
                                 break
                             }
@@ -1607,8 +1622,8 @@ export default {
             //set update successful message
             if(data.status == "update user data successful") 
             { 
-                    //save vuex
-                    store.dispatch('storage/actionSetBackendData', backendData.value)
+                //save vuex
+                store.dispatch('storage/actionSetBackendData', backendData.value)
 
                 if(confirmCheckbox) { confirmCheckbox.style.display = "none" }
                 if(confirmChanges) { confirmChanges.style.display = "none" }
@@ -1773,7 +1788,7 @@ export default {
     function selectPreviewImage(pos, description)
     {
         //debugging
-        console.log("selectPreviewImage:" + pos)
+        // console.log("selectPreviewImage:" + pos)
 
         //elements
         let dataObjModalPreviewImage = document.getElementsByClassName("dataObjModalPreviewImage")
@@ -1805,9 +1820,9 @@ export default {
         type = type.substr(0, 1).toUpperCase() + type.substr(1)
 
         //debugging
-        console.log("type: " + type)
-        console.log("action: " + action)
-        console.log("pos: " + pos)
+        // console.log("type: " + type)
+        // console.log("action: " + action)
+        // console.log("pos: " + pos)
 
         //elements
         let dataObjModalEdit = document.getElementById("dataObjModalEdit" + type)
@@ -1976,7 +1991,9 @@ export default {
         //changes: NO
         if(isChanged == false) 
         { 
-            console.log("editData: no changes") 
+            //debugging
+            // console.log("editData: no changes") 
+
             return 
         }
 
@@ -2036,7 +2053,7 @@ export default {
     function confirmCheckboxes(type)
     {
         //debugging
-        console.log("confirmCheckboxes")
+        // console.log("confirmCheckboxes")
 
         //elements
         let checkboxSave = document.getElementById("checkboxSave")
@@ -2086,7 +2103,7 @@ export default {
     function addNewDataRow(type)
     {
         //debugging
-        console.log("addNewDataRow")
+        // console.log("addNewDataRow")
 
         //elements
         let addDataRowModal = document.getElementById("addDataRowModal")
@@ -2131,6 +2148,7 @@ export default {
         let inputCategorySettingsBackgroundImageUrl = document.getElementById("inputCategorySettingsBackgroundImageUrl")
         let editCategoryObjects = document.getElementsByClassName("editCategoryObj")
 
+        //sort categories by position
         categories = categories.sort((a, b) => { return a.pos - b.pos })
 
         //set local storage
@@ -2251,11 +2269,13 @@ export default {
         //type: ADD
         else if(type == "add") 
         {   
+            //count total items
             for(let item in lsCategories)
             {
                 if(lsCategories[item].section == selectedSection) { totalItems++ }
             }
 
+            //set total items
             totalItems = (totalItems + 1).toString()
 
             //add obj to array
@@ -2534,7 +2554,9 @@ export default {
         //changes: NO
         if(isChanged == false)
         {
-            console.log("editCategory: no changes") 
+            //debugging
+            // console.log("editCategory: no changes")
+
             return 
         }
 
@@ -2550,8 +2572,8 @@ export default {
     function editSection(section, type)
     {
         //debugging
-        console.log("editSection: " + type)
-        console.log(section)
+        // console.log("editSection: " + type)
+        // console.log(section)
         
         //elements
         let editSectionObj = ""
@@ -2651,7 +2673,7 @@ export default {
                     {
                         if(newTitle.toLowerCase() == lsSections[c].title.toLowerCase()) 
                         { 
-                            console.log("section " + newTitle + " already exists") 
+                            //update elements
                             updateStatusMessageUpdateSections.style.color = "red"
                             updateStatusMessageUpdateSections.innerText = "section " + newTitle.toLowerCase() + " already exists"
                             updateStatusMessageUpdateSections.style.display = "block"
@@ -2901,7 +2923,9 @@ export default {
         //changes: NO
         if(isChanged == false)
         {
-            console.log("editSection: no changes") 
+            //debugging
+            // console.log("editSection: no changes")
+
             return 
         }
 
@@ -2979,7 +3003,7 @@ export default {
     function saveChangesCategories()
     {
         //debuging
-        console.log("saveChangesCategories")
+        // console.log("saveChangesCategories")
 
         //variables
         let ls = JSON.parse(localStorage.getItem("cms-edit-category"))
@@ -3055,7 +3079,7 @@ export default {
     function saveChangesSections()
     {
         //debuging
-        console.log("saveChangesSections")
+        // console.log("saveChangesSections")
 
         //variables
         let lsSections = JSON.parse(localStorage.getItem("cms-edit-section"))
@@ -3247,10 +3271,10 @@ export default {
         let editAccountPasswordImgHide = document.getElementById("editAccountPasswordImgHide")
         let editAccountColorNavBackground = document.getElementById("editAccountColorNavBackground")
         let editAccountColorNavIcons = document.getElementById("editAccountColorNavIcons")
-        let editAccountColorNavIconsText = document.getElementById("editAccountColorNavIconsText")
+        // let editAccountColorNavIconsText = document.getElementById("editAccountColorNavIconsText")
         let editAccountColorText = document.getElementById("editAccountColorText")
         let editAccountColorSectionBackground = document.getElementById("editAccountColorSectionBackground")
-        let editAccountColorLoadingScreen = document.getElementById("editAccountColorLoadingScreen")
+        // let editAccountColorLoadingScreen = document.getElementById("editAccountColorLoadingScreen")
         let editAccountPasswordProtectedPassword = document.getElementById("editAccountPasswordProtectedPassword")
         // let editAccountPasswordProtectedPasswordConfirm = document.getElementById("editAccountPasswordProtectedPasswordConfirm")
         let updateStatusMessage = document.getElementById("updateStatusMessageUpdateSettings")
@@ -3299,13 +3323,13 @@ export default {
         //colors
         else if(type == "colorNavBackground") { editAccountColorNavBackground.value = value }
         else if(type == "colorNavIcons") { editAccountColorNavIcons.value = value }
-        else if(type == "colorNavIconsText") { editAccountColorNavIconsText.value = value }
+        // else if(type == "colorNavIconsText") { editAccountColorNavIconsText.value = value }
         else if(type == "colorText") { editAccountColorText.value = value }
         else if(type == "colorSectionBackground") { editAccountColorSectionBackground.value = value }
-        else if(type == "colorLoadingScreen") { editAccountColorLoadingScreen.value = value }
+        // else if(type == "colorLoadingScreen") { editAccountColorLoadingScreen.value = value }
 
 
-        //settings
+        //nav
         else if(type == "navPosition") 
         { 
             if(clicked == "true")
@@ -3357,6 +3381,7 @@ export default {
             else if(value == "large") { editAccountNavLarge.style.color = "#822c8b"; editAccountNavLarge.style.opacity = "1" }
         }
 
+        //text
         else if(type == "textStyle") 
         {
             if(clicked == "true")
@@ -3389,6 +3414,7 @@ export default {
         //     else if(value == "large") { editAccountTextLarge.style.color = "#822c8b"; editAccountTextLarge.style.opacity = "1" }
         // }
 
+        //privacy
         else if(type == "siteAccess") 
         {
             if(clicked == "true")
@@ -3432,6 +3458,7 @@ export default {
             }
         }
 
+        //pages
         else if(type == "pageStart") 
         {
             if(clicked == "true")
@@ -3517,6 +3544,7 @@ export default {
         //     else if(value == "false") { editAccountIndexPageNo.style.color = "#822c8b"; editAccountIndexPageNo.style.opacity = "1" }
         // }
 
+        //buttons
         else if(type == "buttonFullscreen") 
         {
             if(clicked == "true")
@@ -3589,6 +3617,7 @@ export default {
             }
         }
 
+        //extra
         else if(type == "modeSlideshow") 
         {
             if(clicked == "true")
@@ -3680,10 +3709,10 @@ export default {
         let editAccountPasswordNewAgain = document.getElementById("editAccountPasswordNewAgain")
         let editAccountColorNavBackground = document.getElementById("editAccountColorNavBackground")
         let editAccountColorNavIcons = document.getElementById("editAccountColorNavIcons")
-        let editAccountColorNavIconsText = document.getElementById("editAccountColorNavIconsText")
+        // let editAccountColorNavIconsText = document.getElementById("editAccountColorNavIconsText")
         let editAccountColorText = document.getElementById("editAccountColorText")
         let editAccountColorSectionBackground = document.getElementById("editAccountColorSectionBackground")
-        let editAccountColorLoadingScreen = document.getElementById("editAccountColorLoadingScreen")
+        // let editAccountColorLoadingScreen = document.getElementById("editAccountColorLoadingScreen")
         let updateStatusMessage = document.getElementById("updateStatusMessageUpdateSettings")
         let checkboxSaveUpdateSettings = document.getElementById("checkboxSaveUpdateSettings")
         let labelSaveUpdateSettings = document.getElementById("labelSaveUpdateSettings")
@@ -3726,10 +3755,10 @@ export default {
         //set settings
         lsSettings.colorNavBackground = editAccountColorNavBackground.value
         lsSettings.colorNavIcons = editAccountColorNavIcons.value
-        lsSettings.colorNavIconsText = editAccountColorNavIconsText.value
+        // lsSettings.colorNavIconsText = editAccountColorNavIconsText.value
         lsSettings.colorText = editAccountColorText.value
         lsSettings.colorSectionBackground = editAccountColorSectionBackground.value
-        lsSettings.colorLoadingScreen = editAccountColorLoadingScreen.value
+        // lsSettings.colorLoadingScreen = editAccountColorLoadingScreen.value
         lsSettings.pageStartTitle = editAccountStartPageTitle.value
         lsSettings.pageStartText = editAccountStartPageText.value
         lsSettings.pageStartBackgroundImage = editAccountStartPageBackgroundImage.value
@@ -3784,8 +3813,9 @@ export default {
             credentials.passwordOld = editAccountPasswordOld.value
         }
 
-        console.log(credentials)
-        console.log(lsSettings)
+        //debugging
+        // console.log(credentials)
+        // console.log(lsSettings)
 
         //set obj
         obj = {"userInfo": userInfo, "credentials": credentials, "settings": lsSettings}
@@ -3795,7 +3825,7 @@ export default {
         .then((response) => { return response.json() })
         .then((data) => {
             //debugging
-            console.log(data)
+            // console.log(data)
 
             //set update successful message
             if(data.status == "update user settings successful") 
@@ -3825,7 +3855,7 @@ export default {
                 setTimeout(() => {undisplayModals()}, 1000) 
             }
 
-            //set update failed messages
+            //error 1: old password is incorrect
             else if(data.status == "update user settings failed: old password is incorrect")
             {
                 editAccountPasswordOld.style.backgroundColor = "red"
@@ -3834,6 +3864,7 @@ export default {
                 updateStatusMessage.innerText = "old password is incorrect"
             }
 
+            //error 2: username is unavailable
             else if(data.status == "update user settings failed: username is unavailable")
             {
                 editAccountUsername.style.backgroundColor = "red"
@@ -3842,6 +3873,7 @@ export default {
                 updateStatusMessage.innerText = "username is unavailable"
             }
 
+            //error 3: domain is unavailable
             else if(data.status == "update user settings failed: domain is unavailable")
             {
                 editAccountDomain.style.backgroundColor = "red"
@@ -3850,6 +3882,7 @@ export default {
                 updateStatusMessage.innerText = "domain is unavailable"
             }
 
+            //error 4: update failed
             else 
             { 
                 updateStatusMessage.style.display = "block"
@@ -3886,7 +3919,7 @@ export default {
     async function dangerAccount(action, type)
     {
         //debugging
-        console.log("resetAccount")
+        // console.log("resetAccount")
 
         //elements
         let editAccountDangerConfirm = document.getElementById("editAccountDangerConfirm")
@@ -3954,7 +3987,7 @@ export default {
                     window.location.reload()
                 }
 
-                //set update failed messages
+                //error 1: password is incorrect
                 else if(data.status == "update user reset failed: password is incorrect")
                 {
                     updateStatusMessage.style.color = "red"
@@ -3962,6 +3995,7 @@ export default {
                     updateStatusMessage.innerText = "password is incorrect"
                 }
 
+                //error 2: update failed
                 else 
                 { 
                     updateStatusMessage.style.color = "red"
@@ -3974,7 +4008,8 @@ export default {
         //delete account
         else if(action == 'account' && type == 'delete') 
         {
-            console.log("password: " + editAccountDangerConfirmText.value)
+            //debugging
+            // console.log("password: " + editAccountDangerConfirmText.value)
 
             //delete user
             await fetch(BACKEND_API + "/user-delete", {method: 'post', body: JSON.stringify(obj)})
@@ -3982,7 +4017,7 @@ export default {
             .then((data) => {
 
                 //debugging
-                console.log(data)
+                // console.log(data)
 
                 //set update successful message
                 if(data.status == "delete user successful") 
@@ -3991,7 +4026,7 @@ export default {
                     router.push("/")
                 }
 
-                //set update failed messages
+                //error 1: password is incorrect
                 else if(data.status == "delete user failed: password is incorrect")
                 {
                     updateStatusMessage.style.color = "red"
@@ -3999,6 +4034,7 @@ export default {
                     updateStatusMessage.innerText = "password is incorrect"
                 }
 
+                //error 2: update failed
                 else 
                 { 
                     updateStatusMessage.style.color = "red"
@@ -4046,21 +4082,10 @@ export default {
     }
 
 
-    function removeForbiddenCharacters(value)
-    {
-        //format value
-        value = value.replaceAll("'","’")  
-        value = value.replaceAll("\\", "")
-        value = value.replaceAll("/", "")
-        
-        return value
-    }
-
-
     function forbiddenCharactersCheck(value)
     {   
         //debugging
-        console.log("forbiddenCharactersCheck: " + value)
+        // console.log("forbiddenCharactersCheck: " + value)
         
         //variables
         let allowedCharacters = [
@@ -4144,8 +4169,6 @@ export default {
         let defaultIcons = document.getElementsByClassName("editAccountIcon")
         let icon = document.getElementById("icon" + firstLetterToUpperCase(type))
         
-        console.log(icon)
-
         //update elements
         for(let item in defaultIcons)
         {
@@ -4775,6 +4798,8 @@ export default {
     #settingsAccountText { display: none; }
     #editAccountIconDefaultIcons { display: flex; overflow-x: scroll; }
     #editAccountTexts { display: none; }
+    #editAccountLoadingScreenColor { display: none; }
+    #editAccountNavIconsTextColor { display: none; }
 
 
     /*** classes ***/
